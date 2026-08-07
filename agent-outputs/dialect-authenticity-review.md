@@ -1,0 +1,15 @@
+I'm good, thank God | الحمد لله كويس (El hamdulillah kwayes) | word order sounds translated | كويس الحمد لله (kwayyes el7amdulillah)  
+Thank you | شكراً (Shukran) | MSA/formal; less natural in Cairo daily speech | متشكر (motshakker)  
+You're welcome | عفواً (Afwan) | MSA/formal | العفو (el-3afw)  
+Sorry / Excuse me | آسف (Asef) | doesn’t fit “excuse me” well; more natural catch-all is different | معلش (ma3lesh)  
+ten | عشرة (3ashara) | franco is MSA-ish; Masri pronunciation | عشرة (3ashra)  
+How much is this? | بكام دە؟ (bekam da?) | spelling/shape not how people write it | بكام ده؟ (bekam da?)  
+That's too expensive! | دە غالي أوي! (da ghali awi!) | spelling/shape not how people write it | ده غالي أوي! (da ghali awi!)  
+Come on, make it a good price | يلا بس، اعملي سعر حلو (yalla bas, e3melli se3r 7elw) | awkward/unnatural phrasing + gendered verb | يلا بقى، اعملهولي بسعر حلو (yalla ba2a e3mholi bese3r 7elw)  
+One medium koshary | كشري وسط واحد (koshari wasat wa7ed) | unnatural order for ordering | واحد كشري وسط (wa7ed koshari wasat)  
+Extra fried onions | زيادة تقلية (zeyada ta2leya) | unnatural order | تقلية زيادة (ta2leya zeyada)  
+What do you recommend? | تنصحني بإيه؟ (tensa7ni be eh?) | sounds textbook/MSA-leaning | ترشحلي إيه؟ (torasha7li eh?)  
+I'd like this one | عايز دە (3ayez da) | spelling/shape not how people write it | عايز ده (3ayez da)  
+No meat, I'm vegetarian | من غير لحمة، أنا نباتي (men gheir la7ma, ana nabati) | “نباتي” sounds formal; locals usually phrase it differently | من غير لحمة، أنا ماباكلش لحمة (men gheir la7ma, ana mabakolsh la7ma)  
+
+13 of 49 items need correction.

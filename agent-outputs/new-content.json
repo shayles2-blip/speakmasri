@@ -1,0 +1,48 @@
+[
+  {"id":"u4","title":"Numbers & Money الأرقام والفلوس","lessons":[
+    {"id":"l4-1","title":"Counting 1–10 العدّ من واحد لعشرة","xp":10,"vocab":[
+      {"en":"one","ar":"واحد","franco":"wa7ed"},
+      {"en":"two","ar":"اتنين","franco":"etnein"},
+      {"en":"three","ar":"تلاتة","franco":"talata"},
+      {"en":"five","ar":"خمسة","franco":"khamsa"},
+      {"en":"ten","ar":"عشرة","franco":"3ashara"}
+    ]},
+    {"id":"l4-2","title":"How Much? بكام؟","xp":10,"vocab":[
+      {"en":"How much is this?","ar":"بكام دە؟","franco":"bekam da?"},
+      {"en":"That's too expensive!","ar":"دە غالي أوي!","franco":"da ghali awi!"},
+      {"en":"Come on, make it a good price","ar":"يلا بس، اعملي سعر حلو","franco":"yalla bas, e3melli se3r 7elw"},
+      {"en":"Twenty pounds, final","ar":"عشرين جنيه وخلاص","franco":"3eshreen geneh w khalas"},
+      {"en":"Do you have change?","ar":"معاك فكة؟","franco":"ma3ak fakka?"}
+    ]},
+    {"id":"l4-3","title":"Taxi & Fares التاكسي والأجرة","xp":10,"vocab":[
+      {"en":"How much to downtown?","ar":"بكام لوسط البلد؟","franco":"bekam le west el balad?"},
+      {"en":"Turn on the meter, please","ar":"شغّل العدّاد لو سمحت","franco":"shaghal el 3addad law sama7t"},
+      {"en":"Stop here on the side","ar":"على جنب هنا","franco":"3ala gamb hena"},
+      {"en":"Keep the change","ar":"خلي الباقي ليك","franco":"khali el ba2i leek"},
+      {"en":"That's not the normal fare","ar":"دي مش الأجرة العادية","franco":"di mesh el ogra el 3adeya"}
+    ]}
+  ]},
+  {"id":"u5","title":"Food & Ordering الأكل والطلب","lessons":[
+    {"id":"l5-1","title":"At the Café على القهوة","xp":10,"vocab":[
+      {"en":"A tea, please","ar":"شاي لو سمحت","franco":"shay law sama7t"},
+      {"en":"Coffee, medium sugar","ar":"قهوة مظبوط","franco":"ahwa mazboot"},
+      {"en":"Without sugar","ar":"سادة","franco":"sada"},
+      {"en":"A fresh mango juice","ar":"عصير مانجا فريش","franco":"3aseer manga fresh"},
+      {"en":"Waiter! (getting attention)","ar":"يا أسطى!","franco":"ya osta!"}
+    ]},
+    {"en_note":"","id":"l5-2","title":"The Koshary Stand عند الكشري","xp":10,"vocab":[
+      {"en":"One medium koshary","ar":"كشري وسط واحد","franco":"koshari wasat wa7ed"},
+      {"en":"Extra fried onions","ar":"زيادة تقلية","franco":"zeyada ta2leya"},
+      {"en":"Easy on the hot sauce","ar":"شطة خفيف","franco":"shatta khafeef"},
+      {"en":"Take away","ar":"تيك أواي","franco":"take away"},
+      {"en":"Eating in","ar":"هنا جوه","franco":"hena gowa"}
+    ]},
+    {"id":"l5-3","title":"Ordering & Paying الطلب والحساب","xp":10,"vocab":[
+      {"en":"What do you recommend?","ar":"تنصحني بإيه؟","franco":"tensa7ni be eh?"},
+      {"en":"I'd like this one","ar":"عايز دە","franco":"3ayez da"},
+      {"en":"No meat, I'm vegetarian","ar":"من غير لحمة، أنا نباتي","franco":"men gheir la7ma, ana nabati"},
+      {"en":"The bill, please","ar":"الحساب لو سمحت","franco":"el 7esab law sama7t"},
+      {"en":"It was really delicious","ar":"كان تحفة والله","franco":"kan to7fa wallahi"}
+    ]}
+  ]}
+]

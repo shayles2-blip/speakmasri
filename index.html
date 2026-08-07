@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SpeakMasri — Learn Egyptian Arabic 🇪🇬</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== AGENT 3: DESIGN SYSTEM ===== */
+:root{--green:#58cc02;--green-d:#58a700;--blue:#1cb0f6;--red:#ff4b4b;
+--yellow:#ffc800;--bg:#fff;--text:#3c3c3c;--border:#e5e5e5;--r:16px;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito','Segoe UI',sans-serif;}
+body{background:#f7f7f7;color:var(--text);}
+.hidden{display:none!important;}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;background:#fff;
+position:relative;padding-bottom:70px;}
+.ar{font-family:'Cairo','Tajawal',sans-serif;direction:rtl;unicode-bidi:isolate;}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+.btn{background:#46a302;color:#fff;border:none;border-radius:var(--r);
+padding:14px 24px;font-weight:800;font-size:16px;box-shadow:0 4px 0 var(--green-d);
+cursor:pointer;text-transform:uppercase;width:100%;transition:.08s;}
+.btn:active{transform:translateY(4px);box-shadow:none;}
+.btn:disabled{background:#e5e5e5;color:#afafaf;box-shadow:0 4px 0 #cfcfcf;cursor:not-allowed;}
+.btn-blue{background:var(--blue);box-shadow:0 4px 0 #1899d6;}
+.btn-ghost{background:#fff;color:var(--blue);border:2px solid var(--border);box-shadow:0 2px 0 var(--border);}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px;
+border-bottom:2px solid var(--border);font-weight:800;}
+.stat{display:flex;gap:4px;align-items:center;font-size:18px;}
+input{width:100%;padding:14px;border:2px solid var(--border);border-radius:12px;
+font-size:16px;margin:8px 0;}
+input:focus{outline:none;border-color:var(--blue);}
+h1{font-size:28px;margin:16px;}h2{margin:16px;font-size:22px;}
+.center{text-align:center;padding:24px;}
+.logo{font-size:48px;text-align:center;margin-top:40px;}
+.brand{color:var(--green);font-weight:900;font-size:32px;text-align:center;}
+/* Path */
+.unit-head{background:var(--green);color:#fff;padding:16px;border-radius:var(--r);
+margin:16px;font-weight:800;}
+.path{display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0;}
+.node{width:70px;height:70px;border-radius:50%;background:var(--green);color:#fff;
+display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;
+box-shadow:0 6px 0 var(--green-d);border:none;transition:.08s;}
+.node:active{transform:translateY(6px);box-shadow:none;}
+.node.locked{background:#e5e5e5;box-shadow:0 6px 0 #cfcfcf;cursor:not-allowed;}
+.node.done{background:var(--yellow);box-shadow:0 6px 0 #e0a800;}
+.path-item{display:flex;flex-direction:column;align-items:center;}
+.path-item.o2{transform:translateX(40px);}.path-item.o3{transform:translateX(-40px);}
+.ltitle{font-size:12px;font-weight:700;margin-top:4px;color:#666;text-align:center;width:120px;}
+/* Exercise */
+.q{font-size:22px;font-weight:800;margin:24px 16px 8px;}
+.opt{display:block;width:calc(100% - 32px);margin:8px 16px;padding:18px;
+border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;
+font-size:20px;text-align:center;transition:.1s;box-shadow:0 2px 0 var(--border);}
+.opt.sel{border-color:var(--blue);background:#ddf4ff;}
+.opt.correct{border-color:var(--green);background:#d7ffb8;}
+.opt.wrong{border-color:var(--red);background:#ffdfe0;}
+.franco{color:#6b6b6b;font-size:15px;font-style:normal;}
+.progbar{height:16px;background:var(--border);border-radius:8px;flex:1;margin:0 12px;overflow:hidden;}
+.progfill{height:100%;background:var(--green);border-radius:8px;transition:.3s;}
+#lesson{padding-bottom:96px;}
+#checkWrap{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;
+padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
+background:#fff;border-top:2px solid var(--border);z-index:6;}
+.feedback{position:fixed;bottom:80px;left:0;right:0;max-width:480px;margin:0 auto;
+padding:20px 16px;border-top-left-radius:20px;border-top-right-radius:20px;z-index:5;}
+.fb-ok{background:#d7ffb8;}.fb-no{background:#ffdfe0;}
+.fb-title{font-weight:900;font-size:20px;margin-bottom:8px;}
+.match-cols{display:flex;gap:12px;padding:16px;}
+.match-col{flex:1;display:flex;flex-direction:column;gap:10px;}
+/* Nav */
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;
+display:flex;background:#fff;border-top:2px solid var(--border);
+padding-bottom:env(safe-area-inset-bottom);}
+.nav button{flex:1;background:none;border:none;padding:14px;font-size:24px;cursor:pointer;
+border-top:3px solid transparent;}
+.nav button.active{border-top-color:var(--blue);}
+.lb-row{display:flex;justify-content:space-between;padding:14px 16px;
+border-bottom:1px solid var(--border);font-weight:700;}
+.rank{color:#b98600;font-weight:900;width:30px;}
+.confetti{font-size:64px;text-align:center;margin:20px;}
+.audio-btn{background:var(--blue);width:80px;height:80px;border-radius:50%;font-size:32px;
+color:#fff;border:none;box-shadow:0 4px 0 #1899d6;cursor:pointer;margin:16px auto;display:block;}
+.audio-btn:disabled{background:#cfcfcf;box-shadow:0 4px 0 #b5b5b5;cursor:not-allowed;}
+.fillwrap{padding:16px;}
+.fillwrap input{font-size:20px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- AUTH -->
+  <div id="auth" class="center">
+    <div class="logo">🦉</div>
+    <div class="brand">SpeakMasri</div>
+    <p style="color:#777;margin:8px 0 24px">Learn <b>Egyptian Arabic</b> 🇪🇬 the way locals really speak</p>
+    <input id="name" placeholder="Name (for signup)" autocomplete="name">
+    <input id="email" placeholder="Email" type="email" autocomplete="email">
+    <input id="pass" placeholder="Password" type="password" autocomplete="current-password">
+    <select id="motivation" style="width:100%;padding:14px;border:2px solid var(--border);border-radius:12px;font-size:16px;margin:8px 0;color:var(--text)">
+      <option value="">Why are you learning? (for signup)</option>
+      <option value="partner">Egyptian partner / in-laws</option>
+      <option value="traveler">Upcoming trip to Egypt</option>
+      <option value="heritage">Reconnecting with heritage</option>
+      <option value="other">Other</option>
+    </select>
+    <div id="authErr" role="alert" style="color:var(--red);font-weight:700;margin:8px 0"></div>
+    <button class="btn" onclick="signup()">Sign Up</button>
+    <div style="height:10px"></div>
+    <button class="btn btn-ghost" onclick="login()">Log In</button>
+    <div style="height:16px"></div>
+    <button class="btn btn-ghost" style="border-style:dashed" onclick="startGuestLesson()">Try a Lesson First (No Account)</button>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main" class="hidden">
+    <div class="top">
+      <div class="stat">🔥 <span id="streak">0</span></div>
+      <div class="stat" style="color:var(--yellow)">⭐ <span id="xp">0</span></div>
+    </div>
+    <!-- LEARN -->
+    <div id="learn"></div>
+    <!-- PROFILE -->
+    <div id="profile" class="hidden center">
+      <div class="logo">🦉</div>
+      <h2 id="pName"></h2>
+      <p style="color:#777" id="pEmail"></p>
+      <div style="display:flex;justify-content:space-around;margin:24px 0">
+        <div><div style="font-size:28px;font-weight:900;color:var(--yellow)" id="pXp">0</div>Total XP</div>
+        <div><div style="font-size:28px;font-weight:900;color:var(--red)" id="pStreak">0</div>Day Streak</div>
+      </div>
+      <button class="btn btn-ghost" onclick="logout()">Log Out</button>
+    </div>
+    <div class="nav">
+      <button class="active" id="nLearn" onclick="tab('learn')" aria-label="Learn">🏠</button>
+      <button id="nProfile" onclick="tab('profile')" aria-label="Profile">👤</button>
+    </div>
+  </div>
+
+  <!-- LESSON -->
+  <div id="lesson" class="hidden">
+    <div class="top">
+      <button onclick="quitLesson()" aria-label="Quit lesson" style="background:none;border:none;font-size:24px;cursor:pointer;padding:10px;min-width:44px;min-height:44px">✕</button>
+      <div class="progbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progbarEl"><div class="progfill" id="prog"></div></div>
+    </div>
+    <div id="exArea"></div>
+    <div id="fbArea" aria-live="polite"></div>
+    <div id="checkWrap"><button class="btn" id="checkBtn" onclick="check()" disabled>Check</button></div>
+  </div>
+
+  <!-- COMPLETE -->
+  <div id="done" class="hidden center">
+    <div class="confetti">🎉</div>
+    <h1 id="doneTitle">Lesson Complete!</h1>
+    <div style="display:flex;justify-content:space-around;margin:24px 0">
+      <div style="background:#fff8dc;padding:16px;border-radius:16px;border:2px solid var(--yellow)">
+        <div style="font-size:24px;font-weight:900;color:var(--yellow)" id="dXp">+10</div>XP Earned</div>
+      <div style="background:#e0f7ff;padding:16px;border-radius:16px;border:2px solid var(--blue)">
+        <div style="font-size:24px;font-weight:900;color:var(--blue)" id="dAcc">100%</div>Accuracy</div>
+    </div>
+    <div id="missionBox" style="background:#f0fff0;border:2px dashed var(--green);border-radius:16px;margin:16px;padding:16px;text-align:left"></div>
+    <div style="padding:0 16px"><button class="btn" onclick="finishLesson()">Continue</button></div>
+  </div>
+</div>
+
+<script>
+/* ===== AGENT 5: NATIVE EGYPTIAN CONTENT ===== */
+const COURSE={units:[
+ {id:"u1",title:"Greetings التحيات",lessons:[
+  {id:"l1-1",title:"Hello & Hi",xp:10,vocab:[
+   {en:"Hi (informal)",ar:"إزيك",franco:"Ezzayak"},
+   {en:"Welcome / Hey",ar:"أهلاً",franco:"Ahlan"},
+   {en:"Good morning",ar:"صباح الخير",franco:"Sabah el kheir"},
+   {en:"Good evening",ar:"مساء الخير",franco:"Masa el kheir"},
+   {en:"Goodbye",ar:"مع السلامة",franco:"Ma'a el salama"}
+  ]},
+  {id:"l1-2",title:"How are you?",xp:10,vocab:[
+   {en:"How are you? (to a man)",ar:"عامل إيه",franco:"3amel eh"},
+   {en:"I'm good, thank God",ar:"كويس الحمد لله",franco:"kwayyes el7amdulillah"},
+   {en:"Fine / OK",ar:"تمام",franco:"Tamam"},
+   {en:"Not good",ar:"مش كويس",franco:"Mesh kwayes"}
+  ]}
+ ]},
+ {id:"u2",title:"Politeness الذوق",lessons:[
+  {id:"l2-1",title:"Please & Thanks",xp:10,vocab:[
+   {en:"Thank you",ar:"شكراً",franco:"Shukran"},
+   {en:"You're welcome",ar:"العفو",franco:"el-3afw"},
+   {en:"Please (to a man)",ar:"لو سمحت",franco:"Law samaht"},
+   {en:"Sorry / Excuse me",ar:"آسف",franco:"Asef"},
+   {en:"Never mind / It's OK",ar:"معلش",franco:"Ma3lesh"}
+  ]}
+ ]},
+ {id:"u3",title:"Everyday Words كلمات يومية",lessons:[
+  {id:"l3-1",title:"Yes, No & Common",xp:10,vocab:[
+   {en:"Yes",ar:"أيوة",franco:"Aywa"},
+   {en:"No",ar:"لأ",franco:"La'"},
+   {en:"Let's go / Come on",ar:"يلا",franco:"Yalla"},
+   {en:"Finished / Enough / OK",ar:"خلاص",franco:"Khalas"},
+   {en:"God willing",ar:"إن شاء الله",franco:"Inshallah"}
+  ]}
+ ]},
+ {id:"u4",title:"Numbers & Money الأرقام والفلوس",lessons:[
+  {id:"l4-1",title:"Counting 1–10 العدّ من واحد لعشرة",xp:10,vocab:[
+   {en:"one",ar:"واحد",franco:"wa7ed"},
+   {en:"two",ar:"اتنين",franco:"etnein"},
+   {en:"three",ar:"تلاتة",franco:"talata"},
+   {en:"five",ar:"خمسة",franco:"khamsa"},
+   {en:"ten",ar:"عشرة",franco:"3ashra"}
+  ]},
+  {id:"l4-2",title:"How Much? بكام؟",xp:10,vocab:[
+   {en:"How much is this?",ar:"بكام ده؟",franco:"bekam da?"},
+   {en:"That's too expensive!",ar:"ده غالي أوي!",franco:"da ghali awi!"},
+   {en:"Come on, make it a good price",ar:"يلا بقى، اعملهولي بسعر حلو",franco:"yalla ba2a, e3mholi bese3r 7elw"},
+   {en:"Twenty pounds, final",ar:"عشرين جنيه وخلاص",franco:"3eshreen geneh w khalas"},
+   {en:"Do you have change?",ar:"معاك فكة؟",franco:"ma3ak fakka?"}
+  ]},
+  {id:"l4-3",title:"Taxi & Fares التاكسي والأجرة",xp:10,vocab:[
+   {en:"How much to downtown?",ar:"بكام لوسط البلد؟",franco:"bekam le west el balad?"},
+   {en:"Turn on the meter, please",ar:"شغّل العدّاد لو سمحت",franco:"shaghal el 3addad law sama7t"},
+   {en:"Stop here on the side",ar:"على جنب هنا",franco:"3ala gamb hena"},
+   {en:"Keep the change",ar:"خلي الباقي ليك",franco:"khali el ba2i leek"},
+   {en:"That's not the normal fare",ar:"دي مش الأجرة العادية",franco:"di mesh el ogra el 3adeya"}
+  ]}
+ ]},
+ {id:"u5",title:"Food & Ordering الأكل والطلب",lessons:[
+  {id:"l5-1",title:"At the Café على القهوة",xp:10,vocab:[
+   {en:"A tea, please",ar:"شاي لو سمحت",franco:"shay law sama7t"},
+   {en:"Coffee, medium sugar",ar:"قهوة مظبوط",franco:"ahwa mazboot"},
+   {en:"Without sugar",ar:"سادة",franco:"sada"},
+   {en:"A fresh mango juice",ar:"عصير مانجا فريش",franco:"3aseer manga fresh"},
+   {en:"Waiter! (getting attention)",ar:"يا أسطى!",franco:"ya osta!"}
+  ]},
+  {id:"l5-2",title:"The Koshary Stand عند الكشري",xp:10,vocab:[
+   {en:"One medium koshary",ar:"واحد كشري وسط",franco:"wa7ed koshari wasat"},
+   {en:"Extra fried onions",ar:"تقلية زيادة",franco:"ta2leya zeyada"},
+   {en:"Easy on the hot sauce",ar:"شطة خفيف",franco:"shatta khafeef"},
+   {en:"Take away",ar:"تيك أواي",franco:"take away"},
+   {en:"Eating in",ar:"هنا جوه",franco:"hena gowa"}
+  ]},
+  {id:"l5-3",title:"Ordering & Paying الطلب والحساب",xp:10,vocab:[
+   {en:"What do you recommend?",ar:"ترشحلي إيه؟",franco:"torasha7li eh?"},
+   {en:"I'd like this one",ar:"عايز ده",franco:"3ayez da"},
+   {en:"No meat, I'm vegetarian",ar:"من غير لحمة، أنا مباكلش لحمة",franco:"men gheir la7ma, ana mabakolsh la7ma"},
+   {en:"The bill, please",ar:"الحساب لو سمحت",franco:"el 7esab law sama7t"},
+   {en:"It was really delicious",ar:"كان تحفة والله",franco:"kan to7fa wallahi"}
+  ]}
+ ]}
+]};
+
+/* ===== AGENT 6: APP STATE & LOGIC ===== */
+let user=null;          // logged-in user object
+let curLesson=null;     // lesson currently in progress
+let exList=[];          // built exercises for current lesson
+let exIdx=0;
+let correctCount=0;
+let selection=null;     // current selection for check()
+let matchState=null;    // state for match exercise
+
+function loadUsers(){return JSON.parse(localStorage.getItem("lm_users")||"[]");}
+function saveUsers(u){localStorage.setItem("lm_users",JSON.stringify(u));}
+function saveCurrent(email){localStorage.setItem("lm_current",email);}
+function loadCurrentEmail(){return localStorage.getItem("lm_current");}
+function saveUser(){
+  const users=loadUsers();
+  const i=users.findIndex(u=>u.email===user.email);
+  if(i>=0)users[i]=user;
+  saveUsers(users);
+}
+
+function allVocab(){
+  const v=[];
+  COURSE.units.forEach(u=>u.lessons.forEach(l=>v.push(...l.vocab)));
+  return v;
+}
+
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+/* ---------- AUTH ---------- */
+function signup(){
+  const name=document.getElementById("name").value.trim();
+  const email=document.getElementById("email").value.trim().toLowerCase();
+  const pass=document.getElementById("pass").value;
+  const motivation=document.getElementById("motivation").value;
+  const err=document.getElementById("authErr");
+  err.textContent="";
+  if(!name||!email||!pass){err.textContent="Fill in all fields to sign up.";return;}
+  const users=loadUsers();
+  if(users.find(u=>u.email===email)){err.textContent="That email is already registered — log in instead.";return;}
+  const newUser={name,email,password:pass,motivation,xp:0,streak:0,lastActive:null,progress:{},missionsCompleted:0};
+  users.push(newUser);
+  saveUsers(users);
+  saveCurrent(email);
+  user=newUser;
+  enterApp();
+}
+
+function login(){
+  const email=document.getElementById("email").value.trim().toLowerCase();
+  const pass=document.getElementById("pass").value;
+  const err=document.getElementById("authErr");
+  err.textContent="";
+  const users=loadUsers();
+  const found=users.find(u=>u.email===email&&u.password===pass);
+  if(!found){err.textContent="No matching account. Check email/password or sign up.";return;}
+  user=found;
+  saveCurrent(email);
+  enterApp();
+}
+
+function startGuestLesson(){
+  user={name:"Guest",email:null,isGuest:true,xp:0,streak:0,lastActive:null,progress:{},missionsCompleted:0};
+  startLesson(COURSE.units[0].lessons[0]);
+}
+
+function logout(){
+  localStorage.removeItem("lm_current");
+  user=null;
+  document.getElementById("main").classList.add("hidden");
+  document.getElementById("auth").classList.remove("hidden");
+  document.getElementById("name").value="";
+  document.getElementById("email").value="";
+  document.getElementById("pass").value="";
+}
+
+function enterApp(){
+  touchStreak();
+  document.getElementById("auth").classList.add("hidden");
+  document.getElementById("main").classList.remove("hidden");
+  refreshTopBar();
+  renderPath();
+  tab("learn");
+}
+
+function touchStreak(){
+  const today=new Date().toISOString().slice(0,10);
+  if(user.lastActive===today)return;
+  if(user.lastActive){
+    const prev=new Date(user.lastActive);
+    const diffDays=Math.round((new Date(today)-prev)/86400000);
+    user.streak = diffDays===1 ? user.streak+1 : 1;
+  } else {
+    user.streak=1;
+  }
+  user.lastActive=today;
+  saveUser();
+}
+
+function refreshTopBar(){
+  document.getElementById("streak").textContent=user.streak;
+  document.getElementById("xp").textContent=user.xp;
+}
+
+/* ---------- NAV ---------- */
+function tab(name){
+  ["learn","profile"].forEach(t=>{
+    document.getElementById(t).classList.toggle("hidden",t!==name);
+    document.getElementById("n"+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle("active",t===name);
+  });
+  if(name==="profile")renderProfile();
+  if(name==="learn")renderPath();
+}
+
+/* ---------- LEARNING PATH ---------- */
+function isLessonDone(id){return !!(user.progress[id]&&user.progress[id].done);}
+function isLessonUnlocked(uIdx,lIdx){
+  if(uIdx===0&&lIdx===0)return true;
+  const flat=[];
+  COURSE.units.forEach((u,ui)=>u.lessons.forEach((l,li)=>flat.push({ui,li,id:l.id})));
+  const pos=flat.findIndex(f=>f.ui===uIdx&&f.li===lIdx);
+  const prev=flat[pos-1];
+  return prev?isLessonDone(prev.id):true;
+}
+
+function renderPath(){
+  const el=document.getElementById("learn");
+  el.innerHTML="";
+  COURSE.units.forEach((u,ui)=>{
+    const head=document.createElement("div");
+    head.className="unit-head";
+    head.textContent=u.title;
+    el.appendChild(head);
+    const path=document.createElement("div");
+    path.className="path";
+    u.lessons.forEach((l,li)=>{
+      const wrap=document.createElement("div");
+      wrap.style.textAlign="center";
+      const unlocked=isLessonUnlocked(ui,li);
+      const done=isLessonDone(l.id);
+      const node=document.createElement("button");
+      node.className="node "+(done?"done":(unlocked?"":"locked"))+" o"+((li%3)+1);
+      node.textContent=done?"★":(unlocked?"▶":"🔒");
+      node.onclick=()=>{if(unlocked)startLesson(l);};
+      wrap.appendChild(node);
+      const t=document.createElement("div");
+      t.className="ltitle";
+      t.textContent=l.title;
+      wrap.appendChild(t);
+      path.appendChild(wrap);
+    });
+    el.appendChild(path);
+  });
+}
+
+/* ---------- PROFILE ---------- */
+function renderProfile(){
+  document.getElementById("pName").textContent=user.name;
+  document.getElementById("pEmail").textContent=user.email;
+  document.getElementById("pXp").textContent=user.xp;
+  document.getElementById("pStreak").textContent=user.streak;
+}
+
+/* ---------- EXERCISE BUILDING ---------- */
+function buildExercises(vocab){
+  const pool=allVocab();
+  const list=[];
+
+  vocab.forEach(item=>{
+    // multiple choice: EN -> AR
+    const distractors=shuffle(pool.filter(v=>v.ar!==item.ar)).slice(0,3);
+    list.push({type:"mc",q:item.en,answer:item.ar,franco:item.franco,
+      opts:shuffle([item.ar,...distractors.map(d=>d.ar)])});
+  });
+
+  vocab.forEach(item=>{
+    // listen & choose: hear AR -> pick EN
+    const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
+    list.push({type:"listen",q:item.ar,answer:item.en,franco:item.franco,
+      opts:shuffle([item.en,...distractors.map(d=>d.en)])});
+  });
+
+  vocab.forEach(item=>{
+    // fill in the blank: type the Franco transliteration
+    list.push({type:"fill",q:item.en,ar:item.ar,answer:item.franco});
+  });
+
+  if(vocab.length>=2){
+    list.push({type:"match",pairs:shuffle(vocab).slice(0,Math.min(4,vocab.length))});
+  }
+
+  return shuffle(list);
+}
+
+/* ---------- LESSON RUNTIME ---------- */
+function startLesson(lesson){
+  curLesson=lesson;
+  exList=buildExercises(lesson.vocab);
+  exIdx=0;
+  correctCount=0;
+  document.getElementById("main").classList.add("hidden");
+  document.getElementById("lesson").classList.remove("hidden");
+  renderExercise();
+}
+
+function quitLesson(){
+  if((exIdx>0||correctCount>0)&&!confirm("Quit this lesson? You'll lose your progress in it."))return;
+  document.getElementById("lesson").classList.add("hidden");
+  if(user&&user.isGuest){
+    user=null;
+    document.getElementById("auth").classList.remove("hidden");
+  } else {
+    document.getElementById("main").classList.remove("hidden");
+    tab("learn");
+  }
+}
+
+function updateProg(){
+  const pct=Math.round((exIdx/exList.length)*100);
+  document.getElementById("prog").style.width=pct+"%";
+  document.getElementById("progbarEl").setAttribute("aria-valuenow",pct);
+}
+
+function renderExercise(){
+  selection=null;matchState=null;
+  updateProg();
+  document.getElementById("fbArea").innerHTML="";
+  document.getElementById("checkWrap").classList.remove("hidden");
+  const checkBtn=document.getElementById("checkBtn");
+  checkBtn.textContent="Check";
+  checkBtn.disabled=true;
+  checkBtn.onclick=check;
+  const ex=exList[exIdx];
+  const area=document.getElementById("exArea");
+  area.innerHTML="";
+
+  if(ex.type==="mc"){
+    const q=document.createElement("div");q.className="q";q.textContent="Translate: \""+ex.q+"\"";
+    area.appendChild(q);
+    ex.opts.forEach(o=>{
+      const b=document.createElement("button");
+      b.className="opt ar";b.textContent=o;b.lang="ar";
+      b.onclick=()=>selectOpt(b,o);
+      area.appendChild(b);
+    });
+  } else if(ex.type==="listen"){
+    const q=document.createElement("div");q.className="q";q.textContent="Listen and choose the meaning";
+    area.appendChild(q);
+    const audioBtn=document.createElement("button");
+    audioBtn.className="audio-btn";audioBtn.textContent="🔊";
+    audioBtn.setAttribute("aria-label","Play audio");
+    if(!("speechSynthesis" in window)){
+      audioBtn.disabled=true;
+      audioBtn.title="Audio not supported on this device";
+      const note=document.createElement("div");
+      note.style.cssText="text-align:center;color:#999;font-size:13px";
+      note.textContent="🔇 Audio not supported here — pick from the options below";
+      area.appendChild(audioBtn);area.appendChild(note);
+    } else {
+      audioBtn.onclick=()=>speak(ex.q);
+      area.appendChild(audioBtn);
+    }
+    ex.opts.forEach(o=>{
+      const b=document.createElement("button");
+      b.className="opt";b.textContent=o;
+      b.onclick=()=>selectOpt(b,o);
+      area.appendChild(b);
+    });
+    if("speechSynthesis" in window)speak(ex.q);
+  } else if(ex.type==="fill"){
+    const q=document.createElement("div");q.className="q";q.textContent="Type it in Franco-Arabic";
+    area.appendChild(q);
+    const sub=document.createElement("div");sub.style.padding="0 16px";
+    sub.innerHTML=`<div class="ar" lang="ar" style="font-size:26px">${ex.ar}</div><div style="color:#777;margin-top:4px">${ex.q}</div>`;
+    area.appendChild(sub);
+    const fw=document.createElement("div");fw.className="fillwrap";
+    const inp=document.createElement("input");
+    inp.id="fillInput";inp.placeholder="e.g. Shukran";inp.autocomplete="off";
+    inp.oninput=()=>{selection=inp.value;checkBtn.disabled=!inp.value.trim();};
+    fw.appendChild(inp);area.appendChild(fw);
+  } else if(ex.type==="match"){
+    const q=document.createElement("div");q.className="q";q.textContent="Match the pairs";
+    area.appendChild(q);
+    const cols=document.createElement("div");cols.className="match-cols";
+    const left=document.createElement("div");left.className="match-col";
+    const right=document.createElement("div");right.className="match-col";
+    const ens=ex.pairs.map(p=>p.en);
+    const ars=shuffle(ex.pairs.map(p=>p.ar));
+    matchState={matched:new Set(),selEn:null,selAr:null,pairs:ex.pairs};
+    ens.forEach(en=>{
+      const b=document.createElement("button");b.className="opt";b.style.fontSize="15px";b.textContent=en;
+      b.dataset.en=en;
+      b.onclick=()=>matchPick("en",en,b);
+      left.appendChild(b);
+    });
+    ars.forEach(ar=>{
+      const b=document.createElement("button");b.className="opt ar";b.lang="ar";b.style.fontSize="18px";b.textContent=ar;
+      b.dataset.ar=ar;
+      b.onclick=()=>matchPick("ar",ar,b);
+      right.appendChild(b);
+    });
+    cols.appendChild(left);cols.appendChild(right);
+    area.appendChild(cols);
+    document.getElementById("checkWrap").classList.add("hidden");
+  }
+}
+
+function selectOpt(btn,val){
+  document.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel"));
+  btn.classList.add("sel");
+  selection=val;
+  document.getElementById("checkBtn").disabled=false;
+}
+
+function matchPick(side,val,btn){
+  if(btn.classList.contains("correct"))return;
+  if(side==="en"){
+    document.querySelectorAll('[data-en]').forEach(b=>b.classList.remove("sel"));
+    matchState.selEn=val;btn.classList.add("sel");
+  } else {
+    document.querySelectorAll('[data-ar]').forEach(b=>b.classList.remove("sel"));
+    matchState.selAr=val;btn.classList.add("sel");
+  }
+  if(matchState.selEn&&matchState.selAr){
+    const pair=matchState.pairs.find(p=>p.en===matchState.selEn);
+    const enBtn=document.querySelector(`[data-en="${CSS.escape(matchState.selEn)}"]`);
+    const arBtn=document.querySelector(`[data-ar="${CSS.escape(matchState.selAr)}"]`);
+    if(pair&&pair.ar===matchState.selAr){
+      enBtn.classList.remove("sel");arBtn.classList.remove("sel");
+      enBtn.classList.add("correct");arBtn.classList.add("correct");
+      matchState.matched.add(matchState.selEn);
+      matchState.selEn=null;matchState.selAr=null;
+      if(matchState.matched.size===matchState.pairs.length){
+        correctCount++;
+        setTimeout(nextExercise,500);
+      }
+    } else {
+      enBtn.classList.add("wrong");arBtn.classList.add("wrong");
+      setTimeout(()=>{
+        enBtn.classList.remove("sel","wrong");arBtn.classList.remove("sel","wrong");
+        matchState.selEn=null;matchState.selAr=null;
+      },500);
+    }
+  }
+}
+
+function normalize(s){return s.toLowerCase().replace(/['’]/g,"").trim();}
+
+function check(){
+  const ex=exList[exIdx];
+  let ok=false;
+  if(ex.type==="mc"||ex.type==="listen"){
+    ok = selection===ex.answer;
+    document.querySelectorAll(".opt").forEach(o=>{
+      if(o.classList.contains("sel")){o.classList.add(ok?"correct":"wrong");o.insertAdjacentHTML("beforeend",ok?" ✓":" ✗");}
+      if(!ok && (o.textContent.trim()===ex.answer)){o.classList.add("correct");o.insertAdjacentHTML("beforeend"," ✓");}
+    });
+  } else if(ex.type==="fill"){
+    ok = normalize(selection||"")===normalize(ex.answer);
+  }
+  if(ok)correctCount++;
+  showFeedback(ok,ex);
+}
+
+function showFeedback(ok,ex){
+  const fb=document.getElementById("fbArea");
+  const answerText = ex.type==="fill" ? `${ex.answer} (${ex.ar})` :
+                      ex.type==="mc" ? `${ex.answer}${ex.franco?" — "+ex.franco:""}` :
+                      ex.type==="listen" ? ex.answer : "";
+  fb.innerHTML=`<div class="feedback ${ok?"fb-ok":"fb-no"}">
+    <div class="fb-title">${ok?"Correct! ✅":"Not quite ❌"}</div>
+    ${!ok?`<div>Answer: <b>${answerText}</b></div>`:""}
+  </div>`;
+  const checkBtn=document.getElementById("checkBtn");
+  checkBtn.textContent="Continue";
+  checkBtn.disabled=false;
+  checkBtn.onclick=nextExercise;
+}
+
+function nextExercise(){
+  exIdx++;
+  document.getElementById("checkWrap").classList.remove("hidden");
+  if(exIdx>=exList.length){finishAsSuccess();}
+  else renderExercise();
+}
+
+function speak(text){
+  if(!("speechSynthesis" in window))return;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="ar-EG";
+  const voices=speechSynthesis.getVoices();
+  const arVoice=voices.find(v=>v.lang&&v.lang.toLowerCase().startsWith("ar"));
+  if(arVoice)u.voice=arVoice;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+function renderMission(){
+  const box=document.getElementById("missionBox");
+  const pick=curLesson.vocab[Math.floor(Math.random()*curLesson.vocab.length)];
+  box.innerHTML=`<div style="font-weight:800;margin-bottom:8px">🎯 Tonight's mission</div>
+    <div>Say this to them: <span class="ar" lang="ar" style="font-size:20px">${pick.ar}</span>
+    <span class="franco">(${pick.franco})</span> — "${pick.en}"</div>
+    <button class="btn btn-blue" style="margin-top:12px" id="missionBtn" onclick="markMissionDone()">I said it! ✅</button>`;
+}
+
+function markMissionDone(){
+  if(user&&!user.isGuest){
+    user.missionsCompleted=(user.missionsCompleted||0)+1;
+    saveUser();
+  }
+  const btn=document.getElementById("missionBtn");
+  btn.textContent="Nice! 🎉";
+  btn.disabled=true;
+}
+
+function finishAsSuccess(){
+  const total=exList.length;
+  const acc=Math.round((correctCount/total)*100);
+  user.xp+=curLesson.xp;
+  document.getElementById("dXp").textContent="+"+curLesson.xp;
+  document.getElementById("dAcc").textContent=acc+"%";
+  if(user.isGuest){
+    document.getElementById("doneTitle").textContent="Nice! Sign up to save this progress";
+  } else {
+    user.progress[curLesson.id]={done:true,score:acc};
+    saveUser();
+    document.getElementById("doneTitle").textContent="Lesson Complete!";
+  }
+  renderMission();
+  document.getElementById("lesson").classList.add("hidden");
+  document.getElementById("done").classList.remove("hidden");
+}
+
+function finishLesson(){
+  document.getElementById("done").classList.add("hidden");
+  if(user&&user.isGuest){
+    user=null;
+    document.getElementById("auth").classList.remove("hidden");
+  } else {
+    document.getElementById("main").classList.remove("hidden");
+    refreshTopBar();
+    tab("learn");
+  }
+}
+
+/* ---------- BOOTSTRAP ---------- */
+(function init(){
+  if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
+  const email=loadCurrentEmail();
+  if(email){
+    const users=loadUsers();
+    const found=users.find(u=>u.email===email);
+    if(found){user=found;enterApp();}
+  }
+})();
+</script>
+</body>
+</html>
