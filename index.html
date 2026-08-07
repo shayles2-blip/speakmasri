@@ -115,11 +115,17 @@ color:#fff;border:none;box-shadow:0 4px 0 #1899d6;cursor:pointer;margin:16px aut
   <!-- MAIN -->
   <div id="main" class="hidden">
     <div class="top">
-      <div class="stat">🔥 <span id="streak">0</span></div>
+      <div class="stat">💬 <span id="milestoneCount">0</span> said</div>
       <div class="stat" style="color:var(--yellow)">⭐ <span id="xp">0</span></div>
     </div>
     <!-- LEARN -->
     <div id="learn"></div>
+    <!-- PHRASEBOOK -->
+    <div id="phrasebook" class="hidden">
+      <h2>📖 Phrasebook</h2>
+      <p style="padding:0 16px 12px;color:#777">Everything you've unlocked so far — pull this up mid-conversation.</p>
+      <div id="pbList"></div>
+    </div>
     <!-- PROFILE -->
     <div id="profile" class="hidden center">
       <div class="logo">🦉</div>
@@ -127,12 +133,18 @@ color:#fff;border:none;box-shadow:0 4px 0 #1899d6;cursor:pointer;margin:16px aut
       <p style="color:#777" id="pEmail"></p>
       <div style="display:flex;justify-content:space-around;margin:24px 0">
         <div><div style="font-size:28px;font-weight:900;color:var(--yellow)" id="pXp">0</div>Total XP</div>
-        <div><div style="font-size:28px;font-weight:900;color:var(--red)" id="pStreak">0</div>Day Streak</div>
+        <div><div style="font-size:28px;font-weight:900;color:var(--green)" id="pMilestones">0</div>Phrases Said</div>
       </div>
+      <div style="text-align:left;padding:0 16px">
+        <div style="font-weight:800;margin-bottom:8px">Your moments</div>
+        <div id="milestoneLog" style="color:#555;font-size:14px"></div>
+      </div>
+      <div style="height:16px"></div>
       <button class="btn btn-ghost" onclick="logout()">Log Out</button>
     </div>
     <div class="nav">
       <button class="active" id="nLearn" onclick="tab('learn')" aria-label="Learn">🏠</button>
+      <button id="nPhrasebook" onclick="tab('phrasebook')" aria-label="Phrasebook">📖</button>
       <button id="nProfile" onclick="tab('profile')" aria-label="Profile">👤</button>
     </div>
   </div>
@@ -164,9 +176,18 @@ color:#fff;border:none;box-shadow:0 4px 0 #1899d6;cursor:pointer;margin:16px aut
 </div>
 
 <script>
-/* ===== AGENT 5: NATIVE EGYPTIAN CONTENT ===== */
+/* ===== AGENT 5: NATIVE EGYPTIAN CONTENT — scenario-based (partner/in-laws journey) ===== */
 const COURSE={units:[
- {id:"u1",title:"Greetings التحيات",lessons:[
+ {id:"u0",title:"Everyday Basics أساسيات يومية",lessons:[
+  {id:"l3-1",title:"Yes, No & Common",xp:10,vocab:[
+   {en:"Yes",ar:"أيوة",franco:"Aywa"},
+   {en:"No",ar:"لأ",franco:"La'"},
+   {en:"Let's go / Come on",ar:"يلا",franco:"Yalla"},
+   {en:"Finished / Enough / OK",ar:"خلاص",franco:"Khalas"},
+   {en:"God willing",ar:"إن شاء الله",franco:"Inshallah"}
+  ]}
+ ]},
+ {id:"u1",title:"Scenario: Meeting Her Family for the First Time",lessons:[
   {id:"l1-1",title:"Hello & Hi",xp:10,vocab:[
    {en:"Hi (informal)",ar:"إزيك",franco:"Ezzayak"},
    {en:"Welcome / Hey",ar:"أهلاً",franco:"Ahlan"},
@@ -179,9 +200,7 @@ const COURSE={units:[
    {en:"I'm good, thank God",ar:"كويس الحمد لله",franco:"kwayyes el7amdulillah"},
    {en:"Fine / OK",ar:"تمام",franco:"Tamam"},
    {en:"Not good",ar:"مش كويس",franco:"Mesh kwayes"}
-  ]}
- ]},
- {id:"u2",title:"Politeness الذوق",lessons:[
+  ]},
   {id:"l2-1",title:"Please & Thanks",xp:10,vocab:[
    {en:"Thank you",ar:"شكراً",franco:"Shukran"},
    {en:"You're welcome",ar:"العفو",franco:"el-3afw"},
@@ -190,16 +209,27 @@ const COURSE={units:[
    {en:"Never mind / It's OK",ar:"معلش",franco:"Ma3lesh"}
   ]}
  ]},
- {id:"u3",title:"Everyday Words كلمات يومية",lessons:[
-  {id:"l3-1",title:"Yes, No & Common",xp:10,vocab:[
-   {en:"Yes",ar:"أيوة",franco:"Aywa"},
-   {en:"No",ar:"لأ",franco:"La'"},
-   {en:"Let's go / Come on",ar:"يلا",franco:"Yalla"},
-   {en:"Finished / Enough / OK",ar:"خلاص",franco:"Khalas"},
-   {en:"God willing",ar:"إن شاء الله",franco:"Inshallah"}
+ {id:"u2",title:"Scenario: Getting Close with Mom & Dad",lessons:[
+  {id:"l2-2",title:"Family & Terms of Endearment",xp:10,vocab:[
+   {en:"Darling / Sweetheart (to partner)",ar:"حبيبي / حبيبتي",franco:"7abibi / 7abibti"},
+   {en:"Respectful way to address mother-in-law (like 'Mama')",ar:"ماما",franco:"mama"},
+   {en:"Respectful way to address father-in-law (like 'Baba')",ar:"بابا",franco:"baba"},
+   {en:"How Egyptians actually say 'I love you' (casual, natural)",ar:"باحبك",franco:"ba7ebak / ba7ebik"},
+   {en:"Asking 'How is your family?' (as Egyptians say it)",ar:"العيلة عاملة إيه؟",franco:"el-3eela 3amla eh?"},
+   {en:"Saying 'God keep them safe' (common after mentioning family)",ar:"الله يِخَلِّيهم",franco:"Allah y5alleehom"}
   ]}
  ]},
- {id:"u4",title:"Numbers & Money الأرقام والفلوس",lessons:[
+ {id:"u3",title:"Scenario: A Special Occasion (Eid & Celebrations)",lessons:[
+  {id:"l3-2",title:"Eid & Family Gatherings",xp:10,vocab:[
+   {en:"Eid greeting (to anyone)",ar:"كل سنة وانت طيب",franco:"kol sana w enta tayyeb"},
+   {en:"Blessing/wish to elders",ar:"الله يخليك لنا",franco:"Allah yekhalleek lana"},
+   {en:"Complimenting the host's cooking/hospitality",ar:"الاكل كان تحفة يا تيتا",franco:"el-akl kan tu7fa ya teeta"},
+   {en:"Asking politely for more food",ar:"ممكن أكل زيادة شوية؟",franco:"momken akl zeyada shwayya?"},
+   {en:"Compliment about how nice everyone looks",ar:"الناس كلها شكلها حلو أوي",franco:"el-nas kolaha shaklaha 7elw awi"},
+   {en:"Offering to help (useful at family gatherings)",ar:"أنا أساعد في إيه؟",franco:"ana asa3d fi eh?"}
+  ]}
+ ]},
+ {id:"u4",title:"Scenario: Out & About Together",lessons:[
   {id:"l4-1",title:"Counting 1–10 العدّ من واحد لعشرة",xp:10,vocab:[
    {en:"one",ar:"واحد",franco:"wa7ed"},
    {en:"two",ar:"اتنين",franco:"etnein"},
@@ -222,7 +252,7 @@ const COURSE={units:[
    {en:"That's not the normal fare",ar:"دي مش الأجرة العادية",franco:"di mesh el ogra el 3adeya"}
   ]}
  ]},
- {id:"u5",title:"Food & Ordering الأكل والطلب",lessons:[
+ {id:"u5",title:"Scenario: Cooking & Eating Together",lessons:[
   {id:"l5-1",title:"At the Café على القهوة",xp:10,vocab:[
    {en:"A tea, please",ar:"شاي لو سمحت",franco:"shay law sama7t"},
    {en:"Coffee, medium sugar",ar:"قهوة مظبوط",franco:"ahwa mazboot"},
@@ -290,7 +320,7 @@ function signup(){
   if(!name||!email||!pass){err.textContent="Fill in all fields to sign up.";return;}
   const users=loadUsers();
   if(users.find(u=>u.email===email)){err.textContent="That email is already registered — log in instead.";return;}
-  const newUser={name,email,password:pass,motivation,xp:0,streak:0,lastActive:null,progress:{},missionsCompleted:0};
+  const newUser={name,email,password:pass,motivation,xp:0,streak:0,lastActive:null,progress:{},milestones:[]};
   users.push(newUser);
   saveUsers(users);
   saveCurrent(email);
@@ -312,7 +342,7 @@ function login(){
 }
 
 function startGuestLesson(){
-  user={name:"Guest",email:null,isGuest:true,xp:0,streak:0,lastActive:null,progress:{},missionsCompleted:0};
+  user={name:"Guest",email:null,isGuest:true,xp:0,streak:0,lastActive:null,progress:{},milestones:[]};
   startLesson(COURSE.units[0].lessons[0]);
 }
 
@@ -350,18 +380,19 @@ function touchStreak(){
 }
 
 function refreshTopBar(){
-  document.getElementById("streak").textContent=user.streak;
+  document.getElementById("milestoneCount").textContent=(user.milestones||[]).length;
   document.getElementById("xp").textContent=user.xp;
 }
 
 /* ---------- NAV ---------- */
 function tab(name){
-  ["learn","profile"].forEach(t=>{
+  ["learn","phrasebook","profile"].forEach(t=>{
     document.getElementById(t).classList.toggle("hidden",t!==name);
     document.getElementById("n"+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle("active",t===name);
   });
   if(name==="profile")renderProfile();
   if(name==="learn")renderPath();
+  if(name==="phrasebook")renderPhrasebook();
 }
 
 /* ---------- LEARNING PATH ---------- */
@@ -410,7 +441,41 @@ function renderProfile(){
   document.getElementById("pName").textContent=user.name;
   document.getElementById("pEmail").textContent=user.email;
   document.getElementById("pXp").textContent=user.xp;
-  document.getElementById("pStreak").textContent=user.streak;
+  const milestones=user.milestones||[];
+  document.getElementById("pMilestones").textContent=milestones.length;
+  const log=document.getElementById("milestoneLog");
+  if(!milestones.length){
+    log.innerHTML='<p style="color:#999">No moments yet — finish a lesson and try the mission tonight.</p>';
+  } else {
+    log.innerHTML=milestones.slice().reverse().slice(0,20).map(m=>
+      `<div style="padding:8px 0;border-bottom:1px solid var(--border)">
+        <span class="ar" lang="ar">${m.ar}</span> <span class="franco">(${m.franco})</span>
+        <div style="color:#999;font-size:12px">${m.date}</div>
+      </div>`
+    ).join("");
+  }
+}
+
+/* ---------- PHRASEBOOK ---------- */
+function renderPhrasebook(){
+  const list=document.getElementById("pbList");
+  const learned=[];
+  COURSE.units.forEach((u,ui)=>u.lessons.forEach((l,li)=>{
+    if(isLessonUnlocked(ui,li))learned.push(...l.vocab);
+  }));
+  if(!learned.length){
+    list.innerHTML='<p style="padding:16px;color:#777">Nothing unlocked yet — finish your first lesson.</p>';
+    return;
+  }
+  list.innerHTML=learned.map((v,i)=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)">
+      <div>
+        <div class="ar" lang="ar" style="font-size:20px">${v.ar}</div>
+        <div class="franco">${v.franco}</div>
+        <div style="color:#555;font-size:14px">${v.en}</div>
+      </div>
+      <button class="audio-btn" style="width:44px;height:44px;font-size:18px;margin:0" aria-label="Play audio" onclick="speak(${JSON.stringify(v.ar)})">🔊</button>
+    </div>`).join("");
 }
 
 /* ---------- EXERCISE BUILDING ---------- */
