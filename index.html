@@ -223,10 +223,10 @@ const COURSE={units:[
   {id:"l3-2",title:"Eid & Family Gatherings",xp:10,vocab:[
    {en:"Eid greeting (to anyone)",ar:"كل سنة وانت طيب",franco:"kol sana w enta tayyeb"},
    {en:"Blessing/wish to elders",ar:"الله يخليك لنا",franco:"Allah yekhalleek lana"},
-   {en:"Complimenting the host's cooking/hospitality",ar:"الاكل كان تحفة يا تيتا",franco:"el-akl kan tu7fa ya teeta"},
-   {en:"Asking politely for more food",ar:"ممكن أكل زيادة شوية؟",franco:"momken akl zeyada shwayya?"},
-   {en:"Compliment about how nice everyone looks",ar:"الناس كلها شكلها حلو أوي",franco:"el-nas kolaha shaklaha 7elw awi"},
-   {en:"Offering to help (useful at family gatherings)",ar:"أنا أساعد في إيه؟",franco:"ana asa3d fi eh?"}
+   {en:"Complimenting the host's cooking/hospitality",ar:"الأكل تحفة، تسلم إيدِك",franco:"el-akl tu7fa, teslam eedek"},
+   {en:"Asking politely for more food",ar:"ممكن آخد زيادة شوية؟",franco:"momken akhod zeyada shwayya?"},
+   {en:"Compliment about how nice everyone looks",ar:"كلكم شكلكم حلو أوي",franco:"kolkom sheklokom 7elw awi"},
+   {en:"Offering to help (useful at family gatherings)",ar:"أساعد في إيه؟",franco:"asa3ed fi eh?"}
   ]}
  ]},
  {id:"u4",title:"Scenario: Out & About Together",lessons:[
@@ -320,7 +320,7 @@ function signup(){
   if(!name||!email||!pass){err.textContent="Fill in all fields to sign up.";return;}
   const users=loadUsers();
   if(users.find(u=>u.email===email)){err.textContent="That email is already registered — log in instead.";return;}
-  const newUser={name,email,password:pass,motivation,xp:0,streak:0,lastActive:null,progress:{},milestones:[]};
+  const newUser={name,email,password:pass,motivation,xp:0,progress:{},milestones:[]};
   users.push(newUser);
   saveUsers(users);
   saveCurrent(email);
@@ -342,7 +342,7 @@ function login(){
 }
 
 function startGuestLesson(){
-  user={name:"Guest",email:null,isGuest:true,xp:0,streak:0,lastActive:null,progress:{},milestones:[]};
+  user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[]};
   startLesson(COURSE.units[0].lessons[0]);
 }
 
@@ -357,26 +357,11 @@ function logout(){
 }
 
 function enterApp(){
-  touchStreak();
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("main").classList.remove("hidden");
   refreshTopBar();
   renderPath();
   tab("learn");
-}
-
-function touchStreak(){
-  const today=new Date().toISOString().slice(0,10);
-  if(user.lastActive===today)return;
-  if(user.lastActive){
-    const prev=new Date(user.lastActive);
-    const diffDays=Math.round((new Date(today)-prev)/86400000);
-    user.streak = diffDays===1 ? user.streak+1 : 1;
-  } else {
-    user.streak=1;
-  }
-  user.lastActive=today;
-  saveUser();
 }
 
 function refreshTopBar(){
@@ -463,19 +448,29 @@ function renderPhrasebook(){
   COURSE.units.forEach((u,ui)=>u.lessons.forEach((l,li)=>{
     if(isLessonUnlocked(ui,li))learned.push(...l.vocab);
   }));
+  list.innerHTML="";
   if(!learned.length){
     list.innerHTML='<p style="padding:16px;color:#777">Nothing unlocked yet — finish your first lesson.</p>';
     return;
   }
-  list.innerHTML=learned.map((v,i)=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)">
+  learned.forEach(v=>{
+    const row=document.createElement("div");
+    row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)";
+    row.innerHTML=`
       <div>
         <div class="ar" lang="ar" style="font-size:20px">${v.ar}</div>
         <div class="franco">${v.franco}</div>
         <div style="color:#555;font-size:14px">${v.en}</div>
-      </div>
-      <button class="audio-btn" style="width:44px;height:44px;font-size:18px;margin:0" aria-label="Play audio" onclick="speak(${JSON.stringify(v.ar)})">🔊</button>
-    </div>`).join("");
+      </div>`;
+    const btn=document.createElement("button");
+    btn.className="audio-btn";
+    btn.style.cssText="width:44px;height:44px;font-size:18px;margin:0";
+    btn.setAttribute("aria-label","Play audio");
+    btn.textContent="🔊";
+    btn.onclick=()=>speak(v.ar);
+    row.appendChild(btn);
+    list.appendChild(row);
+  });
 }
 
 /* ---------- EXERCISE BUILDING ---------- */
@@ -712,19 +707,23 @@ function speak(text){
   speechSynthesis.speak(u);
 }
 
+let curMission=null;
+
 function renderMission(){
   const box=document.getElementById("missionBox");
-  const pick=curLesson.vocab[Math.floor(Math.random()*curLesson.vocab.length)];
+  curMission=curLesson.vocab[Math.floor(Math.random()*curLesson.vocab.length)];
   box.innerHTML=`<div style="font-weight:800;margin-bottom:8px">🎯 Tonight's mission</div>
-    <div>Say this to them: <span class="ar" lang="ar" style="font-size:20px">${pick.ar}</span>
-    <span class="franco">(${pick.franco})</span> — "${pick.en}"</div>
+    <div>Say this to them: <span class="ar" lang="ar" style="font-size:20px">${curMission.ar}</span>
+    <span class="franco">(${curMission.franco})</span> — "${curMission.en}"</div>
     <button class="btn btn-blue" style="margin-top:12px" id="missionBtn" onclick="markMissionDone()">I said it! ✅</button>`;
 }
 
 function markMissionDone(){
-  if(user&&!user.isGuest){
-    user.missionsCompleted=(user.missionsCompleted||0)+1;
+  if(user&&!user.isGuest&&curMission){
+    user.milestones=user.milestones||[];
+    user.milestones.push({ar:curMission.ar,franco:curMission.franco,date:new Date().toISOString().slice(0,10)});
     saveUser();
+    refreshTopBar();
   }
   const btn=document.getElementById("missionBtn");
   btn.textContent="Nice! 🎉";
