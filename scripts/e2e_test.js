@@ -24,11 +24,13 @@ const VOCAB_LOOKUP = {
 
   // Sign up
   const testEmail = `test${Date.now()}@example.com`;
+  await page.click('#authChoice button:has-text("Sign Up")');
+  await page.waitForSelector('#authForm:not(.hidden)', { timeout: 5000 });
   await page.fill('#name', 'Test Learner');
   await page.fill('#email', testEmail);
   await page.fill('#pass', 'testpass123');
   await page.selectOption('#motivation', 'partner');
-  await page.click('button:has-text("Sign Up")');
+  await page.click('#signupSubmit');
   await page.waitForSelector('#main:not(.hidden)', { timeout: 5000 });
   await page.screenshot({ path: '/tmp/e2e_02_learn.png' });
   console.log('SIGNUP_OK');
@@ -163,9 +165,11 @@ const VOCAB_LOOKUP = {
     await page.click('button:has-text("Log Out")');
     await page.waitForSelector('#auth:not(.hidden)', { timeout: 5000 });
     console.log('LOGGED_OUT');
+    await page.click('#authChoice button:has-text("Log In")');
+    await page.waitForSelector('#authForm:not(.hidden)', { timeout: 5000 });
     await page.fill('#email', testEmail);
     await page.fill('#pass', 'testpass123');
-    await page.click('button:has-text("Log In")');
+    await page.click('#loginSubmit');
     await page.waitForSelector('#main:not(.hidden)', { timeout: 8000 });
     await page.waitForTimeout(500);
     const xpAfter = await page.locator('#xp').textContent();

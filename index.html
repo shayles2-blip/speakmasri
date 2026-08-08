@@ -59,6 +59,15 @@ body { max-width: none; margin: 0; }
   --text-main: #1C2024;
   --text-muted: #687076;
   --border-light: #E6E8EB;
+  --ink-soft: var(--text-muted);
+  --brick: var(--error);
+  --line: var(--border-light);
+  --gold: var(--accent-gold);
+  --teal: #0B7285;
+  --teal-soft: #E3F4F6;
+  --sage: #4F7A5A;
+  --clay: #C1652E;
+  --clay-soft: #FBEEE3;
   --r-sm: 12px;
   --r-md: 16px;
   --r-pill: 999px;
@@ -531,26 +540,42 @@ input:focus, select:focus {
       </div>
       <div style="color:var(--ink-soft)">Thank you</div>
     </div>
-    <input id="name" placeholder="Name (for signup)" autocomplete="name">
-    <input id="email" placeholder="Email" type="email" autocomplete="email">
-    <input id="pass" placeholder="Password" type="password" autocomplete="current-password">
-    <select id="motivation">
-      <option value="">What's your learning goal? (optional)</option>
-      <option value="partner">Egyptian partner / in-laws</option>
-      <option value="traveler">Upcoming trip to Egypt</option>
-      <option value="heritage">Reconnecting with heritage</option>
-      <option value="other">Other</option>
-    </select>
-    <div id="authErr" role="alert" style="color:var(--brick);font-weight:600;margin:8px 0"></div>
-    <div id="authMsg" role="status" style="color:var(--teal);font-weight:600;margin:8px 0"></div>
-    <button class="btn" onclick="signup()">Sign Up</button>
-    <div style="height:10px"></div>
-    <button class="btn btn-ghost" onclick="login()">Log In</button>
-    <div style="text-align:right;margin-top:6px">
-      <button type="button" onclick="resetPassword()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>
+    <div id="authChoice">
+      <button class="btn" onclick="startGuestLesson()">Try a Lesson Free</button>
+      <div style="margin-top:14px">
+        <button type="button" onclick="showLogin()" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Log In</button>
+        <span style="color:var(--ink-soft);margin:0 2px">&middot;</span>
+        <button type="button" onclick="showSignup()" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Sign Up</button>
+      </div>
     </div>
-    <div style="height:16px"></div>
-    <button class="btn btn-ghost" style="border-style:dashed" onclick="startGuestLesson()">Try a Lesson First (No Account)</button>
+
+    <div id="authForm" class="hidden">
+      <div id="nameField" class="hidden">
+        <input id="name" placeholder="Name (for signup)" autocomplete="name">
+      </div>
+      <input id="email" placeholder="Email" type="email" autocomplete="email">
+      <input id="pass" placeholder="Password" type="password" autocomplete="current-password">
+      <div id="motivationField" class="hidden">
+        <select id="motivation">
+          <option value="">What's your learning goal? (optional)</option>
+          <option value="partner">Egyptian partner / in-laws</option>
+          <option value="traveler">Upcoming trip to Egypt</option>
+          <option value="heritage">Reconnecting with heritage</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div id="authErr" role="alert" style="color:var(--brick);font-weight:600;margin:8px 0"></div>
+      <div id="authMsg" role="status" style="color:var(--teal);font-weight:600;margin:8px 0"></div>
+      <button id="signupSubmit" class="btn hidden" onclick="signup()">Sign Up</button>
+      <button id="loginSubmit" class="btn btn-ghost hidden" onclick="login()">Log In</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <button type="button" onclick="backToChoice()" style="background:none;border:none;color:var(--ink-soft);font-size:13px;text-decoration:underline;cursor:pointer">&larr; Back</button>
+        <div id="forgotLink" class="hidden">
+          <button type="button" onclick="resetPassword()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>
+        </div>
+      </div>
+    </div>
+
     <div style="margin-top:20px;font-size:12px;color:var(--ink-soft)">
       <a href="privacy.html" style="color:var(--ink-soft)">Privacy Policy</a> &middot; <a href="terms.html" style="color:var(--ink-soft)">Terms of Service</a>
     </div>
@@ -576,8 +601,8 @@ input:focus, select:focus {
       <h2 id="pName"></h2>
       <p style="color:var(--ink-soft)" id="pEmail"></p>
       <div style="display:flex;justify-content:space-around;margin:24px 0">
-        <div><div style="font-size:28px;font-weight:600;font-family:'Fraunces',serif;color:var(--gold)" id="pXp">0</div>Total XP</div>
-        <div><div style="font-size:28px;font-weight:600;font-family:'Fraunces',serif;color:var(--sage)" id="pMilestones">0</div>Phrases Said</div>
+        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold)" id="pXp">0</div>Total XP</div>
+        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pMilestones">0</div>Phrases Said</div>
       </div>
       <div style="text-align:left;padding:0 16px">
         <div style="font-weight:800;margin-bottom:8px">Your moments</div>
@@ -623,9 +648,9 @@ input:focus, select:focus {
     <h1 id="doneTitle">Lesson Complete!</h1>
     <div style="display:flex;justify-content:space-around;margin:24px 0">
       <div style="background:var(--gold-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--gold)">
-        <div style="font-size:22px;font-weight:600;font-family:'Fraunces',serif;color:var(--gold)" id="dXp">+10</div>XP Earned</div>
+        <div style="font-size:22px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold)" id="dXp">+10</div>XP Earned</div>
       <div style="background:var(--teal-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--teal)">
-        <div style="font-size:22px;font-weight:600;font-family:'Fraunces',serif;color:var(--teal)" id="dAcc">100%</div>Accuracy</div>
+        <div style="font-size:22px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--teal)" id="dAcc">100%</div>Accuracy</div>
     </div>
     <div id="missionBox" style="background:var(--clay-soft);border:1.5px dashed var(--clay);border-radius:var(--r-lg);margin:16px;padding:16px;text-align:left"></div>
     <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px">
@@ -820,6 +845,37 @@ async function login(){
   }
 }
 
+function showSignup(){
+  document.getElementById('authChoice').classList.add('hidden');
+  document.getElementById('authForm').classList.remove('hidden');
+  document.getElementById('nameField').classList.remove('hidden');
+  document.getElementById('motivationField').classList.remove('hidden');
+  document.getElementById('signupSubmit').classList.remove('hidden');
+  document.getElementById('loginSubmit').classList.add('hidden');
+  document.getElementById('forgotLink').classList.add('hidden');
+  document.getElementById('authErr').textContent='';
+  document.getElementById('authMsg').textContent='';
+}
+
+function showLogin(){
+  document.getElementById('authChoice').classList.add('hidden');
+  document.getElementById('authForm').classList.remove('hidden');
+  document.getElementById('nameField').classList.add('hidden');
+  document.getElementById('motivationField').classList.add('hidden');
+  document.getElementById('signupSubmit').classList.add('hidden');
+  document.getElementById('loginSubmit').classList.remove('hidden');
+  document.getElementById('forgotLink').classList.remove('hidden');
+  document.getElementById('authErr').textContent='';
+  document.getElementById('authMsg').textContent='';
+}
+
+function backToChoice(){
+  document.getElementById('authForm').classList.add('hidden');
+  document.getElementById('authChoice').classList.remove('hidden');
+  document.getElementById('authErr').textContent='';
+  document.getElementById('authMsg').textContent='';
+}
+
 async function resetPassword(){
   const email=document.getElementById("email").value.trim().toLowerCase();
   const err=document.getElementById("authErr");
@@ -864,6 +920,7 @@ async function logout(){
   document.getElementById("name").value="";
   document.getElementById("email").value="";
   document.getElementById("pass").value="";
+  backToChoice();
 }
 
 function enterApp(){
@@ -1113,6 +1170,7 @@ function quitLesson(){
   if(user&&user.isGuest){
     user=null;
     document.getElementById("auth").classList.remove("hidden");
+    backToChoice();
   } else {
     document.getElementById("main").classList.remove("hidden");
     tab("learn");
@@ -1455,6 +1513,7 @@ function finishLesson(){
   if(user&&user.isGuest){
     user=null;
     document.getElementById("auth").classList.remove("hidden");
+    backToChoice();
   } else {
     document.getElementById("main").classList.remove("hidden");
     refreshTopBar();
