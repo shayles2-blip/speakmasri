@@ -798,6 +798,7 @@ async function login(){
 
 function startGuestLesson(){
   user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[]};
+  document.getElementById("auth").classList.add("hidden");
   startLesson(COURSE.units[0].lessons[0]);
 }
 
