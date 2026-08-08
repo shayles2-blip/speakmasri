@@ -1,0 +1,68 @@
+[
+  {
+    "en": "My name is... (formal, to elders)",
+    "ar": "أنا اسمي...",
+    "franco": "Ana esmi...",
+    "register": "formal"
+  },
+  {
+    "en": "What's your name? (polite, to elders)",
+    "ar": "اسم حضرتك إيه؟",
+    "franco": "Esm 7adrtak eih?",
+    "register": "formal"
+  },
+  {
+    "en": "This is my mother (introducing her respectfully)",
+    "ar": "دي والدتي.",
+    "franco": "Di waldeti.",
+    "register": "formal"
+  },
+  {
+    "en": "This is my father (introducing him respectfully)",
+    "ar": "ده والدي.",
+    "franco": "Da waledi.",
+    "register": "formal"
+  },
+  {
+    "en": "How should I address your mother? (asking partner)",
+    "ar": "مامتك أناديها بإيه؟",
+    "franco": "Mamtak anadiha bi eih?",
+    "register": "intimate"
+  },
+  {
+    "en": "Call her 'Mama' (partner telling you what to say)",
+    "ar": "قولي لها ماما",
+    "franco": "2oli laha mama",
+    "register": "intimate"
+  },
+  {
+    "en": "This is my aunt (father's sister, respectful)",
+    "ar": "دي عمتي",
+    "franco": "Di 3amti",
+    "register": "formal"
+  },
+  {
+    "en": "This is my uncle (father's brother, respectful)",
+    "ar": "ده عمي",
+    "franco": "Da 3ami",
+    "register": "formal"
+  },
+  {
+    "en": "This is my aunt (mother's sister, respectful)",
+    "ar": "دي خالتي",
+    "franco": "Di 5alti",
+    "register": "formal"
+  },
+  {
+    "en": "This is my uncle (mother's brother, respectful)",
+    "ar": "ده خالي",
+    "franco": "Da 5ali",
+    "register": "formal"
+  },
+  {
+    "en": "What do I call your older brother? (asking partner)",
+    "ar": "أخوك الكبير أناديه بإيه؟",
+    "franco": "A5ook el kbeer anadih bi eih?",
+    "register": "intimate"
+  }
+]

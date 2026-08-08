@@ -1,0 +1,68 @@
+[
+  {
+    "en": "Do you like Egypt?",
+    "ar": "مصر عجبتك؟",
+    "franco": "Masr 3agabtak?",
+    "register": "neutral"
+  },
+  {
+    "en": "Can you handle the spice?",
+    "ar": "بتستحمل الشطة؟",
+    "franco": "Betesta7mel el-shatta?",
+    "register": "casual"
+  },
+  {
+    "en": "When are you learning Arabic?",
+    "ar": "حضرتك بتتعلم عربي بقالك قد إيه؟",
+    "franco": "Hadratak betet3allam 3arabi ba2alak add eh?",
+    "register": "neutral"
+  },
+  {
+    "en": "When’s the wedding?",
+    "ar": "إمتى الجواز؟",
+    "franco": "Emta el gawaz?",
+    "register": "casual"
+  },
+  {
+    "en": "Do you eat ful medames?",
+    "ar": "بتاكلي فول؟",
+    "franco": "Betaakli fool?",
+    "register": "neutral"
+  },
+  {
+    "en": "Are you used to the heat yet?",
+    "ar": "اتعودتي على الحر؟",
+    "franco": "Et3awadti 3ala el 7ar?",
+    "register": "neutral"
+  },
+  {
+    "en": "You’re not leaving us, right?",
+    "ar": "مش هتسيبينا، صح؟",
+    "franco": "Msh hatsibina, sa7?",
+    "register": "intimate"
+  },
+  {
+    "en": "Do you like Egyptian tea?",
+    "ar": "الشاي المصري عجبك؟",
+    "franco": "El shai el masri 3agabak?",
+    "register": "neutral"
+  },
+  {
+    "en": "You’ll visit us often, won’t you?",
+    "ar": "هتزورينا كتير، مش كده؟",
+    "franco": "Hatzurina kteer, msh keda?",
+    "register": "formal"
+  },
+  {
+    "en": "You’re not scared of our family, are you?",
+    "ar": "مش خايف من العيلة بتاعتنا، صح؟",
+    "franco": "Msh 5aif men el 3eela beta3tna, sa7?",
+    "register": "casual"
+  },
+  {
+    "en": "You’ll get used to us soon, inshallah.",
+    "ar": "هتتعود علينا قريب إن شاء الله.",
+    "franco": "Hatet3awad 3alina 2areeb, in shaa Allah.",
+    "register": "formal"
+  }
+]

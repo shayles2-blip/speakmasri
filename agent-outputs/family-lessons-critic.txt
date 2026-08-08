@@ -1,0 +1,36 @@
+l1-10|0|Oops, my tongue got tangled!|"ياختي" غريبة/بتتقال لست؛ الأنسب جملة لوحدها|لساني اتلخبط!|Lesani etlakhbat!
+l1-10|1|Sorry, my brain short-circuited for a second!|ترجمة حرفية و"اتشورت" مش بتتقال كده + فرانكو غلط|آسف، دماغي فصلت ثانية.|Asif, demaghi faslet sanya.
+l1-10|3|Forgive me, I’m still learning the Egyptian way!|مش طبيعية: "بتعلم المصري"؛ قول "اللهجة"|سامحني، أنا لسه بتعلّم اللهجة المصرية.|Same7ni, ana lissa bet3allam el-lahga el-masreyya.
+l1-10|4|Oh no, did I just say that out loud? My bad!|"يالا" مش في محلها و"غلطتي" تقيلة شوية|يا نهار أبيض… أنا قلت كده بصوت عالي؟ معلش!|Ya nahar abyad... ana 2olt keda be-sot 3ali? ma3lesh!
+l1-10|5|I’m like a bull in a china shop today—sorry!|مَثَل إنجليزي مترجم/مش مصري|CUT
+l1-10|6|My Egyptian’s still in beta mode, bear with me!|هزار ميتا/مش جملة تعليمية طبيعية + "خلي بالك مني" غلط|CUT
+l1-10|7|I didn’t mean to refuse, my stomach’s just shy around you all!|مش منطقي/كرييتڤ رايتنج مش مسري|CUT
+l1-10|8|Pardon my mess, I’m still assembling my Egyptian personality!|كرييتڤ/مش بتتقال + تركيب عربي غلط|CUT
+l1-10|9|Babe, save me—I just called your dad ‘ya 7abibi’ by accident!|صياغة "خليني" غلط هنا|يا بيبي إلحقني—أنا ناديت باباك «يا حبيبي» بالغلط!|Ya baby el7a2ni—ana nadet babak "ya 7abibi" bel ghalat!
+l1-10|10|I’ll just laugh it off… *nervous chuckle*|ستيج دايركشن مش عبارة تعليمية|CUT
+l1-11|2|We ate so well, may God keep you (said after a meal)|"كلنا أوي" غلط|أكلنا حلو أوي، ربنا يخليك.|Akalna 7elw awy, Rabbena ye5alleek.
+l1-3|0|May God bless your hands (said when entering, praising the home)|الجملة مش في سياقها: دي للأكل/التعب مش للبيت|ما شاء الله، البيت منوّر.|Ma sha2 Allah el-beet menawwar.
+l1-4|2|This is my mother (introducing her respectfully)|"مامتي" مش فورمال مع الكبار|دي والدتي.|Di waldeti.
+l1-4|3|This is my father (introducing him respectfully)|"بابا" مش فورمال مع الكبار|ده والدي.|Da waledi.
+l1-5|0|No, thank you (first polite refusal).|"متشكرين" (جمع) مش مناسبة غالبًا|لا، شكرًا.|La2, shokran.
+l1-5|3|It's delicious, may God bless your hands (praise to the cook).|"إيدك" مفرد + فرانكو ملخبط|لذيذ أوي، تسلم إيديك.|Lazeez awy, teslam eedeek.
+l1-5|5|You're spoiling me (when they keep insisting).|"بتدلعيني" بتطلع فليرتي/مش لطيفة مع أهل|كتر خيرك.|Keteer 5eirik.
+l1-5|7|It's perfect, no need for more (warm but firm).|"كامل" مش بتتقال كده|كفاية كده، متشكر.|Kefaya keda, motshakker.
+l1-5|8|I'll explode if I eat more (humorous refusal).|تركيب غلط: الفاعل/المؤنث|بطني هتنفجر لو كلت أكتر!|Batni hatenfegar law kelt aktar!
+l1-5|9|Just a sip, I'm really full (for tea/juice).|"شبعان" للزق/الأكل؛ مع الشاي بنقول "مليان"|رشفة بس، أنا مليان أوي.|Rashfa bas, ana melyan awy.
+l1-5|10|You're too kind (to the host after insistence).|"إنتي طيبة" مش فورمال وبتفترض النوع|كتر خيرك.|Keteer 5eirik.
+l1-6|1|I work in [field], but I'm still learning.|"بتعلم" سايبة/مش مفهومة بتتعلم إيه|بشتغل في [مجال]، بس لسه بتعلّم عربي.|Bashtaghal fi [magal], bas lissa bet3allam 3arabi.
+l1-6|3|I’ve been in Egypt for [time], and I love it here.|"أنا في مصر من [وقت]" مش طبيعية|أنا في مصر بقالي [مدة]، وبحبها أوي.|Ana fi Masr ba2aly [modda], w ba7ebha awy.
+l1-6|7|I’m here to learn and be part of the family.|فرانكو معناه "أعلّم" مش "أتعلم"|أنا جاي أتعلم وأبقى واحد من العيلة.|Ana gay at3allam w ab2a wa7ed men el-3eela.
+l1-6|10|I’m still getting used to Cairo—it’s amazing!|عربي/فرانكو مكسرين ("مذهلة/mozha")|لسه بتعود على القاهرة… بس حلوة قوي!|Lissa bat3awwad 3ala el-2ahera... bas 7elwa awy!
+l1-7|0|This home is so full of blessings, God willing.|"إن شاء الله" ملهاش لازمة هنا؛ الأنسب "ما شاء الله"|ما شاء الله البيت ده مليان بركة.|Ma sha2 Allah el-beet da melyan baraka.
+l1-7|1|Your hands are blessed, may God keep them safe.|"إيدك مباركة" مش دارجة|تسلم إيديك، ربنا يحفظك.|Teslam eedeek, Rabbena ye7fazak.
+l1-8|1|Can you handle the spice?|"الحر" = حرارة الجو؛ للشطة بنقول شطة/حراق|بتستحمل الشطة؟|Betesta7mel el-shatta?
+l1-8|2|When are you learning Arabic?|الإنجليزي مقصوده "من امتى/بقالك قد ايه" مش "إمتى هتتعلم"|حضرتك بتتعلم عربي بقالك قد إيه؟|Hadratak betet3allam 3arabi ba2alak add eh?
+l1-9|0|I didn’t catch that—could you say it again, please?|صياغة "تكرري تاني" ركيكة/مكررة|معلش، ممكن تقولها تاني لو سمحت؟|Ma3lesh, momken t2olha tani law sama7t?
+l1-9|1|Sorry, my Arabic is still weak—could you speak a little slower?|ترتيب غلط: "شوية ابطء" + فرانكو غلط|آسف، عربيتي لسه ضعيفة… ممكن تتكلم أبطأ شوية؟|Asif, 3arabiti lissa da3eefa... momken tetkallem abTa2 shwayya?
+l1-9|2|I missed that—what did you say?|"فوتني الكلام" مش دارجة|ما سمعتش كويس… إيه اللي حضرتك قلته؟|Ma seme3tesh kwayyes... eh elli hadرتak 2olto?
+l1-9|9|Sorry, my brain froze—could you repeat?|لازم "وقفت" مش "وقف" + فرانكو غلط|آسف، دماغي وقفت… ممكن تعيد؟|Asif, demaghi we2fet... momken te3eed?
+l1-9|10|I’m trying to follow, but it’s too fast.|"بيكون سريع قوي" مش طبيعية|بحاول أتابع بس الكلام سريع أوي.|Ba7awel atabe3 bas el-kalam saree3 awy.
+
+34 of 99 need correction/removal.

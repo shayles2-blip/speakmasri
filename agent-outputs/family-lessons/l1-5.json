@@ -1,0 +1,68 @@
+[
+  {
+    "en": "No, thank you (first polite refusal).",
+    "ar": "لا، شكرًا.",
+    "franco": "La2, shokran.",
+    "register": "formal"
+  },
+  {
+    "en": "I swear I'm full (after second helping).",
+    "ar": "والله شبعان.",
+    "franco": "Wallah sha3baan.",
+    "register": "neutral"
+  },
+  {
+    "en": "Just a little, please (when they insist).",
+    "ar": "شوية بس، لو سمحت.",
+    "franco": "Shwayya bass, law sama7t.",
+    "register": "formal"
+  },
+  {
+    "en": "It's delicious, may God bless your hands (praise to the cook).",
+    "ar": "لذيذ أوي، تسلم إيديك.",
+    "franco": "Lazeez awy, teslam eedeek.",
+    "register": "formal"
+  },
+  {
+    "en": "I can't eat another bite (polite way to stop).",
+    "ar": "مقدرش آكل أكتر من كده.",
+    "franco": "Ma2darsh akol aktar men keda.",
+    "register": "neutral"
+  },
+  {
+    "en": "You're spoiling me (when they keep insisting).",
+    "ar": "كتر خيرك.",
+    "franco": "Keteer 5eirik.",
+    "register": "casual"
+  },
+  {
+    "en": "I'll have some later (gentle refusal).",
+    "ar": "هاخد بعدين.",
+    "franco": "Ha5od ba3deen.",
+    "register": "neutral"
+  },
+  {
+    "en": "It's perfect, no need for more (warm but firm).",
+    "ar": "كفاية كده، متشكر.",
+    "franco": "Kefaya keda, motshakker.",
+    "register": "neutral"
+  },
+  {
+    "en": "I'll explode if I eat more (humorous refusal).",
+    "ar": "بطني هتنفجر لو كلت أكتر!",
+    "franco": "Batni hatenfegar law kelt aktar!",
+    "register": "casual"
+  },
+  {
+    "en": "Just a sip, I'm really full (for tea/juice).",
+    "ar": "رشفة بس، أنا مليان أوي.",
+    "franco": "Rashfa bas, ana melyan awy.",
+    "register": "neutral"
+  },
+  {
+    "en": "You're too kind (to the host after insistence).",
+    "ar": "كتر خيرك.",
+    "franco": "Keteer 5eirik.",
+    "register": "formal"
+  }
+]

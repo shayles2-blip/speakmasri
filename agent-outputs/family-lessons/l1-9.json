@@ -1,0 +1,68 @@
+[
+  {
+    "en": "I didn’t catch that—could you say it again, please?",
+    "ar": "معلش، ممكن تقولها تاني لو سمحت؟",
+    "franco": "Ma3lesh, momken t2olha tani law sama7t?",
+    "register": "formal"
+  },
+  {
+    "en": "Sorry, my Arabic is still weak—could you speak a little slower?",
+    "ar": "آسف، عربيتي لسه ضعيفة… ممكن تتكلم أبطأ شوية؟",
+    "franco": "Asif, 3arabiti lissa da3eefa... momken tetkallem abTa2 shwayya?",
+    "register": "formal"
+  },
+  {
+    "en": "I missed that—what did you say?",
+    "ar": "ما سمعتش كويس… إيه اللي حضرتك قلته؟",
+    "franco": "Ma seme3tesh kwayyes... eh elli hadرتak 2olto?",
+    "register": "neutral"
+  },
+  {
+    "en": "Could you repeat that one more time?",
+    "ar": "ممكن تعيديها تاني مرة؟",
+    "franco": "Momken te3idiha tani mara?",
+    "register": "neutral"
+  },
+  {
+    "en": "I didn’t get it—could you explain in simpler words?",
+    "ar": "ما فهمتش، ممكن تشرحي بكلمات أسهل؟",
+    "franco": "Ma fhmtish, momken teshra7i b kalemat as-hal?",
+    "register": "formal"
+  },
+  {
+    "en": "Wait, I’m lost—what’s going on?",
+    "ar": "استنى، انا تايه، ايه اللي بيحصل؟",
+    "franco": "Estanna, ana tayeh, eih elly bey7sal?",
+    "register": "casual"
+  },
+  {
+    "en": "Babe, translate this for me quick.",
+    "ar": "يا حبيبي، ترجملي ده بسرعة.",
+    "franco": "Ya 7abibi, taragmli da b sor3a.",
+    "register": "intimate"
+  },
+  {
+    "en": "I didn’t understand—could you say it in English?",
+    "ar": "ما فهمتش، ممكن تقولها بالانجليزي؟",
+    "franco": "Ma fhmtish, momken t2olha bel engelizi?",
+    "register": "neutral"
+  },
+  {
+    "en": "Hold on, I need to ask [partner’s name] what this means.",
+    "ar": "استنى، لازم اسأل [اسم الشريك] ده معناه ايه.",
+    "franco": "Estanna, lazem as2al [esm el shareek] da ma3nah eih.",
+    "register": "formal"
+  },
+  {
+    "en": "Sorry, my brain froze—could you repeat?",
+    "ar": "آسف، دماغي وقفت… ممكن تعيد؟",
+    "franco": "Asif, demaghi we2fet... momken te3eed?",
+    "register": "casual"
+  },
+  {
+    "en": "I’m trying to follow, but it’s too fast.",
+    "ar": "بحاول أتابع بس الكلام سريع أوي.",
+    "franco": "Ba7awel atabe3 bas el-kalam saree3 awy.",
+    "register": "neutral"
+  }
+]

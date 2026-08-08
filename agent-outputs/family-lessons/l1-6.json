@@ -1,0 +1,68 @@
+[
+  {
+    "en": "I'm from [country/city], originally.",
+    "ar": "أنا من [بلد/مدينة] أصلا.",
+    "franco": "Ana mn [balad/madina] aslan.",
+    "register": "neutral"
+  },
+  {
+    "en": "I work in [field], but I'm still learning.",
+    "ar": "بشتغل في [مجال]، بس لسه بتعلّم عربي.",
+    "franco": "Bashtaghal fi [magal], bas lissa bet3allam 3arabi.",
+    "register": "neutral"
+  },
+  {
+    "en": "My family's small—just my parents and me.",
+    "ar": "عيلتي صغيرة، بابا وماما وأنا بس.",
+    "franco": "3eelti soghayyara, baba w mama w ana bass.",
+    "register": "casual"
+  },
+  {
+    "en": "I’ve been in Egypt for [time], and I love it here.",
+    "ar": "أنا في مصر بقالي [مدة]، وبحبها أوي.",
+    "franco": "Ana fi Masr ba2aly [modda], w ba7ebha awy.",
+    "register": "neutral"
+  },
+  {
+    "en": "I’m staying until [time], God willing.",
+    "ar": "هفضل لحد [وقت]، إن شاء الله.",
+    "franco": "Hafdal le7ad [wa2t], in sha2 Allah.",
+    "register": "formal"
+  },
+  {
+    "en": "My Arabic is still weak, but I’m trying!",
+    "ar": "عربي ضعيف شوية، بس بجتهد!",
+    "franco": "3arabi da3if shwayya, bas baghtahid!",
+    "register": "casual"
+  },
+  {
+    "en": "I have one brother/sister—just us two.",
+    "ar": "لي أخ/أخت واحد بس، إحنا الاتنين.",
+    "franco": "Li akh/okht wa7ed bass, e7na el-etnein.",
+    "register": "neutral"
+  },
+  {
+    "en": "I’m here to learn and be part of the family.",
+    "ar": "أنا جاي أتعلم وأبقى واحد من العيلة.",
+    "franco": "Ana gay at3allam w ab2a wa7ed men el-3eela.",
+    "register": "formal"
+  },
+  {
+    "en": "I love Egyptian food—it’s the best!",
+    "ar": "بحب الأكل المصري أوي، أحسن حاجة!",
+    "franco": "Ba7eb el-akl el-masri awi, a7san 7aga!",
+    "register": "casual"
+  },
+  {
+    "en": "I’m so happy to meet you all!",
+    "ar": "أنا فرحان أوي إني قابلتكم!",
+    "franco": "Ana far7an awi eni 2abaltkom!",
+    "register": "formal"
+  },
+  {
+    "en": "I’m still getting used to Cairo—it’s amazing!",
+    "ar": "لسه بتعود على القاهرة… بس حلوة قوي!",
+    "franco": "Lissa bat3awwad 3ala el-2ahera... bas 7elwa awy!",
+    "register": "intimate"
+  }
+]

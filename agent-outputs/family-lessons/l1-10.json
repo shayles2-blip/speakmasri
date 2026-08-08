@@ -1,0 +1,68 @@
+[
+  {
+    "en": "Oops, my tongue got tangled!",
+    "ar": "لساني اتلخبط!",
+    "franco": "Lesani etlakhbat!",
+    "register": "neutral"
+  },
+  {
+    "en": "Sorry, my brain short-circuited for a second!",
+    "ar": "آسف، دماغي فصلت ثانية.",
+    "franco": "Asif, demaghi faslet sanya.",
+    "register": "casual"
+  },
+  {
+    "en": "I swear I’m not usually this clumsy… today’s just not my day!",
+    "ar": "والله ما أنا كده عادة… النهارده مش يومي!",
+    "franco": "WAllah ma ana keda 3ada… elnaharda msh yomi!",
+    "register": "neutral"
+  },
+  {
+    "en": "Forgive me, I’m still learning the Egyptian way!",
+    "ar": "سامحني، أنا لسه بتعلّم اللهجة المصرية.",
+    "franco": "Same7ni, ana lissa bet3allam el-lahga el-masreyya.",
+    "register": "formal"
+  },
+  {
+    "en": "Oh no, did I just say that out loud? My bad!",
+    "ar": "يا نهار أبيض… أنا قلت كده بصوت عالي؟ معلش!",
+    "franco": "Ya nahar abyad... ana 2olt keda be-sot 3ali? ma3lesh!",
+    "register": "casual"
+  },
+  {
+    "en": "Babe, save me—I just called your dad ‘ya 7abibi’ by accident!",
+    "ar": "يا بيبي إلحقني—أنا ناديت باباك «يا حبيبي» بالغلط!",
+    "franco": "Ya baby el7a2ni—ana nadet babak \"ya 7abibi\" bel ghalat!",
+    "register": "intimate"
+  },
+  {
+    "en": "Oh no, I messed up! Sorry about that.",
+    "ar": "يا نهار أبيض، غلطت! آسف والله.",
+    "franco": "Ya nahar abyad, ghalatt! Asif wallah.",
+    "register": "casual"
+  },
+  {
+    "en": "I didn’t mean to say that—my tongue slipped!",
+    "ar": "ما قصدتش أقول كده، لساني اتخطى!",
+    "franco": "Ma 2asadtish a2ool keda, lesani etkhatta!",
+    "register": "casual"
+  },
+  {
+    "en": "Forgive me, I got confused with the names.",
+    "ar": "سامحني، اتخبطت في الأسماء.",
+    "franco": "Samehni, etkhabatt fil asma2.",
+    "register": "neutral"
+  },
+  {
+    "en": "I swear I didn’t mean to refuse—your food is amazing!",
+    "ar": "والله ما قصدت أرفض، الأكل عندك تحفة!",
+    "franco": "Wallah ma 2asadt arfaD, el akel 3andak to7fa!",
+    "register": "casual"
+  },
+  {
+    "en": "I’m so embarrassed—let’s just laugh it off!",
+    "ar": "أنا خجلان أوي، خلينا نضحك عليها!",
+    "franco": "Ana khaglan awi, khalina ned7ak 3aleiha!",
+    "register": "intimate"
+  }
+]
