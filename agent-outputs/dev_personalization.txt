@@ -1,0 +1,87 @@
+```javascript
+function renderPartnerPhrases(){
+  const listEl = document.getElementById("partnerPhrasesList")
+  if(!listEl) return
+  listEl.innerHTML = ""
+  const phrases = user.customPhrases || []
+  if(phrases.length === 0){
+    listEl.textContent = "No partner phrases yet."
+    return
+  }
+  phrases.forEach(function(p,i){
+    const div = document.createElement("div")
+    div.className = "phrase-item"
+    div.innerHTML = `<span>${p.en}</span> - <span>${p.ar}</span> (<span>${p.franco}</span>) <button onclick="deleteCustomPhrase(${i})">🗑️</button>`
+    listEl.appendChild(div)
+  })
+}
+
+function downloadPhraseTemplate(){
+  const sample = [{en:"hello", ar:"مرحبا", franco:"mar7aba", source:"partner"}]
+  const blob = new Blob([JSON.stringify(sample, null, 2)], {type:"application/json"})
+  const a = document.createElement("a")
+  a.href = URL.createObjectURL(blob)
+  a.download = "partner_phrases_template.json"
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(a.href)
+}
+
+function importPartnerPhrases(fileInputEl){
+  if(!fileInputEl.files || fileInputEl.files.length === 0) return
+  const file = fileInputEl.files[0]
+  const reader = new FileReader()
+  reader.onload = function(e){
+    try{
+      const data = JSON.parse(e.target.result)
+      if(!Array.isArray(data)) throw new Error("Not an array")
+      if(!user.customPhrases) user.customPhrases = []
+      const existingEns = new Set(user.customPhrases.map(p => p.en))
+      const valid = []
+      for(let i=0; i<data.length; i++){
+        const item = data[i]
+        if(user.customPhrases.length + valid.length >= 50) break
+        if(typeof item.en !== "string" || typeof item.ar !== "string" || typeof item.franco !== "string") continue
+        if(existingEns.has(item.en)) continue
+        const phrase = {en: item.en, ar: item.ar, franco: item.franco, source: "partner"}
+        valid.push(phrase)
+        existingEns.add(item.en)
+      }
+      const total = user.customPhrases.length + valid.length
+      if(total > 50){
+        const allowed = 50 - user.customPhrases.length
+        if(allowed > 0) user.customPhrases.push(...valid.slice(0, allowed))
+      } else {
+        user.customPhrases.push(...valid)
+      }
+      saveUser()
+      renderPartnerPhrases()
+    } catch(err){
+      alert("Invalid file format")
+    }
+    fileInputEl.value = ""
+  }
+  reader.readAsText(file)
+}
+
+function deleteCustomPhrase(idx){
+  if(!user.customPhrases) return
+  user.customPhrases.splice(idx, 1)
+  saveUser()
+  renderPartnerPhrases()
+}
+```
+
+<!-- Profile screen additions for Partner Phrases:
+<section>
+  <h3>Partner Phrases</h3>
+  <button onclick="downloadPhraseTemplate()">Download Template</button>
+  <input type="file" id="partnerFileInput" accept=".json">
+  <button onclick="importPartnerPhrases(document.getElementById('partnerFileInput'))">Import</button>
+  <div id="partnerPhrasesList"></div>
+</section>
+
+Phrasebook integration note:
+// Inside renderPhrasebook(), merge custom phrases: const allPhrases = [...(existing learned phrases), ...(user.customPhrases || [])];
+-->

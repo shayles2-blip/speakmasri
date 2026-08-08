@@ -528,6 +528,19 @@ input:focus, select:focus {
         <div style="font-weight:800;margin-bottom:8px">Your moments</div>
         <div id="milestoneLog" style="color:var(--ink-soft);font-size:14px"></div>
       </div>
+      <div style="height:24px"></div>
+      <div style="text-align:left;padding:0 16px">
+        <div style="font-weight:800;margin-bottom:4px">Partner Phrases</div>
+        <p style="color:var(--ink-soft);font-size:13px;margin-bottom:10px">Send your partner a template — anything they add (family names, in-jokes) shows up in your Phrasebook.</p>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button class="btn btn-ghost" style="font-size:13px;padding:10px" onclick="downloadPhraseTemplate()">⬇️ Template</button>
+          <label class="btn btn-ghost" style="font-size:13px;padding:10px;text-align:center;cursor:pointer">
+            ⬆️ Import
+            <input type="file" id="partnerFileInput" accept=".json" style="display:none" onchange="importPartnerPhrases(this)">
+          </label>
+        </div>
+        <div id="partnerPhrasesList" style="color:var(--ink-soft);font-size:14px"></div>
+      </div>
       <div style="height:16px"></div>
       <button class="btn btn-ghost" onclick="logout()">Log Out</button>
     </div>
@@ -830,6 +843,80 @@ function renderProfile(){
       </div>`
     ).join("");
   }
+  renderPartnerPhrases();
+}
+
+/* ---------- PARTNER PHRASES (personalization) ---------- */
+function renderPartnerPhrases(){
+  const listEl=document.getElementById("partnerPhrasesList");
+  if(!listEl)return;
+  listEl.innerHTML="";
+  const phrases=user.customPhrases||[];
+  if(phrases.length===0){
+    listEl.innerHTML='<p style="color:var(--ink-soft);font-size:13px">No partner phrases yet.</p>';
+    return;
+  }
+  phrases.forEach((p,i)=>{
+    const div=document.createElement("div");
+    div.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)";
+    div.innerHTML=`<div><span class="ar" lang="ar">${p.ar}</span> <span class="franco">(${p.franco})</span> — ${p.en}</div>`;
+    const del=document.createElement("button");
+    del.textContent="🗑️";
+    del.style.cssText="background:none;border:none;cursor:pointer;font-size:16px";
+    del.setAttribute("aria-label","Delete phrase");
+    del.onclick=()=>deleteCustomPhrase(i);
+    div.appendChild(del);
+    listEl.appendChild(div);
+  });
+}
+
+function downloadPhraseTemplate(){
+  const sample=[{en:"Auntie Mona",ar:"خالة منى",franco:"khalto Mona"}];
+  const blob=new Blob([JSON.stringify(sample,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="partner_phrases_template.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+function importPartnerPhrases(fileInputEl){
+  if(!fileInputEl.files||fileInputEl.files.length===0)return;
+  const file=fileInputEl.files[0];
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!Array.isArray(data))throw new Error("Not an array");
+      if(!user.customPhrases)user.customPhrases=[];
+      const existingEns=new Set(user.customPhrases.map(p=>p.en));
+      const valid=[];
+      for(let i=0;i<data.length;i++){
+        const item=data[i];
+        if(user.customPhrases.length+valid.length>=50)break;
+        if(typeof item.en!=="string"||typeof item.ar!=="string"||typeof item.franco!=="string")continue;
+        if(existingEns.has(item.en))continue;
+        valid.push({en:item.en,ar:item.ar,franco:item.franco,source:"partner"});
+        existingEns.add(item.en);
+      }
+      user.customPhrases.push(...valid);
+      saveUser();
+      renderPartnerPhrases();
+    }catch(err){
+      alert("That file couldn't be read as a phrase list. Make sure it's the JSON template with en/ar/franco fields.");
+    }
+    fileInputEl.value="";
+  };
+  reader.readAsText(file);
+}
+
+function deleteCustomPhrase(idx){
+  if(!user.customPhrases)return;
+  user.customPhrases.splice(idx,1);
+  saveUser();
+  renderPartnerPhrases();
 }
 
 /* ---------- PHRASEBOOK ---------- */
@@ -839,6 +926,7 @@ function renderPhrasebook(){
   COURSE.units.forEach((u,ui)=>u.lessons.forEach((l,li)=>{
     if(isLessonUnlocked(ui,li))learned.push(...l.vocab);
   }));
+  learned.push(...(user.customPhrases||[]));
   list.innerHTML="";
   if(!learned.length){
     list.innerHTML='<p style="padding:16px;color:var(--ink-soft)">Nothing unlocked yet — finish your first lesson.</p>';
