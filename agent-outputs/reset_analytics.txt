@@ -1,0 +1,64 @@
+// 1. PASSWORD RESET - HTML button (add near existing Log In button)
+`<button type="button" onclick="resetPassword()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>`
+
+// 2. SCRIPT TAG for analytics-compat (add alongside existing Firebase script tags)
+`<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>`
+
+// 3. ANALYTICS INITIALIZATION (after firebase.initializeApp(...) line)
+`const analytics = firebase.analytics();`
+
+// 4. PASSWORD RESET FUNCTION (global scope)
+async function resetPassword(){
+ const email = document.getElementById('email').value.trim();
+ if(!email){
+   document.getElementById('authErr').textContent = 'Enter your email above first, then tap Forgot Password';
+   return;
+ }
+ try{
+   await firebase.auth().sendPasswordResetEmail(email);
+   document.getElementById('authErr').textContent = 'Check your email for a reset link.';
+ }catch(e){
+   if(e.code === 'auth/user-not-found'){
+     document.getElementById('authErr').textContent = 'No account with that email.';
+   }else{
+     document.getElementById('authErr').textContent = 'Error sending password reset email.';
+   }
+ }
+}
+
+// 5. RETURN VISIT CHECK FUNCTION (global scope, called after loadUserData() succeeds)
+async function checkReturnVisit(){
+ const user = firebase.auth().currentUser;
+ if(!user) return;
+ const uid = user.uid;
+ const today = new Date().toISOString().slice(0,10);
+ const docRef = firebase.firestore().collection('users').doc(uid);
+ try{
+   const doc = await docRef.get();
+   if(doc.exists){
+     const data = doc.data();
+     if(data.lastActive && data.lastActive !== today){
+       analytics.logEvent('return_visit');
+     }
+   }
+   await docRef.update({lastActive: today});
+ }catch(e){
+   // silently fail – analytics is best effort
+ }
+}
+
+// 6. ANALYTICS EVENT PLACEMENT NOTES (add inside existing functions)
+
+// In signup() – after successful Firestore profile write, before any UI transition:
+// analytics.logEvent('sign_up');
+
+// In finishAsSuccess() – inside the block that handles non-guest users:
+// if(!isGuest && lessonId){
+//   analytics.logEvent('lesson_complete', {lesson_id: lessonId});
+// }
+
+// 7. CALL checkReturnVisit() once after loadUserData() succeeds, before enterApp()
+// Example (in your auth state observer or init flow):
+// await loadUserData();
+// await checkReturnVisit();
+// enterApp();

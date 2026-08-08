@@ -19,14 +19,17 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
 <script>
 firebase.initializeApp({
   projectId: "speakmasri-app",
   appId: "1:219490081503:web:94829c17936bcbd005e76a",
   apiKey: "AIzaSyDa5n3n0zmW20o8Hh4PlJ2Q8N5l4bGX3C4",
   authDomain: "speakmasri-app.firebaseapp.com",
-  messagingSenderId: "219490081503"
+  messagingSenderId: "219490081503",
+  measurementId: "G-P9F5DCNMF7"
 });
+const analytics=firebase.analytics();
 </script>
 <style>
 /* ===== Pico.css theme overrides to match Nile Oasis palette ===== */
@@ -539,9 +542,13 @@ input:focus, select:focus {
       <option value="other">Other</option>
     </select>
     <div id="authErr" role="alert" style="color:var(--brick);font-weight:600;margin:8px 0"></div>
+    <div id="authMsg" role="status" style="color:var(--teal);font-weight:600;margin:8px 0"></div>
     <button class="btn" onclick="signup()">Sign Up</button>
     <div style="height:10px"></div>
     <button class="btn btn-ghost" onclick="login()">Log In</button>
+    <div style="text-align:right;margin-top:6px">
+      <button type="button" onclick="resetPassword()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>
+    </div>
     <div style="height:16px"></div>
     <button class="btn btn-ghost" style="border-style:dashed" onclick="startGuestLesson()">Try a Lesson First (No Account)</button>
   </div>
@@ -776,13 +783,16 @@ async function signup(){
   const motivation=document.getElementById("motivation").value;
   const err=document.getElementById("authErr");
   err.textContent="";
+  document.getElementById("authMsg").textContent="";
   if(!name||!email||!pass){err.textContent="Fill in all fields to sign up.";return;}
   try{
     const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
     await firebase.firestore().collection('users').doc(cred.user.uid).set({
       name,motivation,xp:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
+    analytics.logEvent('sign_up');
     await loadUserData();
+    await checkReturnVisit();
     enterApp();
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
@@ -795,14 +805,46 @@ async function login(){
   const pass=document.getElementById("pass").value;
   const err=document.getElementById("authErr");
   err.textContent="";
+  document.getElementById("authMsg").textContent="";
   try{
     await firebase.auth().signInWithEmailAndPassword(email,pass);
     await loadUserData();
+    await checkReturnVisit();
     enterApp();
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
     console.error('Login error',e);
   }
+}
+
+async function resetPassword(){
+  const email=document.getElementById("email").value.trim().toLowerCase();
+  const err=document.getElementById("authErr");
+  const msg=document.getElementById("authMsg");
+  err.textContent="";msg.textContent="";
+  if(!email){err.textContent="Enter your email above first, then tap Forgot password.";return;}
+  try{
+    await firebase.auth().sendPasswordResetEmail(email);
+    msg.textContent="Check your email for a reset link.";
+  }catch(e){
+    err.textContent=getAuthErrorMessage(e.code);
+    console.error('Reset password error',e);
+  }
+}
+
+async function checkReturnVisit(){
+  const fbUser=firebase.auth().currentUser;
+  if(!fbUser)return;
+  const today=new Date().toISOString().slice(0,10);
+  const docRef=firebase.firestore().collection('users').doc(fbUser.uid);
+  try{
+    const doc=await docRef.get();
+    const data=doc.exists?doc.data():{};
+    if(data.lastActive&&data.lastActive!==today){
+      analytics.logEvent('return_visit_day2');
+    }
+    await docRef.set({lastActive:today},{merge:true});
+  }catch(e){console.error('checkReturnVisit error',e);}
 }
 
 function startGuestLesson(){
@@ -1398,6 +1440,7 @@ async function finishAsSuccess(){
     user.progress[curLesson.id]={done:true,score:acc};
     document.getElementById("doneTitle").textContent="Lesson Complete!";
     await Promise.all([saveProgress(curLesson.id,true,acc),saveXp(user.xp)]);
+    analytics.logEvent('lesson_complete',{lesson_id:curLesson.id});
   }
   renderMission();
   document.getElementById("lesson").classList.add("hidden");
@@ -1421,6 +1464,7 @@ if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
 firebase.auth().onAuthStateChanged(async(fbUser)=>{
   if(fbUser&&(!user||user.isGuest)){
     await loadUserData();
+    await checkReturnVisit();
     enterApp();
   }
 });
