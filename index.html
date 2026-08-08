@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SpeakMasri — Learn Egyptian Arabic 🇪🇬</title>
+<title>SpeakMasri – Learn Egyptian Arabic (Masri)</title>
+<meta name="description" content="Learn Egyptian Arabic through short, scenario-based lessons. Try a lesson for free – no account needed. Phrasebook, partner phrases & register-aware practice.">
+<meta property="og:title" content="SpeakMasri – Learn Egyptian Arabic (Masri)">
+<meta property="og:description" content="Short, scenario-based lessons in Egyptian Arabic. Try one free – no account needed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://speakmasri.com/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpeakMasri – Learn Egyptian Arabic (Masri)">
+<meta name="twitter:description" content="Short, scenario-based lessons in Egyptian Arabic. Try one free – no account needed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
@@ -499,13 +507,20 @@ input:focus, select:focus {
   <!-- AUTH -->
   <div id="auth" class="center">
     <div class="logo">🫖</div>
-    <div class="brand">SpeakMasri</div>
-    <p style="color:var(--ink-soft);margin:8px 0 24px">Learn <b>Egyptian Arabic</b> 🇪🇬 the way locals really speak</p>
+    <h1 class="brand" style="margin:0">SpeakMasri</h1>
+    <p style="color:var(--ink-soft);margin:8px 0 20px;font-size:15px">Learn <b>Egyptian Arabic (Masri)</b> 🇪🇬 through short, practical lessons built around real-life situations. <strong>Try a lesson free — no account needed.</strong></p>
+    <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border-light);border-radius:var(--r-md);padding:12px 16px;margin-bottom:20px;box-shadow:var(--shadow-card)">
+      <div style="text-align:left">
+        <div class="ar" lang="ar" style="font-size:20px">شكراً</div>
+        <div class="franco">Shukran</div>
+      </div>
+      <div style="color:var(--ink-soft)">Thank you</div>
+    </div>
     <input id="name" placeholder="Name (for signup)" autocomplete="name">
     <input id="email" placeholder="Email" type="email" autocomplete="email">
     <input id="pass" placeholder="Password" type="password" autocomplete="current-password">
     <select id="motivation">
-      <option value="">Why are you learning? (for signup)</option>
+      <option value="">What's your learning goal? (optional)</option>
       <option value="partner">Egyptian partner / in-laws</option>
       <option value="traveler">Upcoming trip to Egypt</option>
       <option value="heritage">Reconnecting with heritage</option>
@@ -591,7 +606,16 @@ input:focus, select:focus {
         <div style="font-size:22px;font-weight:600;font-family:'Fraunces',serif;color:var(--teal)" id="dAcc">100%</div>Accuracy</div>
     </div>
     <div id="missionBox" style="background:var(--clay-soft);border:1.5px dashed var(--clay);border-radius:var(--r-lg);margin:16px;padding:16px;text-align:left"></div>
-    <div style="padding:0 16px"><button class="btn" onclick="finishLesson()">Continue</button></div>
+    <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px">
+      <button class="btn btn-ghost" onclick="startRehearsal()">🎙️ Rehearse This Lesson</button>
+      <button class="btn" onclick="finishLesson()">Continue</button>
+    </div>
+  </div>
+
+  <!-- REHEARSAL -->
+  <div id="rehearsal" class="hidden center">
+    <div id="rehearsal-content"></div>
+    <audio id="rehearsalPlayback" style="display:none"></audio>
   </div>
 </div>
 
@@ -1118,6 +1142,103 @@ function nextExercise(){
   document.getElementById("checkWrap").classList.remove("hidden");
   if(exIdx>=exList.length){finishAsSuccess();}
   else renderExercise();
+}
+
+/* ---------- REHEARSAL (hold-to-speak) ---------- */
+let rehearsalIdx, rehearsalPack, currentMediaStream, currentRecorder, currentAudioURL, micAvailable=true, heldDown=false;
+
+function startRehearsal(){
+  rehearsalPack=curLesson.vocab;
+  rehearsalIdx=0;
+  document.getElementById("done").classList.add("hidden");
+  document.getElementById("rehearsal").classList.remove("hidden");
+  micAvailable=true;
+  cleanupRecording();
+  renderRehearsalItem();
+}
+
+function renderRehearsalItem(){
+  const item=rehearsalPack[rehearsalIdx];
+  const content=document.getElementById("rehearsal-content");
+  content.innerHTML=`
+    <div class="ar" lang="ar" style="font-size:32px;margin-bottom:8px">${item.ar}${registerBadge(item)}</div>
+    <div class="franco">${item.franco}</div>
+    <div style="color:var(--ink-soft);margin-bottom:16px">${item.en}</div>
+    <button id="hearBtn" class="audio-btn" aria-label="Hear native pronunciation">🔊</button>
+    ${micAvailable
+      ? `<button id="recordBtn" class="btn btn-blue" style="margin-top:16px" aria-label="Hold to record yourself">🎙️ Hold to Record</button>`
+      : `<p style="color:var(--ink-soft);margin-top:16px">Mic access not available — just practice saying it out loud</p>`}
+    <div style="padding:16px"><button id="nextBtn" class="btn btn-ghost">${rehearsalIdx===rehearsalPack.length-1?'Finish':'Next'}</button></div>
+  `;
+  document.getElementById("hearBtn").onclick=()=>speak(item.ar);
+  if(micAvailable)setupRecordButton(document.getElementById("recordBtn"));
+  document.getElementById("nextBtn").onclick=()=>{
+    cleanupRecording();
+    rehearsalIdx++;
+    if(rehearsalIdx>=rehearsalPack.length){
+      content.innerHTML=`<h2>All done! 🎉</h2><p style="color:var(--ink-soft)">You've practiced the whole lesson.</p>
+        <div style="padding:16px"><button id="finishRehearsalBtn" class="btn">Back to lessons</button></div>`;
+      document.getElementById("finishRehearsalBtn").onclick=()=>{
+        document.getElementById("rehearsal").classList.add("hidden");
+        cleanupRecording();
+        finishLesson();
+      };
+    } else {
+      renderRehearsalItem();
+    }
+  };
+}
+
+function setupRecordButton(btn){
+  btn.addEventListener('mousedown',startRecording);
+  btn.addEventListener('touchstart',startRecording,{passive:false});
+  btn.addEventListener('mouseup',stopRecording);
+  btn.addEventListener('touchend',stopRecording);
+  btn.addEventListener('mouseleave',stopRecording);
+}
+
+function startRecording(e){
+  e.preventDefault();
+  heldDown=true;
+  const btn=e.currentTarget;
+  btn.textContent='🔴 Recording...';
+  navigator.mediaDevices.getUserMedia({audio:true})
+    .then(stream=>{
+      if(!heldDown){ stream.getTracks().forEach(t=>t.stop()); return; }
+      currentMediaStream=stream;
+      currentRecorder=new MediaRecorder(stream);
+      const chunks=[];
+      currentRecorder.ondataavailable=e=>chunks.push(e.data);
+      currentRecorder.onstop=()=>{
+        const blob=new Blob(chunks,{type:'audio/webm'});
+        if(currentAudioURL)URL.revokeObjectURL(currentAudioURL);
+        currentAudioURL=URL.createObjectURL(blob);
+        const audio=document.getElementById("rehearsalPlayback");
+        audio.src=currentAudioURL;
+        audio.play();
+      };
+      currentRecorder.start();
+    })
+    .catch(err=>{
+      micAvailable=false;
+      renderRehearsalItem();
+    });
+}
+
+function stopRecording(){
+  heldDown=false;
+  if(currentRecorder&&currentRecorder.state==='recording')currentRecorder.stop();
+  if(currentMediaStream){currentMediaStream.getTracks().forEach(t=>t.stop());}
+  const btn=document.getElementById("recordBtn");
+  if(btn)btn.textContent='🎙️ Hold to Record';
+}
+
+function cleanupRecording(){
+  heldDown=false;
+  if(currentRecorder&&currentRecorder.state==='recording')currentRecorder.stop();
+  if(currentMediaStream){currentMediaStream.getTracks().forEach(t=>t.stop());currentMediaStream=null;}
+  if(currentAudioURL){URL.revokeObjectURL(currentAudioURL);currentAudioURL=null;}
+  currentRecorder=null;
 }
 
 function registerBadge(v){

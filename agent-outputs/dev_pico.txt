@@ -1,0 +1,17 @@
+<!-- In <head>, BEFORE existing app's <style> block -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+
+/* At the very top of the existing <style> block, before other rules */
+:root {
+  --pico-primary: #1DA14A;
+  --pico-primary-hover: #16823A;
+  --pico-primary-background: #1DA14A;
+  --pico-primary-inverse: #ffffff;
+  --pico-background-color: #FCFBFA;
+  --pico-color: #1C2024;
+  --pico-font-family: 'Plus Jakarta Sans', sans-serif;
+  --pico-border-radius: 12px;
+  --pico-form-element-spacing-vertical: 0.5rem;
+  --pico-form-element-spacing-horizontal: 0.75rem;
+}
+body { max-width: none; margin: 0; }

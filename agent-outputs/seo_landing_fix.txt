@@ -1,0 +1,55 @@
+1. META TAGS
+```html
+<!-- Replace the current <title> tag and add these meta tags inside <head> -->
+<title>SpeakMasri – Learn Egyptian Arabic (Masri)</title>
+<meta name="description" content="Learn Egyptian Arabic through short, scenario‑based lessons. Try a lesson for free – no account needed. Phrasebook, partner phrases & register-aware practice.">
+<meta property="og:title" content="SpeakMasri – Learn Egyptian Arabic (Masri)">
+<meta property="og:description" content="Short, scenario‑based lessons in Egyptian Arabic. Try one free – no account needed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://speakmasri.com/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpeakMasri – Learn Egyptian Arabic (Masri)">
+<meta name="twitter:description" content="Short, scenario‑based lessons in Egyptian Arabic. Try one free – no account needed.">
+```
+
+2. LANDING H1/COPY
+```html
+<!-- Replace the existing <div class="brand">SpeakMasri</div> and the tagline paragraph with this block -->
+<div class="brand">
+  <h1>SpeakMasri</h1>
+  <p class="tagline">Learn Egyptian Arabic (Masri) through short, practical lessons built around real‑life situations. <strong>Try a lesson free – no account needed.</strong> Access a phrasebook, partner‑contributed phrases, and register‑aware tagging to suit any context.</p>
+</div>
+```
+
+3. MOTIVATION COPY FIX
+```html
+<option value="">What’s your learning goal? (optional)</option>
+```
+
+4. SAMPLE PHRASE SNIPPET
+```html
+<div class="card sample-phrase">
+  <div class="phrase-en">Thank you</div>
+  <div class="phrase-ar">شكراً</div>
+  <div class="phrase-franco">Shukran</div>
+</div>
+```
+
+5. ROBOTS.TXT
+```
+User-agent: *
+Allow: /
+Sitemap: https://speakmasri.com/sitemap.xml
+```
+
+6. SITEMAP.XML
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://speakmasri.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
+```

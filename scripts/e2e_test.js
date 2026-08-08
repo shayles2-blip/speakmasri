@@ -7,8 +7,9 @@ const VOCAB_LOOKUP = {
 };
 
 (async () => {
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  const browser = await chromium.launch({ args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'] });
+  const context = await browser.newContext({ permissions: ['microphone'] });
+  const page = await context.newPage();
   const errors = [];
   page.on('console', msg => { if (msg.type() === 'error') { errors.push(msg.text()); console.log('  >> CONSOLE_ERROR at this point:', msg.text()); } });
   page.on('pageerror', err => {
@@ -106,7 +107,29 @@ const VOCAB_LOOKUP = {
   const missionBtnText = await page.locator('#missionBtn').textContent();
   console.log('MISSION_BTN_AFTER_CLICK:', missionBtnText);
 
-  await page.click('#done button:has-text("Continue")');
+  // Rehearsal mode
+  await page.click('button:has-text("Rehearse This Lesson")');
+  await page.waitForTimeout(300);
+  const rehearsalClass = (await page.locator('#rehearsal').getAttribute('class')) || '';
+  console.log('REHEARSAL_VISIBLE:', !rehearsalClass.includes('hidden'));
+  await page.screenshot({ path: '/tmp/e2e_rehearsal.png' });
+  const recordBtn = page.locator('#recordBtn');
+  if (await recordBtn.count()) {
+    await recordBtn.dispatchEvent('mousedown');
+    await page.waitForTimeout(500);
+    await recordBtn.dispatchEvent('mouseup');
+    await page.waitForTimeout(500);
+    console.log('REHEARSAL_RECORD_OK');
+  } else {
+    console.log('REHEARSAL_MIC_FALLBACK_SHOWN');
+  }
+  for (let i = 0; i < 10; i++) {
+    const nextBtn = page.locator('#nextBtn, #finishRehearsalBtn');
+    if (await nextBtn.count() === 0) break;
+    await nextBtn.first().click();
+    await page.waitForTimeout(300);
+    if (await page.locator('#main:not(.hidden)').count()) break;
+  }
   await page.waitForSelector('#main:not(.hidden)', { timeout: 5000 });
   console.log('BACK_TO_MAIN');
 
