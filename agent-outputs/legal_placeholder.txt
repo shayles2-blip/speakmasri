@@ -1,0 +1,118 @@
+=== PRIVACY POLICY ===
+Last updated: [INSERT DATE]
+
+SpeakMasri (“SpeakMasri,” “we,” “us,” or “our”) is a small web app made and operated by a single independent developer. This Privacy Policy explains what information we collect and how we use it.
+
+1) Information we collect
+A) Account information (Firebase Authentication)
+- Name (if you provide one)
+- Email address
+- Password (handled by Firebase Authentication). We do not store your raw password ourselves.
+
+B) Learning data (Firebase Firestore)
+- Lesson progress, XP, milestones, completion history
+- Any custom phrases or notes you choose to save in the app
+
+C) Basic analytics (Firebase Analytics)
+We collect basic usage events to understand how the app is used, such as:
+- Sign-ups
+- Lesson completion
+- Return visits / session activity
+This is used to improve the app. We do not use ad networks or third‑party advertising trackers.
+
+2) Audio and Text-to-Speech
+SpeakMasri uses Google Cloud Text-to-Speech to generate pronunciation audio. We send the text needed to generate the audio to this service.
+- We do not collect voice recordings from you.
+- We do not ask for or store microphone audio.
+
+3) How we use information
+We use your information to:
+- Create and manage your account
+- Save your learning progress and show it back to you
+- Provide the core learning features (including generating audio)
+- Understand basic usage trends and improve the app
+- Respond to support requests
+
+4) What we do NOT do
+- We do not sell your personal data.
+- We do not run ads or share your data with ad networks.
+- We do not use “third-party trackers” beyond the services described above (Firebase and Google Cloud used to run the app).
+
+5) Sharing and service providers
+We use these service providers to operate SpeakMasri:
+- Google Firebase (Authentication, Firestore, Analytics)
+- Google Cloud Text-to-Speech
+These providers process data on our behalf so the app can function.
+
+6) Data retention
+We keep your account information and learning data while your account is active. We may retain limited logs/records as needed for security, debugging, and legal compliance.
+
+7) Account deletion
+You can request deletion of your account and associated learning data by emailing: support@speakmasri.com
+We may ask you to verify ownership of the account (for example, by emailing us from the account’s email address). Deletion may take a reasonable amount of time to complete.
+
+8) Security
+We use standard security measures provided by our infrastructure (Firebase/Google Cloud) and reasonable precautions to protect your data. No method of storage or transmission is 100% secure.
+
+9) Children
+SpeakMasri is not intended for children under 13. If you believe a child has provided personal information, contact us and we will delete it.
+
+10) Changes
+We may update this Privacy Policy from time to time. If we make changes, we will update the “Last updated” date above and may provide additional notice in the app or on the website.
+
+11) Contact
+Questions or requests: support@speakmasri.com
+
+
+=== TERMS OF SERVICE ===
+Last updated: [INSERT DATE]
+
+These Terms of Service (“Terms”) govern your use of SpeakMasri (speakmasri.com) (“SpeakMasri,” “we,” “us,” or “our”). By using the site or creating an account, you agree to these Terms.
+
+1) What SpeakMasri is
+SpeakMasri is a free web app that teaches Egyptian Arabic through short lessons. It is created and operated by a single independent developer (not a corporation).
+
+2) Eligibility
+You must be able to form a legally binding agreement to use SpeakMasri. If you are under 13, do not use the app.
+
+3) Your account
+- You are responsible for maintaining the confidentiality of your login credentials.
+- You agree to provide accurate information and keep your email address up to date.
+- You are responsible for activity that occurs under your account.
+
+4) Acceptable use
+You agree not to:
+- Use the service in a way that breaks any law or regulation
+- Attempt to hack, disrupt, or overload the service
+- Reverse engineer or scrape the site in a way that harms the service
+- Upload or store content (including “custom phrases”) that is illegal, abusive, or infringes someone else’s rights
+
+5) Your content (custom phrases/notes)
+If you enter custom phrases or notes, you retain ownership of your content. You give us permission to host, store, and process that content only as needed to operate the service (for example, saving your progress and generating pronunciation audio for provided text).
+
+6) Intellectual property
+The SpeakMasri site, lessons, text, design, and software are owned by SpeakMasri or its licensors and are protected by applicable laws. You may not copy, redistribute, or sell the lessons or content except as allowed by law or with written permission.
+
+7) Free service; changes
+SpeakMasri is currently free and does not process payments. We may add, remove, or change features at any time. We may also introduce paid features in the future; if we do, we will clearly communicate terms before you are charged.
+
+8) Third-party services
+SpeakMasri relies on third-party services (including Firebase and Google Cloud Text-to-Speech) to function. Your use of SpeakMasri may be subject to those providers’ applicable terms as they relate to their services.
+
+9) Disclaimers
+SpeakMasri is provided “as is” and “as available.” We do not guarantee the service will be uninterrupted, error-free, or that it will meet your needs. Lessons are for educational purposes and are not professional language certification.
+
+10) Limitation of liability
+To the maximum extent allowed by law, SpeakMasri will not be liable for indirect, incidental, special, consequential, or punitive damages, or any loss of data, profits, or goodwill arising from your use of the service. Our total liability for any claim will not exceed the amount you paid to use the service (currently $0).
+
+11) Termination
+You can stop using SpeakMasri at any time. We may suspend or terminate access if we reasonably believe you violated these Terms or if needed to protect the service or other users.
+
+12) Account deletion
+You can request account deletion by emailing support@speakmasri.com. See the Privacy Policy for details.
+
+13) Changes to these Terms
+We may update these Terms from time to time. We will update the “Last updated” date above and may provide additional notice in the app or on the website. Continued use after changes means you accept the updated Terms.
+
+14) Contact
+Questions about these Terms: support@speakmasri.com
