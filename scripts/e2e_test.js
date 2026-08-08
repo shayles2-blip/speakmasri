@@ -32,7 +32,7 @@ const VOCAB_LOOKUP = {
   console.log('SIGNUP_OK');
 
   // Start first lesson
-  const firstNode = await page.locator('.node').first();
+  const firstNode = await page.locator('.lesson-row.unlocked').first();
   await firstNode.click();
   await page.waitForSelector('#lesson:not(.hidden)', { timeout: 5000 });
   await page.screenshot({ path: '/tmp/e2e_03_lesson_start.png' });

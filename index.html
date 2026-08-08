@@ -6,105 +6,123 @@
 <title>SpeakMasri — Learn Egyptian Arabic 🇪🇬</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600;700&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
 <style>
-/* ===== AGENT 3: DESIGN SYSTEM ===== */
-:root{--green:#58cc02;--green-d:#58a700;--blue:#1cb0f6;--red:#ff4b4b;
---yellow:#ffc800;--bg:#fff;--text:#3c3c3c;--border:#e5e5e5;--r:16px;}
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito','Segoe UI',sans-serif;}
-body{background:#f7f7f7;color:var(--text);}
+/* ===== DESIGN SYSTEM — warm, editorial, rooted in the subject (not a gamification-app palette) ===== */
+:root{
+  --ink:#2b2320; --ink-soft:#6e5f54; --paper:#faf5ee; --surface:#ffffff; --line:#e9decf;
+  --teal:#12595c; --teal-deep:#0a3c3e; --teal-soft:#e2eeee;
+  --clay:#c1633d; --clay-deep:#9c4c2e; --clay-soft:#f5e2d8;
+  --gold:#b8863a; --gold-soft:#f4e8cb;
+  --sage:#5c8368; --sage-soft:#e6efe6;
+  --brick:#af4438; --brick-soft:#f6e2df;
+  --r:14px; --r-lg:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',-apple-system,sans-serif;}
+body{background:var(--paper);color:var(--ink);}
 .hidden{display:none!important;}
-.app{max-width:480px;margin:0 auto;min-height:100dvh;background:#fff;
-position:relative;padding-bottom:70px;}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;background:var(--surface);
+position:relative;padding-bottom:70px;box-shadow:0 0 60px rgba(43,35,32,.06);}
 .ar{font-family:'Cairo','Tajawal',sans-serif;direction:rtl;unicode-bidi:isolate;}
-:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
-.btn{background:#46a302;color:#fff;border:none;border-radius:var(--r);
-padding:14px 24px;font-weight:800;font-size:16px;box-shadow:0 4px 0 var(--green-d);
-cursor:pointer;text-transform:uppercase;width:100%;transition:.08s;}
-.btn:active{transform:translateY(4px);box-shadow:none;}
-.btn:disabled{background:#e5e5e5;color:#afafaf;box-shadow:0 4px 0 #cfcfcf;cursor:not-allowed;}
-.btn-blue{background:var(--blue);box-shadow:0 4px 0 #1899d6;}
-.btn-ghost{background:#fff;color:var(--blue);border:2px solid var(--border);box-shadow:0 2px 0 var(--border);}
-.top{display:flex;justify-content:space-between;align-items:center;padding:16px;
-border-bottom:2px solid var(--border);font-weight:800;}
-.stat{display:flex;gap:4px;align-items:center;font-size:18px;}
-input{width:100%;padding:14px;border:2px solid var(--border);border-radius:12px;
-font-size:16px;margin:8px 0;}
-input:focus{outline:none;border-color:var(--blue);}
-h1{font-size:28px;margin:16px;}h2{margin:16px;font-size:22px;}
+h1,h2,.serif{font-family:'Fraunces',Georgia,serif;}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.btn{background:var(--teal);color:#fff;border:none;border-radius:var(--r);
+padding:15px 24px;font-weight:600;font-size:16px;letter-spacing:.01em;
+box-shadow:0 1px 2px rgba(10,60,62,.15);cursor:pointer;width:100%;
+transition:transform .12s ease,box-shadow .12s ease,opacity .12s ease;}
+.btn:hover{box-shadow:0 3px 10px rgba(10,60,62,.22);}
+.btn:active{transform:scale(.97);opacity:.92;}
+.btn:disabled{background:#e3dccf;color:#a89b8c;box-shadow:none;cursor:not-allowed;transform:none;}
+.btn-blue{background:var(--clay);box-shadow:0 1px 2px rgba(156,76,46,.2);}
+.btn-blue:hover{box-shadow:0 3px 10px rgba(156,76,46,.25);}
+.btn-ghost{background:transparent;color:var(--teal);border:1.5px solid var(--line);box-shadow:none;}
+.btn-ghost:hover{background:var(--teal-soft);}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;
+border-bottom:1px solid var(--line);font-weight:600;}
+.stat{display:flex;gap:6px;align-items:center;font-size:16px;color:var(--ink-soft);}
+input,select{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:var(--r);
+font-size:16px;margin:8px 0;background:var(--surface);color:var(--ink);}
+input:focus,select:focus{outline:none;border-color:var(--teal);}
+h1{font-size:30px;margin:16px;font-weight:600;}
+h2{margin:20px 20px 8px;font-size:22px;font-weight:600;}
 .center{text-align:center;padding:24px;}
-.logo{font-size:48px;text-align:center;margin-top:40px;}
-.brand{color:var(--green);font-weight:900;font-size:32px;text-align:center;}
-/* Path */
-.unit-head{background:var(--green);color:#fff;padding:16px;border-radius:var(--r);
-margin:16px;font-weight:800;}
-.path{display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0;}
-.node{width:70px;height:70px;border-radius:50%;background:var(--green);color:#fff;
-display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;
-box-shadow:0 6px 0 var(--green-d);border:none;transition:.08s;}
-.node:active{transform:translateY(6px);box-shadow:none;}
-.node.locked{background:#e5e5e5;box-shadow:0 6px 0 #cfcfcf;cursor:not-allowed;}
-.node.done{background:var(--yellow);box-shadow:0 6px 0 #e0a800;}
-.path-item{display:flex;flex-direction:column;align-items:center;}
-.path-item.o2{transform:translateX(40px);}.path-item.o3{transform:translateX(-40px);}
-.ltitle{font-size:12px;font-weight:700;margin-top:4px;color:#666;text-align:center;width:120px;}
+.logo{font-size:44px;text-align:center;margin-top:36px;}
+.brand{color:var(--teal-deep);font-weight:600;font-size:30px;text-align:center;font-family:'Fraunces',serif;}
+/* Scenario list */
+.scenario-card{margin:14px 16px;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--surface);}
+.scenario-head{display:flex;align-items:center;gap:12px;padding:16px 18px;background:var(--teal-soft);}
+.scenario-icon{font-size:22px;}
+.scenario-title{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--teal-deep);flex:1;}
+.scenario-progress{font-size:12px;color:var(--ink-soft);font-weight:500;}
+.lesson-row{display:flex;align-items:center;gap:12px;padding:14px 18px;border-top:1px solid var(--line);
+cursor:pointer;background:none;border-left:none;border-right:none;border-bottom:none;width:100%;text-align:left;
+transition:background .1s ease;}
+.lesson-row:hover:not(:disabled){background:var(--paper);}
+.lesson-row:disabled{cursor:not-allowed;color:#b8ab9c;}
+.lesson-badge{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+font-size:14px;flex-shrink:0;background:var(--line);color:var(--ink-soft);}
+.lesson-row.done .lesson-badge{background:var(--gold-soft);color:var(--gold);}
+.lesson-row.unlocked .lesson-badge{background:var(--teal);color:#fff;}
+.lesson-name{font-size:15px;font-weight:500;color:var(--ink);}
+.lesson-row:disabled .lesson-name{color:#b8ab9c;}
 /* Exercise */
-.q{font-size:22px;font-weight:800;margin:24px 16px 8px;}
-.opt{display:block;width:calc(100% - 32px);margin:8px 16px;padding:18px;
-border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;
-font-size:20px;text-align:center;transition:.1s;box-shadow:0 2px 0 var(--border);}
-.opt.sel{border-color:var(--blue);background:#ddf4ff;}
-.opt.correct{border-color:var(--green);background:#d7ffb8;}
-.opt.wrong{border-color:var(--red);background:#ffdfe0;}
-.franco{color:#6b6b6b;font-size:15px;font-style:normal;}
-.progbar{height:16px;background:var(--border);border-radius:8px;flex:1;margin:0 12px;overflow:hidden;}
-.progfill{height:100%;background:var(--green);border-radius:8px;transition:.3s;}
+.q{font-size:21px;font-weight:600;margin:24px 20px 10px;font-family:'Fraunces',serif;color:var(--ink);}
+.opt{display:block;width:calc(100% - 32px);margin:8px 16px;padding:17px;
+border:1.5px solid var(--line);border-radius:var(--r);background:var(--surface);cursor:pointer;
+font-size:19px;text-align:center;transition:border-color .12s ease,background .12s ease;}
+.opt.sel{border-color:var(--teal);background:var(--teal-soft);}
+.opt.correct{border-color:var(--sage);background:var(--sage-soft);}
+.opt.wrong{border-color:var(--brick);background:var(--brick-soft);}
+.franco{color:var(--ink-soft);font-size:14px;}
+.progbar{height:8px;background:var(--line);border-radius:8px;flex:1;margin:0 14px;overflow:hidden;}
+.progfill{height:100%;background:var(--clay);border-radius:8px;transition:.3s;}
 #lesson{padding-bottom:96px;}
 #checkWrap{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;
-padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
-background:#fff;border-top:2px solid var(--border);z-index:6;}
+padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
+background:var(--surface);border-top:1px solid var(--line);z-index:6;}
 .feedback{position:fixed;bottom:80px;left:0;right:0;max-width:480px;margin:0 auto;
-padding:20px 16px;border-top-left-radius:20px;border-top-right-radius:20px;z-index:5;}
-.fb-ok{background:#d7ffb8;}.fb-no{background:#ffdfe0;}
-.fb-title{font-weight:900;font-size:20px;margin-bottom:8px;}
-.match-cols{display:flex;gap:12px;padding:16px;}
+padding:20px;border-top-left-radius:var(--r-lg);border-top-right-radius:var(--r-lg);z-index:5;}
+.fb-ok{background:var(--sage-soft);}.fb-no{background:var(--brick-soft);}
+.fb-title{font-weight:600;font-size:19px;margin-bottom:6px;font-family:'Fraunces',serif;}
+.match-cols{display:flex;gap:12px;padding:16px 20px;}
 .match-col{flex:1;display:flex;flex-direction:column;gap:10px;}
 /* Nav */
 .nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;
-display:flex;background:#fff;border-top:2px solid var(--border);
+display:flex;background:var(--surface);border-top:1px solid var(--line);
 padding-bottom:env(safe-area-inset-bottom);}
-.nav button{flex:1;background:none;border:none;padding:14px;font-size:24px;cursor:pointer;
-border-top:3px solid transparent;}
-.nav button.active{border-top-color:var(--blue);}
-.lb-row{display:flex;justify-content:space-between;padding:14px 16px;
-border-bottom:1px solid var(--border);font-weight:700;}
-.rank{color:#b98600;font-weight:900;width:30px;}
-.confetti{font-size:64px;text-align:center;margin:20px;}
-.audio-btn{background:var(--blue);width:80px;height:80px;border-radius:50%;font-size:32px;
-color:#fff;border:none;box-shadow:0 4px 0 #1899d6;cursor:pointer;margin:16px auto;display:block;}
-.audio-btn:disabled{background:#cfcfcf;box-shadow:0 4px 0 #b5b5b5;cursor:not-allowed;}
-.fillwrap{padding:16px;}
-.fillwrap input{font-size:20px;text-align:center;}
+.nav button{flex:1;background:none;border:none;padding:14px;font-size:22px;cursor:pointer;
+border-top:2px solid transparent;opacity:.55;transition:opacity .12s ease;}
+.nav button.active{border-top-color:var(--clay);opacity:1;}
+.confetti{font-size:56px;text-align:center;margin:20px;}
+.audio-btn{background:var(--clay);width:72px;height:72px;border-radius:50%;font-size:28px;
+color:#fff;border:none;box-shadow:0 2px 8px rgba(156,76,46,.25);cursor:pointer;margin:16px auto;display:block;
+transition:transform .12s ease;}
+.audio-btn:active{transform:scale(.94);}
+.audio-btn:disabled{background:#d8cfc2;box-shadow:none;cursor:not-allowed;}
+.fillwrap{padding:16px 20px;}
+.fillwrap input{font-size:19px;text-align:center;}
+#auth,#main,#lesson,#done{animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
 <div class="app">
   <!-- AUTH -->
   <div id="auth" class="center">
-    <div class="logo">🦉</div>
+    <div class="logo">🫖</div>
     <div class="brand">SpeakMasri</div>
-    <p style="color:#777;margin:8px 0 24px">Learn <b>Egyptian Arabic</b> 🇪🇬 the way locals really speak</p>
+    <p style="color:var(--ink-soft);margin:8px 0 24px">Learn <b>Egyptian Arabic</b> 🇪🇬 the way locals really speak</p>
     <input id="name" placeholder="Name (for signup)" autocomplete="name">
     <input id="email" placeholder="Email" type="email" autocomplete="email">
     <input id="pass" placeholder="Password" type="password" autocomplete="current-password">
-    <select id="motivation" style="width:100%;padding:14px;border:2px solid var(--border);border-radius:12px;font-size:16px;margin:8px 0;color:var(--text)">
+    <select id="motivation">
       <option value="">Why are you learning? (for signup)</option>
       <option value="partner">Egyptian partner / in-laws</option>
       <option value="traveler">Upcoming trip to Egypt</option>
       <option value="heritage">Reconnecting with heritage</option>
       <option value="other">Other</option>
     </select>
-    <div id="authErr" role="alert" style="color:var(--red);font-weight:700;margin:8px 0"></div>
+    <div id="authErr" role="alert" style="color:var(--brick);font-weight:600;margin:8px 0"></div>
     <button class="btn" onclick="signup()">Sign Up</button>
     <div style="height:10px"></div>
     <button class="btn btn-ghost" onclick="login()">Log In</button>
@@ -116,28 +134,28 @@ color:#fff;border:none;box-shadow:0 4px 0 #1899d6;cursor:pointer;margin:16px aut
   <div id="main" class="hidden">
     <div class="top">
       <div class="stat">💬 <span id="milestoneCount">0</span> said</div>
-      <div class="stat" style="color:var(--yellow)">⭐ <span id="xp">0</span></div>
+      <div class="stat" style="color:var(--gold)">⭐ <span id="xp">0</span></div>
     </div>
     <!-- LEARN -->
     <div id="learn"></div>
     <!-- PHRASEBOOK -->
     <div id="phrasebook" class="hidden">
       <h2>📖 Phrasebook</h2>
-      <p style="padding:0 16px 12px;color:#777">Everything you've unlocked so far — pull this up mid-conversation.</p>
+      <p style="padding:0 16px 12px;color:var(--ink-soft)">Everything you've unlocked so far — pull this up mid-conversation.</p>
       <div id="pbList"></div>
     </div>
     <!-- PROFILE -->
     <div id="profile" class="hidden center">
-      <div class="logo">🦉</div>
+      <div class="logo">🫖</div>
       <h2 id="pName"></h2>
-      <p style="color:#777" id="pEmail"></p>
+      <p style="color:var(--ink-soft)" id="pEmail"></p>
       <div style="display:flex;justify-content:space-around;margin:24px 0">
-        <div><div style="font-size:28px;font-weight:900;color:var(--yellow)" id="pXp">0</div>Total XP</div>
-        <div><div style="font-size:28px;font-weight:900;color:var(--green)" id="pMilestones">0</div>Phrases Said</div>
+        <div><div style="font-size:28px;font-weight:600;font-family:'Fraunces',serif;color:var(--gold)" id="pXp">0</div>Total XP</div>
+        <div><div style="font-size:28px;font-weight:600;font-family:'Fraunces',serif;color:var(--sage)" id="pMilestones">0</div>Phrases Said</div>
       </div>
       <div style="text-align:left;padding:0 16px">
         <div style="font-weight:800;margin-bottom:8px">Your moments</div>
-        <div id="milestoneLog" style="color:#555;font-size:14px"></div>
+        <div id="milestoneLog" style="color:var(--ink-soft);font-size:14px"></div>
       </div>
       <div style="height:16px"></div>
       <button class="btn btn-ghost" onclick="logout()">Log Out</button>
@@ -165,12 +183,12 @@ color:#fff;border:none;box-shadow:0 4px 0 #1899d6;cursor:pointer;margin:16px aut
     <div class="confetti">🎉</div>
     <h1 id="doneTitle">Lesson Complete!</h1>
     <div style="display:flex;justify-content:space-around;margin:24px 0">
-      <div style="background:#fff8dc;padding:16px;border-radius:16px;border:2px solid var(--yellow)">
-        <div style="font-size:24px;font-weight:900;color:var(--yellow)" id="dXp">+10</div>XP Earned</div>
-      <div style="background:#e0f7ff;padding:16px;border-radius:16px;border:2px solid var(--blue)">
-        <div style="font-size:24px;font-weight:900;color:var(--blue)" id="dAcc">100%</div>Accuracy</div>
+      <div style="background:var(--gold-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--gold)">
+        <div style="font-size:22px;font-weight:600;font-family:'Fraunces',serif;color:var(--gold)" id="dXp">+10</div>XP Earned</div>
+      <div style="background:var(--teal-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--teal)">
+        <div style="font-size:22px;font-weight:600;font-family:'Fraunces',serif;color:var(--teal)" id="dAcc">100%</div>Accuracy</div>
     </div>
-    <div id="missionBox" style="background:#f0fff0;border:2px dashed var(--green);border-radius:16px;margin:16px;padding:16px;text-align:left"></div>
+    <div id="missionBox" style="background:var(--clay-soft);border:1.5px dashed var(--clay);border-radius:var(--r-lg);margin:16px;padding:16px;text-align:left"></div>
     <div style="padding:0 16px"><button class="btn" onclick="finishLesson()">Continue</button></div>
   </div>
 </div>
@@ -391,33 +409,35 @@ function isLessonUnlocked(uIdx,lIdx){
   return prev?isLessonDone(prev.id):true;
 }
 
+const SCENARIO_ICONS={u0:"💬",u1:"🤝",u2:"❤️",u3:"🎉",u4:"🚕",u5:"🍲"};
+
 function renderPath(){
   const el=document.getElementById("learn");
   el.innerHTML="";
   COURSE.units.forEach((u,ui)=>{
+    const card=document.createElement("div");
+    card.className="scenario-card";
+
+    const doneCount=u.lessons.filter(l=>isLessonDone(l.id)).length;
     const head=document.createElement("div");
-    head.className="unit-head";
-    head.textContent=u.title;
-    el.appendChild(head);
-    const path=document.createElement("div");
-    path.className="path";
+    head.className="scenario-head";
+    head.innerHTML=`<span class="scenario-icon">${SCENARIO_ICONS[u.id]||"📍"}</span>
+      <span class="scenario-title">${u.title.replace(/^Scenario:\s*/,"")}</span>
+      <span class="scenario-progress">${doneCount}/${u.lessons.length}</span>`;
+    card.appendChild(head);
+
     u.lessons.forEach((l,li)=>{
-      const wrap=document.createElement("div");
-      wrap.style.textAlign="center";
       const unlocked=isLessonUnlocked(ui,li);
       const done=isLessonDone(l.id);
-      const node=document.createElement("button");
-      node.className="node "+(done?"done":(unlocked?"":"locked"))+" o"+((li%3)+1);
-      node.textContent=done?"★":(unlocked?"▶":"🔒");
-      node.onclick=()=>{if(unlocked)startLesson(l);};
-      wrap.appendChild(node);
-      const t=document.createElement("div");
-      t.className="ltitle";
-      t.textContent=l.title;
-      wrap.appendChild(t);
-      path.appendChild(wrap);
+      const row=document.createElement("button");
+      row.className="lesson-row "+(done?"done":(unlocked?"unlocked":""));
+      row.disabled=!unlocked;
+      row.innerHTML=`<span class="lesson-badge">${done?"✓":(unlocked?(li+1):"🔒")}</span>
+        <span class="lesson-name">${l.title}</span>`;
+      row.onclick=()=>{if(unlocked)startLesson(l);};
+      card.appendChild(row);
     });
-    el.appendChild(path);
+    el.appendChild(card);
   });
 }
 
@@ -430,12 +450,12 @@ function renderProfile(){
   document.getElementById("pMilestones").textContent=milestones.length;
   const log=document.getElementById("milestoneLog");
   if(!milestones.length){
-    log.innerHTML='<p style="color:#999">No moments yet — finish a lesson and try the mission tonight.</p>';
+    log.innerHTML='<p style="color:var(--ink-soft)">No moments yet — finish a lesson and try the mission tonight.</p>';
   } else {
     log.innerHTML=milestones.slice().reverse().slice(0,20).map(m=>
-      `<div style="padding:8px 0;border-bottom:1px solid var(--border)">
+      `<div style="padding:8px 0;border-bottom:1px solid var(--line)">
         <span class="ar" lang="ar">${m.ar}</span> <span class="franco">(${m.franco})</span>
-        <div style="color:#999;font-size:12px">${m.date}</div>
+        <div style="color:var(--ink-soft);font-size:12px">${m.date}</div>
       </div>`
     ).join("");
   }
@@ -450,17 +470,17 @@ function renderPhrasebook(){
   }));
   list.innerHTML="";
   if(!learned.length){
-    list.innerHTML='<p style="padding:16px;color:#777">Nothing unlocked yet — finish your first lesson.</p>';
+    list.innerHTML='<p style="padding:16px;color:var(--ink-soft)">Nothing unlocked yet — finish your first lesson.</p>';
     return;
   }
   learned.forEach(v=>{
     const row=document.createElement("div");
-    row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)";
+    row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)";
     row.innerHTML=`
       <div>
         <div class="ar" lang="ar" style="font-size:20px">${v.ar}</div>
         <div class="franco">${v.franco}</div>
-        <div style="color:#555;font-size:14px">${v.en}</div>
+        <div style="color:var(--ink-soft);font-size:14px">${v.en}</div>
       </div>`;
     const btn=document.createElement("button");
     btn.className="audio-btn";
@@ -565,7 +585,7 @@ function renderExercise(){
       audioBtn.disabled=true;
       audioBtn.title="Audio not supported on this device";
       const note=document.createElement("div");
-      note.style.cssText="text-align:center;color:#999;font-size:13px";
+      note.style.cssText="text-align:center;color:var(--ink-soft);font-size:13px";
       note.textContent="🔇 Audio not supported here — pick from the options below";
       area.appendChild(audioBtn);area.appendChild(note);
     } else {
@@ -583,7 +603,7 @@ function renderExercise(){
     const q=document.createElement("div");q.className="q";q.textContent="Type it in Franco-Arabic";
     area.appendChild(q);
     const sub=document.createElement("div");sub.style.padding="0 16px";
-    sub.innerHTML=`<div class="ar" lang="ar" style="font-size:26px">${ex.ar}</div><div style="color:#777;margin-top:4px">${ex.q}</div>`;
+    sub.innerHTML=`<div class="ar" lang="ar" style="font-size:26px">${ex.ar}</div><div style="color:var(--ink-soft);margin-top:4px">${ex.q}</div>`;
     area.appendChild(sub);
     const fw=document.createElement("div");fw.className="fillwrap";
     const inp=document.createElement("input");
