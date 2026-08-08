@@ -1,0 +1,195 @@
+```sql
+-- Ensure the uuid-ossp extension is available (commonly pre-installed in Supabase)
+create extension if not exists "uuid-ossp";
+
+-- -------------------------------------------------------------------
+-- 1. Tables
+-- -------------------------------------------------------------------
+
+-- profiles table
+create table if not exists public.profiles (
+    id uuid primary key references auth.users on delete cascade,
+    name text,
+    motivation text,
+    xp int default 0,
+    created_at timestamptz default timezone('utc'::text, now())
+);
+
+-- user_progress table
+create table if not exists public.user_progress (
+    user_id uuid references public.profiles on delete cascade,
+    lesson_id text not null,
+    done boolean default false,
+    score int default 0,
+    primary key (user_id, lesson_id)
+);
+
+-- user_milestones table
+create table if not exists public.user_milestones (
+    id bigserial primary key,
+    user_id uuid references public.profiles on delete cascade not null,
+    ar text,
+    franco text,
+    achieved_at date default current_date
+);
+
+-- custom_phrases table
+create table if not exists public.custom_phrases (
+    id bigserial primary key,
+    user_id uuid references public.profiles on delete cascade not null,
+    en text,
+    ar text,
+    franco text,
+    source text default 'partner',
+    created_at timestamptz default timezone('utc'::text, now())
+);
+
+-- -------------------------------------------------------------------
+-- 2. Enable Row Level Security on all tables
+-- -------------------------------------------------------------------
+alter table if exists public.profiles enable row level security;
+alter table if exists public.user_progress enable row level security;
+alter table if exists public.user_milestones enable row level security;
+alter table if exists public.custom_phrases enable row level security;
+
+-- -------------------------------------------------------------------
+-- 3. RLS Policies for profiles
+-- -------------------------------------------------------------------
+
+-- profiles: SELECT
+drop policy if exists "Users can view own profile" on public.profiles;
+create policy "Users can view own profile"
+    on public.profiles for select
+    using (auth.uid() = id);
+
+-- profiles: INSERT (primarily handled by trigger, but allow if needed)
+drop policy if exists "Users can insert own profile" on public.profiles;
+create policy "Users can insert own profile"
+    on public.profiles for insert
+    with check (auth.uid() = id);
+
+-- profiles: UPDATE
+drop policy if exists "Users can update own profile" on public.profiles;
+create policy "Users can update own profile"
+    on public.profiles for update
+    using (auth.uid() = id)
+    with check (auth.uid() = id);
+
+-- profiles: DELETE
+drop policy if exists "Users can delete own profile" on public.profiles;
+create policy "Users can delete own profile"
+    on public.profiles for delete
+    using (auth.uid() = id);
+
+-- -------------------------------------------------------------------
+-- 4. RLS Policies for user_progress
+-- -------------------------------------------------------------------
+
+-- user_progress: SELECT
+drop policy if exists "Users can view own progress" on public.user_progress;
+create policy "Users can view own progress"
+    on public.user_progress for select
+    using (auth.uid() = user_id);
+
+-- user_progress: INSERT
+drop policy if exists "Users can insert own progress" on public.user_progress;
+create policy "Users can insert own progress"
+    on public.user_progress for insert
+    with check (auth.uid() = user_id);
+
+-- user_progress: UPDATE
+drop policy if exists "Users can update own progress" on public.user_progress;
+create policy "Users can update own progress"
+    on public.user_progress for update
+    using (auth.uid() = user_id)
+    with check (auth.uid() = user_id);
+
+-- user_progress: DELETE
+drop policy if exists "Users can delete own progress" on public.user_progress;
+create policy "Users can delete own progress"
+    on public.user_progress for delete
+    using (auth.uid() = user_id);
+
+-- -------------------------------------------------------------------
+-- 5. RLS Policies for user_milestones
+-- -------------------------------------------------------------------
+
+-- user_milestones: SELECT
+drop policy if exists "Users can view own milestones" on public.user_milestones;
+create policy "Users can view own milestones"
+    on public.user_milestones for select
+    using (auth.uid() = user_id);
+
+-- user_milestones: INSERT
+drop policy if exists "Users can insert own milestones" on public.user_milestones;
+create policy "Users can insert own milestones"
+    on public.user_milestones for insert
+    with check (auth.uid() = user_id);
+
+-- user_milestones: UPDATE
+drop policy if exists "Users can update own milestones" on public.user_milestones;
+create policy "Users can update own milestones"
+    on public.user_milestones for update
+    using (auth.uid() = user_id)
+    with check (auth.uid() = user_id);
+
+-- user_milestones: DELETE
+drop policy if exists "Users can delete own milestones" on public.user_milestones;
+create policy "Users can delete own milestones"
+    on public.user_milestones for delete
+    using (auth.uid() = user_id);
+
+-- -------------------------------------------------------------------
+-- 6. RLS Policies for custom_phrases
+-- -------------------------------------------------------------------
+
+-- custom_phrases: SELECT
+drop policy if exists "Users can view own custom phrases" on public.custom_phrases;
+create policy "Users can view own custom phrases"
+    on public.custom_phrases for select
+    using (auth.uid() = user_id);
+
+-- custom_phrases: INSERT
+drop policy if exists "Users can insert own custom phrases" on public.custom_phrases;
+create policy "Users can insert own custom phrases"
+    on public.custom_phrases for insert
+    with check (auth.uid() = user_id);
+
+-- custom_phrases: UPDATE
+drop policy if exists "Users can update own custom phrases" on public.custom_phrases;
+create policy "Users can update own custom phrases"
+    on public.custom_phrases for update
+    using (auth.uid() = user_id)
+    with check (auth.uid() = user_id);
+
+-- custom_phrases: DELETE
+drop policy if exists "Users can delete own custom phrases" on public.custom_phrases;
+create policy "Users can delete own custom phrases"
+    on public.custom_phrases for delete
+    using (auth.uid() = user_id);
+
+-- -------------------------------------------------------------------
+-- 7. Trigger function and trigger for new user profile creation
+-- -------------------------------------------------------------------
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = ''
+as $$
+begin
+    insert into public.profiles (id, name, motivation)
+    values (
+        new.id,
+        new.raw_user_meta_data ->> 'name',
+        new.raw_user_meta_data ->> 'motivation'
+    );
+    return new;
+end;
+$$;
+
+-- drop existing trigger if it exists and recreate
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+    after insert on auth.users
+    for each row execute function public.handle_new_user();
+```

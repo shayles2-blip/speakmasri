@@ -1,0 +1,42 @@
+```js
+async function signup(){
+  const name=document.getElementById("name").value.trim();
+  const email=document.getElementById("email").value.trim().toLowerCase();
+  const pass=document.getElementById("pass").value;
+  const motivation=document.getElementById("motivation").value;
+  const err=document.getElementById("authErr");
+  err.textContent="";
+  if(!name||!email||!pass){err.textContent="Fill in all fields to sign up.";return;}
+  try{
+    const {data,error}=await supabase.auth.signUp({email,password:pass,options:{data:{name,motivation}}});
+    if(error){err.textContent=error.message;return;}
+    if(data.user){
+      await loadUserData();
+      enterApp();
+    }
+  }catch(e){err.textContent=e.message;}
+}
+
+async function login(){
+  const email=document.getElementById("email").value.trim().toLowerCase();
+  const pass=document.getElementById("pass").value;
+  const err=document.getElementById("authErr");
+  err.textContent="";
+  try{
+    const {data,error}=await supabase.auth.signInWithPassword({email,password:pass});
+    if(error){err.textContent="No matching account. Check email/password or sign up.";return;}
+    await loadUserData();
+    enterApp();
+  }catch(e){err.textContent=e.message;}
+}
+
+async function logout(){
+  await supabase.auth.signOut();
+  user=null;
+  document.getElementById("main").classList.add("hidden");
+  document.getElementById("auth").classList.remove("hidden");
+  document.getElementById("name").value="";
+  document.getElementById("email").value="";
+  document.getElementById("pass").value="";
+}
+```

@@ -1,0 +1,70 @@
+async function loadUserData(){
+  const {data:{user:authUser}}=await supabase.auth.getUser();
+  if(!authUser)return;
+  const uid=authUser.id;
+  const[{data:profile},{data:progress},{data:milestones},{data:phrases}]=await Promise.all([
+    supabase.from('profiles').select('*').eq('id',uid).single(),
+    supabase.from('user_progress').select('*').eq('user_id',uid),
+    supabase.from('user_milestones').select('*').eq('user_id',uid),
+    supabase.from('custom_phrases').select('*').eq('user_id',uid)
+  ]);
+  const progressMap={};
+  if(progress)progress.forEach(r=>{progressMap[r.lesson_id]={done:r.done,score:r.score};});
+  const milestonesArr=[];
+  if(milestones)milestones.forEach(m=>{milestonesArr.push({ar:m.ar,franco:m.franco,date:m.achieved_at});});
+  const phrasesArr=[];
+  if(phrases)phrases.forEach(p=>{phrasesArr.push({en:p.en,ar:p.ar,franco:p.franco,source:p.source});});
+  user.name=profile?.name||authUser.user_metadata?.name||'';
+  user.email=profile?.email||authUser.email||'';
+  user.motivation=profile?.motivation||'';
+  user.xp=profile?.xp||0;
+  user.progress=progressMap;
+  user.milestones=milestonesArr;
+  user.customPhrases=phrasesArr;
+}
+
+async function saveProgress(lessonId,done,score){
+  const{data:{user:authUser}}=await supabase.auth.getUser();
+  if(!authUser)return;
+  await supabase.from('user_progress').upsert({
+    user_id:authUser.id,
+    lesson_id:lessonId,
+    done,
+    score
+  },{onConflict:'user_id,lesson_id'});
+}
+
+async function saveMilestone(ar,franco){
+  const{data:{user:authUser}}=await supabase.auth.getUser();
+  if(!authUser)return;
+  await supabase.from('user_milestones').insert({
+    user_id:authUser.id,
+    ar,
+    franco,
+    achieved_at:new Date().toISOString()
+  });
+}
+
+async function saveXp(newXpTotal){
+  const{data:{user:authUser}}=await supabase.auth.getUser();
+  if(!authUser)return;
+  await supabase.from('profiles').update({xp:newXpTotal}).eq('id',authUser.id);
+}
+
+async function saveCustomPhrase(en,ar,franco){
+  const{data:{user:authUser}}=await supabase.auth.getUser();
+  if(!authUser)return;
+  await supabase.from('custom_phrases').insert({
+    user_id:authUser.id,
+    en,
+    ar,
+    franco,
+    source:'partner'
+  });
+}
+
+async function deleteCustomPhraseRemote(id){
+  const{data:{user:authUser}}=await supabase.auth.getUser();
+  if(!authUser)return;
+  await supabase.from('custom_phrases').delete().eq('id',id).eq('user_id',authUser.id);
+}
