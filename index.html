@@ -16,6 +16,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  projectId: "speakmasri-app",
+  appId: "1:219490081503:web:94829c17936bcbd005e76a",
+  apiKey: "AIzaSyDa5n3n0zmW20o8Hh4PlJ2Q8N5l4bGX3C4",
+  authDomain: "speakmasri-app.firebaseapp.com",
+  messagingSenderId: "219490081503"
+});
+</script>
 <style>
 /* ===== Pico.css theme overrides to match Nile Oasis palette ===== */
 :root {
@@ -657,15 +669,82 @@ let correctCount=0;
 let selection=null;     // current selection for check()
 let matchState=null;    // state for match exercise
 
-function loadUsers(){return JSON.parse(localStorage.getItem("lm_users")||"[]");}
-function saveUsers(u){localStorage.setItem("lm_users",JSON.stringify(u));}
-function saveCurrent(email){localStorage.setItem("lm_current",email);}
-function loadCurrentEmail(){return localStorage.getItem("lm_current");}
-function saveUser(){
-  const users=loadUsers();
-  const i=users.findIndex(u=>u.email===user.email);
-  if(i>=0)users[i]=user;
-  saveUsers(users);
+function getAuthErrorMessage(code){
+  const map={
+    'auth/email-already-in-use':'This email is already registered.',
+    'auth/wrong-password':'Incorrect password.',
+    'auth/invalid-credential':'Invalid email or password.',
+    'auth/weak-password':'Password should be at least 6 characters.',
+    'auth/invalid-email':'Please enter a valid email address.',
+    'auth/user-not-found':'No account found with this email.'
+  };
+  return map[code]||'Something went wrong. Please try again.';
+}
+
+async function loadUserData(){
+  const uid=firebase.auth().currentUser.uid;
+  const db=firebase.firestore();
+  const userDocSnap=await db.collection('users').doc(uid).get();
+  const userData=userDocSnap.exists?userDocSnap.data():{};
+
+  const progressSnap=await db.collection(`users/${uid}/progress`).get();
+  const progress={};
+  progressSnap.forEach(doc=>{progress[doc.id]=doc.data();});
+
+  const milestonesSnap=await db.collection(`users/${uid}/milestones`).get();
+  const milestones=[];
+  milestonesSnap.forEach(doc=>{milestones.push(doc.data());});
+
+  const phrasesSnap=await db.collection(`users/${uid}/customPhrases`).get();
+  const customPhrases=[];
+  phrasesSnap.forEach(doc=>{const p=doc.data();p._id=doc.id;customPhrases.push(p);});
+
+  user={
+    name:userData.name||'',
+    email:firebase.auth().currentUser.email,
+    motivation:userData.motivation||'',
+    xp:userData.xp||0,
+    progress,
+    milestones,
+    customPhrases
+  };
+}
+
+async function saveProgress(lessonId,done,score){
+  const uid=firebase.auth().currentUser.uid;
+  try{
+    await firebase.firestore().collection(`users/${uid}/progress`).doc(lessonId).set({done,score},{merge:true});
+  }catch(e){console.error('saveProgress error',e);}
+}
+
+async function saveMilestone(ar,franco){
+  const uid=firebase.auth().currentUser.uid;
+  const today=new Date().toISOString().slice(0,10);
+  try{
+    await firebase.firestore().collection(`users/${uid}/milestones`).add({ar,franco,date:today});
+  }catch(e){console.error('saveMilestone error',e);}
+}
+
+async function saveXp(newXpTotal){
+  const uid=firebase.auth().currentUser.uid;
+  try{
+    await firebase.firestore().collection('users').doc(uid).update({xp:newXpTotal});
+  }catch(e){console.error('saveXp error',e);}
+}
+
+async function saveCustomPhrase(en,ar,franco){
+  const uid=firebase.auth().currentUser.uid;
+  try{
+    const ref=await firebase.firestore().collection(`users/${uid}/customPhrases`).add({en,ar,franco,source:'partner'});
+    return ref.id;
+  }catch(e){console.error('saveCustomPhrase error',e);return null;}
+}
+
+async function deleteCustomPhraseRemote(phraseId){
+  const uid=firebase.auth().currentUser.uid;
+  try{
+    await firebase.firestore().collection(`users/${uid}/customPhrases`).doc(phraseId).delete();
+  }catch(e){console.error('deleteCustomPhraseRemote error',e);}
 }
 
 function allVocab(){
@@ -681,7 +760,7 @@ function shuffle(arr){
 }
 
 /* ---------- AUTH ---------- */
-function signup(){
+async function signup(){
   const name=document.getElementById("name").value.trim();
   const email=document.getElementById("email").value.trim().toLowerCase();
   const pass=document.getElementById("pass").value;
@@ -689,27 +768,32 @@ function signup(){
   const err=document.getElementById("authErr");
   err.textContent="";
   if(!name||!email||!pass){err.textContent="Fill in all fields to sign up.";return;}
-  const users=loadUsers();
-  if(users.find(u=>u.email===email)){err.textContent="That email is already registered — log in instead.";return;}
-  const newUser={name,email,password:pass,motivation,xp:0,progress:{},milestones:[]};
-  users.push(newUser);
-  saveUsers(users);
-  saveCurrent(email);
-  user=newUser;
-  enterApp();
+  try{
+    const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
+    await firebase.firestore().collection('users').doc(cred.user.uid).set({
+      name,motivation,xp:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await loadUserData();
+    enterApp();
+  }catch(e){
+    err.textContent=getAuthErrorMessage(e.code);
+    console.error('Signup error',e);
+  }
 }
 
-function login(){
+async function login(){
   const email=document.getElementById("email").value.trim().toLowerCase();
   const pass=document.getElementById("pass").value;
   const err=document.getElementById("authErr");
   err.textContent="";
-  const users=loadUsers();
-  const found=users.find(u=>u.email===email&&u.password===pass);
-  if(!found){err.textContent="No matching account. Check email/password or sign up.";return;}
-  user=found;
-  saveCurrent(email);
-  enterApp();
+  try{
+    await firebase.auth().signInWithEmailAndPassword(email,pass);
+    await loadUserData();
+    enterApp();
+  }catch(e){
+    err.textContent=getAuthErrorMessage(e.code);
+    console.error('Login error',e);
+  }
 }
 
 function startGuestLesson(){
@@ -717,8 +801,8 @@ function startGuestLesson(){
   startLesson(COURSE.units[0].lessons[0]);
 }
 
-function logout(){
-  localStorage.removeItem("lm_current");
+async function logout(){
+  try{await firebase.auth().signOut();}catch(e){console.error('Logout error',e);}
   user=null;
   document.getElementById("main").classList.add("hidden");
   document.getElementById("auth").classList.remove("hidden");
@@ -855,7 +939,7 @@ function importPartnerPhrases(fileInputEl){
   if(!fileInputEl.files||fileInputEl.files.length===0)return;
   const file=fileInputEl.files[0];
   const reader=new FileReader();
-  reader.onload=(e)=>{
+  reader.onload=async(e)=>{
     try{
       const data=JSON.parse(e.target.result);
       if(!Array.isArray(data))throw new Error("Not an array");
@@ -870,8 +954,11 @@ function importPartnerPhrases(fileInputEl){
         valid.push({en:item.en,ar:item.ar,franco:item.franco,source:"partner"});
         existingEns.add(item.en);
       }
+      for(const item of valid){
+        const id=await saveCustomPhrase(item.en,item.ar,item.franco);
+        item._id=id;
+      }
       user.customPhrases.push(...valid);
-      saveUser();
       renderPartnerPhrases();
     }catch(err){
       alert("That file couldn't be read as a phrase list. Make sure it's the JSON template with en/ar/franco fields.");
@@ -881,11 +968,11 @@ function importPartnerPhrases(fileInputEl){
   reader.readAsText(file);
 }
 
-function deleteCustomPhrase(idx){
+async function deleteCustomPhrase(idx){
   if(!user.customPhrases)return;
-  user.customPhrases.splice(idx,1);
-  saveUser();
+  const [removed]=user.customPhrases.splice(idx,1);
   renderPartnerPhrases();
+  if(removed&&removed._id)await deleteCustomPhraseRemote(removed._id);
 }
 
 /* ---------- PHRASEBOOK ---------- */
@@ -1277,19 +1364,19 @@ function renderMission(){
     <button class="btn btn-blue" style="margin-top:12px" id="missionBtn" onclick="markMissionDone()">I said it! ✅</button>`;
 }
 
-function markMissionDone(){
+async function markMissionDone(){
   if(user&&!user.isGuest&&curMission){
     user.milestones=user.milestones||[];
     user.milestones.push({ar:curMission.ar,franco:curMission.franco,date:new Date().toISOString().slice(0,10)});
-    saveUser();
     refreshTopBar();
+    await saveMilestone(curMission.ar,curMission.franco);
   }
   const btn=document.getElementById("missionBtn");
   btn.textContent="Nice! 🎉";
   btn.disabled=true;
 }
 
-function finishAsSuccess(){
+async function finishAsSuccess(){
   const total=exList.length;
   const acc=Math.round((correctCount/total)*100);
   user.xp+=curLesson.xp;
@@ -1299,8 +1386,8 @@ function finishAsSuccess(){
     document.getElementById("doneTitle").textContent="Nice! Sign up to save this progress";
   } else {
     user.progress[curLesson.id]={done:true,score:acc};
-    saveUser();
     document.getElementById("doneTitle").textContent="Lesson Complete!";
+    await Promise.all([saveProgress(curLesson.id,true,acc),saveXp(user.xp)]);
   }
   renderMission();
   document.getElementById("lesson").classList.add("hidden");
@@ -1320,15 +1407,13 @@ function finishLesson(){
 }
 
 /* ---------- BOOTSTRAP ---------- */
-(function init(){
-  if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
-  const email=loadCurrentEmail();
-  if(email){
-    const users=loadUsers();
-    const found=users.find(u=>u.email===email);
-    if(found){user=found;enterApp();}
+if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
+firebase.auth().onAuthStateChanged(async(fbUser)=>{
+  if(fbUser&&(!user||user.isGuest)){
+    await loadUserData();
+    enterApp();
   }
-})();
+});
 </script>
 </body>
 </html>

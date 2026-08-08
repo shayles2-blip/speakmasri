@@ -18,13 +18,14 @@ const VOCAB_LOOKUP = {
     console.log('  >> PAGEERROR FIRED RIGHT NOW:', m);
   });
 
-  const filePath = 'file://' + path.resolve(__dirname, '..', 'index.html');
+  const filePath = process.env.E2E_URL || ('file://' + path.resolve(__dirname, '..', 'index.html'));
   await page.goto(filePath);
   await page.screenshot({ path: '/tmp/e2e_01_auth.png' });
 
   // Sign up
+  const testEmail = `test${Date.now()}@example.com`;
   await page.fill('#name', 'Test Learner');
-  await page.fill('#email', `test${Date.now()}@example.com`);
+  await page.fill('#email', testEmail);
   await page.fill('#pass', 'testpass123');
   await page.selectOption('#motivation', 'partner');
   await page.click('button:has-text("Sign Up")');
@@ -156,6 +157,21 @@ const VOCAB_LOOKUP = {
   console.log('MILESTONE_LOG:', milestoneLog.replace(/\s+/g, ' ').trim().slice(0, 200));
 
   console.log('CONSOLE_ERRORS:', errors.length ? JSON.stringify(errors) : 'none');
+
+  if (process.env.E2E_URL) {
+    // Persistence check: logout, log back in, confirm XP/milestones survived
+    await page.click('button:has-text("Log Out")');
+    await page.waitForSelector('#auth:not(.hidden)', { timeout: 5000 });
+    console.log('LOGGED_OUT');
+    await page.fill('#email', testEmail);
+    await page.fill('#pass', 'testpass123');
+    await page.click('button:has-text("Log In")');
+    await page.waitForSelector('#main:not(.hidden)', { timeout: 8000 });
+    await page.waitForTimeout(500);
+    const xpAfter = await page.locator('#xp').textContent();
+    const milestonesAfter = await page.locator('#milestoneCount').textContent();
+    console.log('AFTER_RELOGIN_XP:', xpAfter, 'AFTER_RELOGIN_MILESTONES:', milestonesAfter);
+  }
 
   await browser.close();
 })().catch(e => { console.error('TEST_CRASHED:', e.message); process.exit(1); });

@@ -1,0 +1,198 @@
+CDN-SCRIPT-TAGS
+```html
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  projectId: "speakmasri-app",
+  appId: "1:219490081503:web:94829c17936bcbd005e76a",
+  apiKey: "AIzaSyDa5n3n0zmW20o8Hh4PlJ2Q8N5l4bGX3C4",
+  authDomain: "speakmasri-app.firebaseapp.com",
+  messagingSenderId: "219490081503"
+});
+</script>
+```
+
+AUTH-FUNCTIONS
+```javascript
+function getAuthErrorMessage(code) {
+  const map = {
+    'auth/email-already-in-use': 'This email is already registered.',
+    'auth/wrong-password': 'Incorrect password.',
+    'auth/invalid-credential': 'Invalid email or password.',
+    'auth/weak-password': 'Password should be at least 6 characters.',
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/user-not-found': 'No account found with this email.'
+  };
+  return map[code] || 'Authentication failed. Please try again.';
+}
+
+async function signup() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('pass').value;
+  const motivation = document.getElementById('motivation').value.trim();
+  const authErr = document.getElementById('authErr');
+  authErr.textContent = '';
+
+  try {
+    const cred = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+    const user = cred.user;
+    await firebase.firestore().collection('users').doc(user.uid).set({
+      name: name,
+      motivation: motivation,
+      xp: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await loadUserData();
+    enterApp();
+  } catch (e) {
+    authErr.textContent = getAuthErrorMessage(e.code);
+    console.error('Signup error', e);
+  }
+}
+
+async function login() {
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('pass').value;
+  const authErr = document.getElementById('authErr');
+  authErr.textContent = '';
+
+  try {
+    await firebase.auth().signInWithEmailAndPassword(email, pass);
+    await loadUserData();
+    enterApp();
+  } catch (e) {
+    authErr.textContent = getAuthErrorMessage(e.code);
+    console.error('Login error', e);
+  }
+}
+
+async function logout() {
+  try {
+    await firebase.auth().signOut();
+    document.getElementById('main').style.display = 'none';
+    document.getElementById('auth').style.display = 'block';
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('pass').value = '';
+    document.getElementById('motivation').value = '';
+  } catch (e) {
+    console.error('Logout error', e);
+  }
+}
+```
+
+DATA-FUNCTIONS
+```javascript
+async function loadUserData() {
+  const uid = firebase.auth().currentUser.uid;
+  const db = firebase.firestore();
+
+  try {
+    const userDocSnap = await db.collection('users').doc(uid).get();
+    if (!userDocSnap.exists) throw new Error('User doc not found');
+    const userData = userDocSnap.data();
+
+    // progress subcollection
+    const progressSnap = await db.collection(`users/${uid}/progress`).get();
+    const progress = {};
+    progressSnap.forEach(doc => {
+      progress[doc.id] = doc.data();
+    });
+
+    // milestones subcollection
+    const milestonesSnap = await db.collection(`users/${uid}/milestones`).get();
+    const milestones = [];
+    milestonesSnap.forEach(doc => {
+      milestones.push(doc.data());
+    });
+
+    // custom phrases subcollection
+    const customPhrasesSnap = await db.collection(`users/${uid}/customPhrases`).get();
+    const customPhrases = [];
+    customPhrasesSnap.forEach(doc => {
+      const phrase = doc.data();
+      phrase._id = doc.id;
+      customPhrases.push(phrase);
+    });
+
+    // update global user object
+    window.user = {
+      name: userData.name,
+      email: firebase.auth().currentUser.email,
+      motivation: userData.motivation,
+      xp: userData.xp || 0,
+      progress: progress,
+      milestones: milestones,
+      customPhrases: customPhrases
+    };
+  } catch (e) {
+    console.error('loadUserData error', e);
+    throw e;
+  }
+}
+
+async function saveProgress(lessonId, done, score) {
+  const uid = firebase.auth().currentUser.uid;
+  try {
+    await firebase.firestore().collection(`users/${uid}/progress`).doc(lessonId).set({
+      done: done,
+      score: score
+    }, { merge: true });
+  } catch (e) {
+    console.error('saveProgress error', e);
+  }
+}
+
+async function saveMilestone(ar, franco) {
+  const uid = firebase.auth().currentUser.uid;
+  const today = new Date().toISOString().split('T')[0];
+  try {
+    await firebase.firestore().collection(`users/${uid}/milestones`).add({
+      ar: ar,
+      franco: franco,
+      date: today
+    });
+  } catch (e) {
+    console.error('saveMilestone error', e);
+  }
+}
+
+async function saveXp(newXpTotal) {
+  const uid = firebase.auth().currentUser.uid;
+  try {
+    await firebase.firestore().collection('users').doc(uid).update({
+      xp: newXpTotal
+    });
+  } catch (e) {
+    console.error('saveXp error', e);
+  }
+}
+
+async function saveCustomPhrase(en, ar, franco) {
+  const uid = firebase.auth().currentUser.uid;
+  try {
+    const ref = await firebase.firestore().collection(`users/${uid}/customPhrases`).add({
+      en: en,
+      ar: ar,
+      franco: franco,
+      source: 'partner'
+    });
+    return ref.id;
+  } catch (e) {
+    console.error('saveCustomPhrase error', e);
+    return null;
+  }
+}
+
+async function deleteCustomPhraseRemote(phraseId) {
+  const uid = firebase.auth().currentUser.uid;
+  try {
+    await firebase.firestore().collection(`users/${uid}/customPhrases`).doc(phraseId).delete();
+  } catch (e) {
+    console.error('deleteCustomPhraseRemote error', e);
+  }
+}
+```
