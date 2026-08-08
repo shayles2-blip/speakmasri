@@ -980,7 +980,7 @@ function renderPhrasebook(){
   const list=document.getElementById("pbList");
   const learned=[];
   COURSE.units.forEach((u,ui)=>u.lessons.forEach((l,li)=>{
-    if(isLessonUnlocked(ui,li))learned.push(...l.vocab);
+    if(isLessonUnlocked(ui,li))l.vocab.forEach((v,vi)=>learned.push({...v,_audio:`audio/${l.id}_${vi}.mp3`}));
   }));
   learned.push(...(user.customPhrases||[]));
   list.innerHTML="";
@@ -1002,14 +1002,15 @@ function renderPhrasebook(){
     btn.style.cssText="width:44px;height:44px;font-size:18px;margin:0";
     btn.setAttribute("aria-label","Play audio");
     btn.textContent="🔊";
-    btn.onclick=()=>speak(v.ar);
+    btn.onclick=()=>playAudio(v.ar,v._audio);
     row.appendChild(btn);
     list.appendChild(row);
   });
 }
 
 /* ---------- EXERCISE BUILDING ---------- */
-function buildExercises(vocab){
+function buildExercises(lesson){
+  const vocab=lesson.vocab;
   const pool=allVocab();
   const list=[];
 
@@ -1020,10 +1021,11 @@ function buildExercises(vocab){
       opts:shuffle([item.ar,...distractors.map(d=>d.ar)])});
   });
 
-  vocab.forEach(item=>{
+  vocab.forEach((item,idx)=>{
     // listen & choose: hear AR -> pick EN
     const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
     list.push({type:"listen",q:item.ar,answer:item.en,franco:item.franco,
+      audio:`audio/${lesson.id}_${idx}.mp3`,
       opts:shuffle([item.en,...distractors.map(d=>d.en)])});
   });
 
@@ -1042,7 +1044,7 @@ function buildExercises(vocab){
 /* ---------- LESSON RUNTIME ---------- */
 function startLesson(lesson){
   curLesson=lesson;
-  exList=buildExercises(lesson.vocab);
+  exList=buildExercises(lesson);
   exIdx=0;
   correctCount=0;
   document.getElementById("main").classList.add("hidden");
@@ -1096,24 +1098,15 @@ function renderExercise(){
     const audioBtn=document.createElement("button");
     audioBtn.className="audio-btn";audioBtn.textContent="🔊";
     audioBtn.setAttribute("aria-label","Play audio");
-    if(!("speechSynthesis" in window)){
-      audioBtn.disabled=true;
-      audioBtn.title="Audio not supported on this device";
-      const note=document.createElement("div");
-      note.style.cssText="text-align:center;color:var(--ink-soft);font-size:13px";
-      note.textContent="🔇 Audio not supported here — pick from the options below";
-      area.appendChild(audioBtn);area.appendChild(note);
-    } else {
-      audioBtn.onclick=()=>speak(ex.q);
-      area.appendChild(audioBtn);
-    }
+    audioBtn.onclick=()=>playAudio(ex.q,ex.audio);
+    area.appendChild(audioBtn);
     ex.opts.forEach(o=>{
       const b=document.createElement("button");
       b.className="opt";b.textContent=o;
       b.onclick=()=>selectOpt(b,o);
       area.appendChild(b);
     });
-    if("speechSynthesis" in window)speak(ex.q);
+    playAudio(ex.q,ex.audio);
   } else if(ex.type==="fill"){
     const q=document.createElement("div");q.className="q";q.textContent="Type it in Franco-Arabic";
     area.appendChild(q);
@@ -1257,7 +1250,7 @@ function renderRehearsalItem(){
       : `<p style="color:var(--ink-soft);margin-top:16px">Mic access not available — just practice saying it out loud</p>`}
     <div style="padding:16px"><button id="nextBtn" class="btn btn-ghost">${rehearsalIdx===rehearsalPack.length-1?'Finish':'Next'}</button></div>
   `;
-  document.getElementById("hearBtn").onclick=()=>speak(item.ar);
+  document.getElementById("hearBtn").onclick=()=>playAudio(item.ar,`audio/${curLesson.id}_${rehearsalIdx}.mp3`);
   if(micAvailable)setupRecordButton(document.getElementById("recordBtn"));
   document.getElementById("nextBtn").onclick=()=>{
     cleanupRecording();
@@ -1351,6 +1344,13 @@ function speak(text){
   if(arVoice)u.voice=arVoice;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
+}
+
+function playAudio(text,audioPath){
+  if(!audioPath){speak(text);return;}
+  const audio=new Audio(audioPath);
+  audio.onerror=()=>speak(text);
+  audio.play().catch(()=>speak(text));
 }
 
 let curMission=null;
