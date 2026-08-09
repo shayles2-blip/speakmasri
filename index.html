@@ -1554,18 +1554,6 @@ function renderExercise(){
     area.appendChild(cols);
     document.getElementById("checkWrap").classList.add("hidden");
   }
-  nudgeRepaint(area);
-}
-
-function nudgeRepaint(el){
-  // Rare WebKit/Safari glitch: freshly-inserted text occasionally fails to paint
-  // even though it's present in the DOM. Briefly promoting the element to its own
-  // compositing layer forces a repaint that reliably fixes it.
-  el.style.willChange="contents";
-  requestAnimationFrame(()=>{
-    void el.offsetHeight;
-    requestAnimationFrame(()=>{ el.style.willChange=""; });
-  });
 }
 
 function selectOpt(btn,val){
