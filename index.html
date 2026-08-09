@@ -524,7 +524,7 @@ input:focus, select:focus {
 .arabic-bloom{
   position:fixed; top:50%; left:50%;
   transform:translate(-50%,-50%) scale(.4);
-  font-size:min(28vw,220px);
+  font-size:min(28vw,90px);
   color:var(--primary);
   opacity:0;
   pointer-events:none;
@@ -533,12 +533,12 @@ input:focus, select:focus {
   animation: bloomOut 1.1s cubic-bezier(.2,.8,.2,1) forwards;
 }
 .arabic-bloom.bloom-small{
-  font-size:min(14vw,110px);
+  font-size:min(14vw,56px);
   animation-duration:.7s;
 }
 @keyframes bloomOut{
   0%  { opacity:0;    transform:translate(-50%,-50%) scale(.4); }
-  25% { opacity:.22;  transform:translate(-50%,-50%) scale(1); }
+  25% { opacity:.11;  transform:translate(-50%,-50%) scale(1); }
   100%{ opacity:0;    transform:translate(-50%,-58%) scale(1.25); }
 }
 
@@ -927,9 +927,9 @@ input:focus, select:focus {
       <button class="btn btn-ghost" onclick="logout()">Log Out</button>
     </div>
     <div class="nav">
-      <button class="active" id="nLearn" onclick="tab('learn')" aria-label="Learn">🏠</button>
-      <button id="nPhrasebook" onclick="tab('phrasebook')" aria-label="Phrasebook">📖</button>
-      <button id="nProfile" onclick="tab('profile')" aria-label="Profile">👤</button>
+      <button class="active" id="nLearn" onclick="tab('learn')" aria-label="Learn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></button>
+      <button id="nPhrasebook" onclick="tab('phrasebook')" aria-label="Phrasebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11a1 1 0 0 1 1 1v17a2 2 0 0 0-2-2H3z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13a1 1 0 0 0-1 1v17a2 2 0 0 1 2-2h7z"/></svg></button>
+      <button id="nProfile" onclick="tab('profile')" aria-label="Profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
   </div>
 
