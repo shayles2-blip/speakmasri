@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teach them a phrase – SpeakMasri</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1DA14A">
+<meta name="description" content="Add a phrase for your favorite person learning Egyptian Arabic.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22%231DA14A%22/%3E%3Cpath%20d%3D%22M32%2028%20L68%2028%20Q70%2028%2069.5%2031%20L60%2064%20Q59%2066%2057%2066%20L43%2066%20Q41%2066%2040%2064%20L30.5%2031%20Q30%2028%2032%2028%20Z%22%20fill%3D%22%23FCFBFA%22/%3E%3Cpath%20d%3D%22M45%2066%20L50%2078%20L55%2066%20Z%22%20fill%3D%22%23C1652E%22/%3E%3Cline%20x1%3D%2234%22%20y1%3D%2238%22%20x2%3D%2266%22%20y2%3D%2238%22%20stroke%3D%22%23D4AF37%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root {
+  --primary: #1DA14A; --primary-hover: #16823A; --primary-surface: #EAF5ED;
+  --accent-gold: #D4AF37; --gold: var(--accent-gold); --gold-soft: #FBF3E0;
+  --error: #D94541; --error-surface: #FFF0EE; --brick: var(--error);
+  --bg-canvas: #FCFBFA; --surface: #FFFFFF;
+  --text-main: #1C2024; --text-muted: #687076; --ink-soft: var(--text-muted);
+  --border-light: #E6E8EB; --line: var(--border-light);
+  --teal: #0B7285; --teal-soft: #E3F4F6;
+  --sage: #4F7A5A; --clay: #C1652E; --clay-soft: #FBEEE3;
+  --r-sm: 12px; --r-md: 16px; --r-lg: 20px; --r-pill: 999px;
+  --shadow-card: 0 2px 8px rgba(28,32,36,.04); --shadow-float: 0 8px 24px rgba(29,161,74,.12);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg-canvas);
+  color: var(--text-main);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 18px 56px;
+}
+
+/* ---------- Brand header ---------- */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.brand svg { width: 32px; height: 32px; flex: none; }
+.brand span {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+}
+
+/* ---------- Intro copy above the card ---------- */
+.intro-head { margin-bottom: 18px; }
+.intro-head h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+.intro-head p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* ---------- Card ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+}
+
+/* ---------- Form fields ---------- */
+.field { margin-bottom: 22px; }
+.field:last-of-type { margin-bottom: 0; }
+
+.field label {
+  display: block;
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.field .hint {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.field .hint strong { color: var(--text-main); }
+
+.franco-tip {
+  background: var(--teal-soft);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+.franco-tip strong { color: var(--teal); }
+
+input[type="text"], textarea {
+  width: 100%;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--r-sm);
+  padding: 13px 14px;
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--text-main);
+  background: var(--bg-canvas);
+  resize: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+input[type="text"]:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-surface);
+  background: var(--surface);
+}
+
+textarea#arField {
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-family: 'Tajawal', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+::placeholder { color: #A6ACB2; font-weight: 500; }
+
+/* ---------- Submit button ---------- */
+button.primary-btn {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 15px 20px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--primary);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: var(--shadow-float);
+  transition: background .15s ease, transform .1s ease, opacity .15s ease;
+}
+button.primary-btn:hover:not(:disabled) { background: var(--primary-hover); }
+button.primary-btn:active:not(:disabled) { transform: scale(0.98); }
+button.primary-btn:disabled {
+  background: var(--border-light);
+  color: var(--text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ---------- Error banner ---------- */
+.error-banner {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: var(--error-surface);
+  color: var(--error);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-top: 18px;
+  line-height: 1.5;
+}
+
+/* ---------- Full-card states (missing link / success) ---------- */
+.state-card {
+  text-align: center;
+  padding: 40px 24px;
+}
+.state-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary-surface);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 26px;
+}
+.state-card.missing .state-icon {
+  background: var(--gold-soft);
+  color: var(--clay);
+}
+.state-card h1 {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+.state-card p {
+  margin: 0 auto;
+  max-width: 400px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+.state-card button.primary-btn { margin-top: 26px; }
+
+/* ---------- Footer ---------- */
+.footer-note {
+  text-align: center;
+  margin-top: 28px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.footer-note a { color: var(--text-muted); text-decoration: underline; }
+
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="48" fill="#1DA14A"/>
+      <path d="M32 28 L68 28 Q70 28 69.5 31 L60 64 Q59 66 57 66 L43 66 Q41 66 40 64 L30.5 31 Q30 28 32 28 Z" fill="#FCFBFA"/>
+      <path d="M45 66 L50 78 L55 66 Z" fill="#C1652E"/>
+      <line x1="34" y1="38" x2="66" y2="38" stroke="#D4AF37" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <span>SpeakMasri</span>
+  </div>
+
+  <!-- State: missing / broken link -->
+  <div id="missingState" class="card state-card missing" hidden>
+    <div class="state-icon">🔗</div>
+    <h1>This link looks incomplete</h1>
+    <p>It's missing a piece it needs to know whose phrasebook to send this to. Ask them to open the app and send you the link again.</p>
+  </div>
+
+  <!-- State: the form -->
+  <div id="formState" hidden>
+    <div class="intro-head">
+      <h1>Teach them a phrase</h1>
+      <p>Someone learning Egyptian Arabic wants to learn it the way you'd actually say it. Fill this in however feels natural — it only takes a minute.</p>
+    </div>
+
+    <div class="card">
+      <form id="phraseForm" novalidate>
+
+        <div class="field">
+          <label for="enField">What's this phrase for?</label>
+          <p class="hint">A quick note so they remember why they saved it — a name, a person, or a moment.</p>
+          <input type="text" id="enField" maxlength="200" autocomplete="off" placeholder="e.g. Auntie Mona, or How to greet your dad">
+        </div>
+
+        <div class="field">
+          <label for="arField">The phrase, in Arabic</label>
+          <p class="hint">Write it in Arabic script, however you'd naturally say it.</p>
+          <textarea id="arField" rows="2" maxlength="200" placeholder="إزيك يا حبيبي؟"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="francoField">Same phrase, typed in English letters</label>
+          <div class="franco-tip">This is called <strong>Franco-Arabic</strong> — it's just how Egyptians normally text each other, no special keyboard needed. Numbers are fine for sounds English doesn't have, like <strong>3</strong>, <strong>7</strong> and <strong>5</strong>.</div>
+          <textarea id="francoField" rows="2" maxlength="200" placeholder="e.g. ezzayak ya 7abibi"></textarea>
+        </div>
+
+        <div id="errorBanner" class="error-banner" hidden></div>
+
+        <button type="submit" id="submitBtn" class="primary-btn" disabled>Send this phrase</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- State: success -->
+  <div id="successState" class="card state-card" hidden>
+    <div class="state-icon">💌</div>
+    <h1>Sent!</h1>
+    <p>They'll see it next time they open SpeakMasri and can save it straight to their phrasebook.</p>
+    <button type="button" id="againBtn" class="primary-btn">Add another phrase</button>
+  </div>
+
+  <div class="footer-note">
+    Not sure what this is? <a href="index.html">speakmasri.com</a>
+  </div>
+
+</div>
+
+<script>
+firebase.initializeApp({
+  projectId: "speakmasri-app",
+  appId: "1:219490081503:web:94829c17936bcbd005e76a",
+  apiKey: "AIzaSyDa5n3n0zmW20o8Hh4PlJ2Q8N5l4bGX3C4",
+  authDomain: "speakmasri-app.firebaseapp.com",
+  messagingSenderId: "219490081503"
+});
+
+var targetUid = new URLSearchParams(window.location.search).get('u');
+
+var missingState = document.getElementById('missingState');
+var formState = document.getElementById('formState');
+var successState = document.getElementById('successState');
+var form = document.getElementById('phraseForm');
+var enField = document.getElementById('enField');
+var arField = document.getElementById('arField');
+var francoField = document.getElementById('francoField');
+var submitBtn = document.getElementById('submitBtn');
+var errorBanner = document.getElementById('errorBanner');
+var againBtn = document.getElementById('againBtn');
+
+if (!targetUid) {
+  missingState.hidden = false;
+} else {
+  formState.hidden = false;
+
+  function ensureAuth() {
+    if (firebase.auth().currentUser) {
+      return Promise.resolve(firebase.auth().currentUser);
+    }
+    return firebase.auth().signInAnonymously().then(function (cred) {
+      return cred.user;
+    });
+  }
+
+  // Kick off anonymous auth immediately in the background — the partner
+  // never sees any sign-in UI, this just warms up the auth state so the
+  // Firestore write is fast once they submit. If it fails here (e.g. a
+  // network blip on page load), submit will call ensureAuth() again and
+  // retry rather than being stuck on a stale rejected promise.
+  ensureAuth().catch(function (err) {
+    console.error('background anonymous sign-in failed', err);
+  });
+
+  function fieldValue(el) { return el.value.trim(); }
+
+  function isValid() {
+    return fieldValue(enField).length > 0 && fieldValue(enField).length <= 200 &&
+           fieldValue(arField).length > 0 && fieldValue(arField).length <= 200 &&
+           fieldValue(francoField).length > 0 && fieldValue(francoField).length <= 200;
+  }
+
+  function updateSubmitState() {
+    submitBtn.disabled = !isValid();
+  }
+
+  [enField, arField, francoField].forEach(function (el) {
+    el.addEventListener('input', updateSubmitState);
+  });
+
+  function showError(message) {
+    errorBanner.textContent = message;
+    errorBanner.hidden = false;
+  }
+
+  function hideError() {
+    errorBanner.hidden = true;
+    errorBanner.textContent = '';
+  }
+
+  function setSending(sending) {
+    submitBtn.disabled = sending || !isValid();
+    submitBtn.textContent = sending ? 'Sending…' : 'Send this phrase';
+    enField.disabled = sending;
+    arField.disabled = sending;
+    francoField.disabled = sending;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!isValid()) return;
+
+    hideError();
+    setSending(true);
+
+    var payload = {
+      en: fieldValue(enField),
+      ar: fieldValue(arField),
+      franco: fieldValue(francoField)
+    };
+
+    ensureAuth()
+      .then(function () {
+        return firebase.firestore()
+          .collection('partnerSubmissions')
+          .doc(targetUid)
+          .collection('items')
+          .add({
+            en: payload.en,
+            ar: payload.ar,
+            franco: payload.franco,
+            submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+      })
+      .then(function () {
+        formState.hidden = true;
+        successState.hidden = false;
+      })
+      .catch(function (err) {
+        console.error('partner submission failed', err);
+        setSending(false);
+        showError("Couldn't send that — check your connection and try again.");
+      });
+  });
+
+  againBtn.addEventListener('click', function () {
+    form.reset();
+    hideError();
+    setSending(false);
+    successState.hidden = true;
+    formState.hidden = false;
+    enField.focus();
+  });
+}
+</script>
+</body>
+</html>
