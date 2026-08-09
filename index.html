@@ -909,18 +909,14 @@ input:focus, select:focus {
       <div style="height:24px"></div>
       <div style="text-align:left;padding:0 16px">
         <div style="font-weight:800;margin-bottom:4px">Partner Phrases</div>
-        <p style="color:var(--ink-soft);font-size:13px;margin-bottom:10px">Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.</p>
-        <button class="btn" id="shareLinkBtn" style="margin-bottom:10px" onclick="sharePartnerLink()">🔗 Share Link With Partner</button>
-        <details style="margin-bottom:10px">
-          <summary style="color:var(--ink-soft);font-size:13px;cursor:pointer">Prefer the JSON file instead?</summary>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn btn-ghost" style="font-size:13px;padding:10px" onclick="downloadPhraseTemplate()">⬇️ Template</button>
-            <label class="btn btn-ghost" style="font-size:13px;padding:10px;text-align:center;cursor:pointer">
-              ⬆️ Import
-              <input type="file" id="partnerFileInput" accept=".json" style="display:none" onchange="importPartnerPhrases(this)">
-            </label>
-          </div>
-        </details>
+        <p style="color:var(--ink-soft);font-size:13px;margin-bottom:10px">Send your partner a template — anything they add (family names, in-jokes) shows up in your Phrasebook.</p>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button class="btn btn-ghost" style="font-size:13px;padding:10px" onclick="downloadPhraseTemplate()">⬇️ Template</button>
+          <label class="btn btn-ghost" style="font-size:13px;padding:10px;text-align:center;cursor:pointer">
+            ⬆️ Import
+            <input type="file" id="partnerFileInput" accept=".json" style="display:none" onchange="importPartnerPhrases(this)">
+          </label>
+        </div>
         <div id="partnerPhrasesList" style="color:var(--ink-soft);font-size:14px"></div>
       </div>
       <div style="height:16px"></div>
@@ -940,9 +936,6 @@ input:focus, select:focus {
       <div class="progbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progbarEl"><div class="progfill" id="prog"></div></div>
     </div>
     <div id="exArea"></div>
-    <div style="text-align:center;margin:4px 0">
-      <button type="button" onclick="reloadCurrentExercise()" style="background:none;border:none;color:var(--ink-soft);font-size:12px;text-decoration:underline;cursor:pointer;padding:6px">Choices not showing up? Tap to reload</button>
-    </div>
     <div id="fbArea" aria-live="polite"></div>
     <div id="checkWrap"><button class="btn" id="checkBtn" onclick="check()" disabled>Check</button></div>
   </div>
@@ -1126,7 +1119,6 @@ async function signup(){
     analytics.logEvent('sign_up');
     await loadUserData();
     await checkReturnVisit();
-    await pullPartnerSubmissions();
     enterApp();
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
@@ -1144,7 +1136,6 @@ async function login(){
     await firebase.auth().signInWithEmailAndPassword(email,pass);
     await loadUserData();
     await checkReturnVisit();
-    await pullPartnerSubmissions();
     enterApp();
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
@@ -1211,50 +1202,6 @@ async function checkReturnVisit(){
     }
     await docRef.set({lastActive:today},{merge:true});
   }catch(e){console.error('checkReturnVisit error',e);}
-}
-
-let pullPartnerSubmissionsPromise=null;
-function pullPartnerSubmissions(){
-  // signup()/login() call this explicitly, but firebase.auth().onAuthStateChanged
-  // also fires from the same sign-in and can call it again before the first
-  // call's Firestore deletes land - without this guard, both calls read the
-  // same not-yet-deleted submission and each create a duplicate phrase.
-  if(pullPartnerSubmissionsPromise)return pullPartnerSubmissionsPromise;
-  pullPartnerSubmissionsPromise=(async()=>{
-    const fbUser=firebase.auth().currentUser;
-    if(!fbUser||!user||user.isGuest)return;
-    try{
-      const snap=await firebase.firestore().collection(`partnerSubmissions/${fbUser.uid}/items`).get();
-      if(snap.empty)return;
-      user.customPhrases=user.customPhrases||[];
-      const existingEns=new Set(user.customPhrases.map(p=>p.en));
-      for(const doc of snap.docs){
-        const item=doc.data();
-        if(typeof item.en!=="string"||typeof item.ar!=="string"||typeof item.franco!=="string")continue;
-        if(!existingEns.has(item.en)){
-          const id=await saveCustomPhrase(item.en,item.ar,item.franco);
-          user.customPhrases.push({en:item.en,ar:item.ar,franco:item.franco,source:"partner",_id:id});
-          existingEns.add(item.en);
-        }
-        await doc.ref.delete();
-      }
-      if(typeof renderPartnerPhrases==="function")renderPartnerPhrases();
-    }catch(e){console.error('pullPartnerSubmissions error',e);}
-  })();
-  pullPartnerSubmissionsPromise.finally(()=>{pullPartnerSubmissionsPromise=null;});
-  return pullPartnerSubmissionsPromise;
-}
-
-function sharePartnerLink(){
-  const fbUser=firebase.auth().currentUser;
-  if(!fbUser)return;
-  const url=`https://speakmasri.com/partner.html?u=${fbUser.uid}`;
-  const btn=document.getElementById("shareLinkBtn");
-  navigator.clipboard.writeText(url).then(()=>{
-    if(btn){const orig=btn.textContent;btn.textContent="Copied! ✅";setTimeout(()=>{btn.textContent=orig;},2000);}
-  }).catch(()=>{
-    prompt("Copy this link to send your partner:",url);
-  });
 }
 
 function startGuestLesson(){
@@ -1607,10 +1554,6 @@ function renderExercise(){
     area.appendChild(cols);
     document.getElementById("checkWrap").classList.add("hidden");
   }
-}
-
-function reloadCurrentExercise(){
-  renderExercise();
 }
 
 function selectOpt(btn,val){
@@ -2079,7 +2022,6 @@ firebase.auth().onAuthStateChanged(async(fbUser)=>{
   if(fbUser&&(!user||user.isGuest)){
     await loadUserData();
     await checkReturnVisit();
-    await pullPartnerSubmissions();
     enterApp();
   }
 });

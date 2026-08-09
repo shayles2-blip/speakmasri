@@ -14,18 +14,5 @@ service cloud.firestore {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
     }
-
-    // Write-only inbox a partner can drop phrase suggestions into via a shareable
-    // link, without needing an account on the learner's side. Any authenticated
-    // (including anonymous) user can create a submission; only the owning learner
-    // can read/delete it once it's pulled into their real customPhrases collection.
-    match /partnerSubmissions/{targetUid}/items/{itemId} {
-      allow create: if request.auth != null
-        && request.resource.data.en is string && request.resource.data.en.size() > 0 && request.resource.data.en.size() <= 200
-        && request.resource.data.ar is string && request.resource.data.ar.size() > 0 && request.resource.data.ar.size() <= 200
-        && request.resource.data.franco is string && request.resource.data.franco.size() > 0 && request.resource.data.franco.size() <= 200;
-      allow read, delete: if request.auth != null && request.auth.uid == targetUid;
-      allow update: if false;
-    }
   }
 }
