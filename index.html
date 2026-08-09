@@ -940,6 +940,9 @@ input:focus, select:focus {
       <div class="progbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progbarEl"><div class="progfill" id="prog"></div></div>
     </div>
     <div id="exArea"></div>
+    <div style="text-align:center;margin:4px 0">
+      <button type="button" onclick="reloadCurrentExercise()" style="background:none;border:none;color:var(--ink-soft);font-size:12px;text-decoration:underline;cursor:pointer;padding:6px">Choices not showing up? Tap to reload</button>
+    </div>
     <div id="fbArea" aria-live="polite"></div>
     <div id="checkWrap"><button class="btn" id="checkBtn" onclick="check()" disabled>Check</button></div>
   </div>
@@ -1604,6 +1607,10 @@ function renderExercise(){
     area.appendChild(cols);
     document.getElementById("checkWrap").classList.add("hidden");
   }
+}
+
+function reloadCurrentExercise(){
+  renderExercise();
 }
 
 function selectOpt(btn,val){
