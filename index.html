@@ -1221,20 +1221,33 @@ function pullPartnerSubmissions(){
     const fbUser=firebase.auth().currentUser;
     if(!fbUser||!user||user.isGuest)return;
     try{
-      const snap=await firebase.firestore().collection(`partnerSubmissions/${fbUser.uid}/items`).get();
-      if(snap.empty)return;
+      const db=firebase.firestore();
+      const counterRef=db.doc(`partnerSubmissions/${fbUser.uid}/meta/counter`);
+      const snap=await db.collection(`partnerSubmissions/${fbUser.uid}/items`).get();
+      if(snap.empty){
+        const counterDoc=await counterRef.get();
+        if(counterDoc.exists&&counterDoc.data().pending!==0)await counterRef.set({pending:0});
+        return;
+      }
       user.customPhrases=user.customPhrases||[];
       const existingEns=new Set(user.customPhrases.map(p=>p.en));
+      let allProcessed=true;
       for(const doc of snap.docs){
         const item=doc.data();
-        if(typeof item.en!=="string"||typeof item.ar!=="string"||typeof item.franco!=="string")continue;
+        if(typeof item.en!=="string"||typeof item.ar!=="string"||typeof item.franco!=="string"){
+          allProcessed=false;
+          continue;
+        }
         if(!existingEns.has(item.en)){
           const id=await saveCustomPhrase(item.en,item.ar,item.franco);
-          if(!id)continue;
+          if(!id){allProcessed=false;continue;}
           user.customPhrases.push({en:item.en,ar:item.ar,franco:item.franco,source:"partner",_id:id});
           existingEns.add(item.en);
         }
-        await doc.ref.delete();
+        try{await doc.ref.delete();}catch(e){allProcessed=false;console.error('partner submission delete error',e);}
+      }
+      if(allProcessed){
+        await counterRef.set({pending:0});
       }
       if(typeof renderPartnerPhrases==="function")renderPartnerPhrases();
     }catch(e){console.error('pullPartnerSubmissions error',e);}

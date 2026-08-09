@@ -399,16 +399,27 @@ if (!targetUid) {
 
     ensureAuth()
       .then(function () {
-        return firebase.firestore()
-          .collection('partnerSubmissions')
-          .doc(targetUid)
-          .collection('items')
-          .add({
+        var db = firebase.firestore();
+        var targetRef = db.collection('partnerSubmissions').doc(targetUid);
+        var counterRef = targetRef.collection('meta').doc('counter');
+        var itemRef = targetRef.collection('items').doc();
+        return counterRef.get().then(function (counterDoc) {
+          var pending = counterDoc.exists ? counterDoc.data().pending : 0;
+          if (!Number.isInteger(pending) || pending < 0 || pending >= 50) {
+            var limitError = new Error('Partner submission limit reached');
+            limitError.code = 'submission-limit';
+            throw limitError;
+          }
+          var batch = db.batch();
+          batch.set(itemRef, {
             en: payload.en,
             ar: payload.ar,
             franco: payload.franco,
             submittedAt: firebase.firestore.FieldValue.serverTimestamp()
           });
+          batch.set(counterRef, { pending: pending + 1 });
+          return batch.commit();
+        });
       })
       .then(function () {
         formState.hidden = true;
@@ -417,7 +428,11 @@ if (!targetUid) {
       .catch(function (err) {
         console.error('partner submission failed', err);
         setSending(false);
-        showError("Couldn't send that — check your connection and try again.");
+        if (err.code === 'submission-limit' || err.code === 'permission-denied') {
+          showError('This link has reached its submission limit for now — ask them to check back later.');
+        } else {
+          showError("Couldn't send that — check your connection and try again.");
+        }
       });
   });
 

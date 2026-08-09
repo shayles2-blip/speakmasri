@@ -16,16 +16,57 @@ service cloud.firestore {
     }
 
     // Write-only inbox a partner can drop phrase suggestions into via a shareable
-    // link, without needing an account on the learner's side. Any authenticated
-    // (including anonymous) user can create a submission; only the owning learner
-    // can read/delete it once it's pulled into their real customPhrases collection.
+    // link. A submission and its pending-counter increment must be in one batch.
     match /partnerSubmissions/{targetUid}/items/{itemId} {
       allow create: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(targetUid))
+        && request.resource.data.keys().hasOnly(['en', 'ar', 'franco', 'submittedAt'])
         && request.resource.data.en is string && request.resource.data.en.size() > 0 && request.resource.data.en.size() <= 200
         && request.resource.data.ar is string && request.resource.data.ar.size() > 0 && request.resource.data.ar.size() <= 200
-        && request.resource.data.franco is string && request.resource.data.franco.size() > 0 && request.resource.data.franco.size() <= 200;
+        && request.resource.data.franco is string && request.resource.data.franco.size() > 0 && request.resource.data.franco.size() <= 200
+        // A serverTimestamp() transform resolves to request.time during rules evaluation.
+        && request.resource.data.submittedAt is timestamp
+        && request.resource.data.submittedAt == request.time
+        && (
+          (!exists(/databases/$(database)/documents/partnerSubmissions/$(targetUid)/meta/counter)
+            && getAfter(/databases/$(database)/documents/partnerSubmissions/$(targetUid)/meta/counter).data.pending == 1)
+          ||
+          (get(/databases/$(database)/documents/partnerSubmissions/$(targetUid)/meta/counter).data.pending is int
+            && get(/databases/$(database)/documents/partnerSubmissions/$(targetUid)/meta/counter).data.pending >= 0
+            && get(/databases/$(database)/documents/partnerSubmissions/$(targetUid)/meta/counter).data.pending < 50
+            && getAfter(/databases/$(database)/documents/partnerSubmissions/$(targetUid)/meta/counter).data.pending
+              == get(/databases/$(database)/documents/partnerSubmissions/$(targetUid)/meta/counter).data.pending + 1)
+        );
       allow read, delete: if request.auth != null && request.auth.uid == targetUid;
       allow update: if false;
+    }
+
+    match /partnerSubmissions/{targetUid}/meta/counter {
+      // Partners need the current value to construct the atomic increment batch.
+      allow get: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(targetUid));
+      allow list: if false;
+
+      allow create: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(targetUid))
+        && request.resource.data.keys().hasOnly(['pending'])
+        && (request.resource.data.pending == 1
+          || (request.auth.uid == targetUid && request.resource.data.pending == 0));
+      allow update: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(targetUid))
+        && resource.data.keys().hasOnly(['pending'])
+        && resource.data.pending is int
+        && resource.data.pending >= 0
+        && resource.data.pending < 50
+        && request.resource.data.keys().hasOnly(['pending'])
+        && request.resource.data.pending == resource.data.pending + 1;
+
+      // After pulling the inbox, only its owning learner may clear the count.
+      allow update: if request.auth != null
+        && request.auth.uid == targetUid
+        && request.resource.data.keys().hasOnly(['pending'])
+        && request.resource.data.pending == 0;
+      allow delete: if request.auth != null && request.auth.uid == targetUid;
     }
   }
 }
