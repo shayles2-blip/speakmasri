@@ -106,7 +106,7 @@ const VOCAB_LOOKUP = {
   const missionText = await page.locator('#missionBox').textContent();
   console.log('MISSION_BOX:', missionText.replace(/\s+/g, ' ').trim());
   await page.click('#missionBtn');
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(1100); // mission button runs a seal+spark animation before settling on final text
   const missionBtnText = await page.locator('#missionBtn').textContent();
   console.log('MISSION_BTN_AFTER_CLICK:', missionBtnText);
 
@@ -150,7 +150,7 @@ const VOCAB_LOOKUP = {
 
   // Profile
   await page.click('#nProfile');
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(1100); // pXp/pMilestones run a count-up animation before settling on final values
   await page.screenshot({ path: '/tmp/e2e_06_profile.png' });
   const xpText = await page.locator('#pXp').textContent();
   const milestoneCount = await page.locator('#pMilestones').textContent();

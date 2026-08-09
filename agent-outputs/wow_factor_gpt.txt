@@ -1,0 +1,25 @@
+1) **Landing screen (first 2 seconds = premium + alive)**
+- **Add a “Nile shimmer” hero backdrop** behind the existing layout: `background: radial-gradient(900px circle at 20% 10%, rgba(29,161,74,.18), transparent 60%), radial-gradient(700px circle at 85% 20%, rgba(212,175,55,.16), transparent 55%), linear-gradient(180deg, #FCFBFA 0%, #F7F4EF 100%);`
+- **Animated light bands** (CSS-only) via `::before/::after` on `body` or `.hero`: semi-transparent diagonal gradients drifting slowly (`animation: drift 8s ease-in-out infinite alternate; transform: translate3d(...); filter: blur(10px); mix-blend-mode: multiply; opacity: .35;`).
+- **Logo/title entrance**: the 🇪🇬 emoji + “SpeakMasri” animate in with a soft “lift” (`@keyframes popIn {0%{transform:translateY(10px) scale(.98);opacity:0}100%{transform:none;opacity:1}}`, 450ms, `cubic-bezier(.2,.9,.2,1)`).
+- **Arabic example card gets a “ink reveal”**: the Arabic line (“شكراً”) animates with a sliding highlight mask (pseudo-element overlay moving left→right in 700ms). Trigger on page load.
+
+2) **In-lesson feedback (instant correct/incorrect = felt, not seen)**
+- On answer click, add class to the chosen option: `.choice.is-correct` / `.choice.is-wrong`.
+- **Correct**: quick “stamp + glow” micro-animation:
+  - Scale down then up: `transform: scale(.98) -> scale(1.02) -> scale(1)` in 220ms.
+  - Border becomes `#1DA14A`; background gets a subtle green wash `rgba(29,161,74,.10)`.
+  - Add a checkmark that draws itself (`::after` with `stroke-dasharray` SVG or CSS border check) in 260ms.
+  - Tiny ripple ring from center (`box-shadow` expanding/fading): `0 0 0 0 rgba(29,161,74,.25)` → `0 0 0 12px rgba(29,161,74,0)` in 400ms.
+- **Incorrect**: “nope” shake + red-tinted clay:
+  - Shake `@keyframes nope {0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}` 280ms.
+  - Border `#C1652E`, background `rgba(193,101,46,.12)`, and a brief top-edge “pulse” (`box-shadow: 0 -3px 0 rgba(...)` → none, 200ms).
+
+3) **Celebration moments (lesson-complete + Tonight’s mission = reward)**
+- On lesson complete, fire **CSS confetti burst** using 12–16 absolutely positioned “paper” divs (no canvas): each has random `--x`, `--rot`, `--delay`; animate `translateY(-20px) → translateY(320px)` + rotation, 900ms, `cubic-bezier(.15,.8,.2,1)`, colors from palette (`#1DA14A`, `#D4AF37`, `#0B7285`, `#C1652E`).
+- XP card does a **count-up** (JS) + **gold shimmer sweep** (`::after` gradient moving across in 700ms).
+- “Tonight’s mission” box becomes a **quest banner**: left border thick `#D4AF37`, subtle patterned background (CSS repeating-linear-gradient at 45° with 4% opacity).
+- When “I said it!” is clicked: button becomes a **seal** (circle-ish via `border-radius: 999px`, gold border), performs a satisfying press (scale to .96) then emits 3 small spark lines (pseudo-elements) in 350ms.
+
+4) **Signature screenshot-able detail**
+- **Interactive Arabic calligraphy halo**: whenever you answer correctly, a faint Tajawal Arabic word (the correct phrase) briefly appears behind the card as oversized outline text (`font-size: clamp(48px, 8vw, 92px); color: transparent; -webkit-text-stroke: 1px rgba(212,175,55,.35);`) and slowly drifts upward 40px while fading (900ms). It feels magical, uniquely “Masri,” and is instantly screenshot-worthy.

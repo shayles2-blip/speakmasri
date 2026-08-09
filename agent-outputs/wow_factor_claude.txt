@@ -1,0 +1,29 @@
+## 1. Landing screen — "Nile at dawn" (first 2s)
+
+**Background:** replace flat `#FCFBFA` with a fixed layered gradient: `radial-gradient(120% 80% at 50% -10%, #FFF9E6 0%, #FCFBFA 55%)` plus two blurred blobs (`filter: blur(70px)`, `opacity:.35`) — one `#1DA14A`, one `#0B7285` — positioned off-canvas top-left/bottom-right, each on a 22s/28s `ease-in-out infinite alternate` `blobDrift` keyframe translating ±40px and `scale(1 → 1.15)`. Zero images.
+
+**Arabic script watermark:** a `<div>` with `مصر` in Tajawal at `clamp(180px, 34vw, 420px)`, `color:#1DA14A`, `opacity:.06`, absolutely centered behind the card, `pointer-events:none`. Animate `strokeGlow`: `opacity .04 → .09` over 6s ease-in-out infinite.
+
+**Entrance choreography** (on load, `animation-delay` staircase): flag `popIn` 500ms `cubic-bezier(.34,1.56,.64,1)` (scale .6→1.08→1, +8° rotate settle); title 60ms later `riseFade` 450ms (translateY 16px→0); subtitle 140ms; phrase card 220ms; CTA 300ms. Prefer `prefers-reduced-motion` guard.
+
+**Phrase card:** add gold left border (4px `#D4AF37`), and auto-cycle the Arabic word every 4s with a 300ms `blurSwap` (`filter: blur(4px)`, opacity 0 → in) between شكراً / حبيبي / إزيك — proves it's a language app in motion.
+
+**CTA:** gradient `linear-gradient(135deg,#22B554,#1DA14A)`, `box-shadow: 0 8px 20px rgba(29,161,74,.32)`; a 2.5s `sheen` keyframe sweeps a 30°-skewed white `opacity:.18` bar across it. Hover: `translateY(-2px)` + shadow to 28px. Active: `scale(.97)` in 80ms.
+
+## 2. In-lesson feedback
+
+**Correct:** card border → `#1DA14A`, background `#EAF7EF`. Simultaneously (250ms, `cubic-bezier(.34,1.56,.64,1)`): `correctPop` scale `1 → 1.04 → 1`; a ✓ badge scales in from 0 with 40ms delay; and 8 tiny confetti dots (green/gold/teal, 6px, `border-radius:50%`) spawn from the card center via JS, each with randomized `--x/--y/--r` CSS vars, 650ms `ease-out`, fading and falling. Progress bar fills with 400ms `cubic-bezier(.4,0,.2,1)` plus a 300ms gold `#D4AF37` flash on its leading edge. `navigator.vibrate(12)`.
+
+**Incorrect:** border `#C1652E`, background `#FDF1EA`, and a 380ms `shakeX` (`translateX: 0,-8,7,-5,3,0`). Card gets a 2px inset ring that pulses once. The correct answer's card then does a slow 600ms `#D4AF37` glow-in. `navigator.vibrate([15,40,15])`.
+
+**Both:** a full-width 3px top "pulse line" sweeps left→right in the answer color over 500ms — a visual "sound".
+
+## 3. Celebration moments
+
+Lesson-complete: 400ms staggered card rise; stat numbers **count up** from 0 (JS `requestAnimationFrame`, 900ms `easeOutCubic`) with a 1.15 → 1 scale bounce on land. Behind them, a one-shot 1.8s confetti burst of 40 pieces from the top edge (CSS-var driven, `transform: translate3d` + `rotate`, then removed from DOM).
+
+**Tonight's mission box:** dark teal `#0B4F5A` gradient card, gold `#D4AF37` dashed border, gently `breathe` pulsing shadow (3s). Tap "I said it!" → button collapses into a filled gold circle with a ✓ (300ms), 12 gold sparkles radiate, and the box does one 500ms `flipReveal` (`rotateX 90°`) into a "❤️ Said it. She noticed." state.
+
+## 4. Signature detail
+
+**The Arabic Bloom.** On every correct answer, the Arabic word you just learned is written *huge* (200px, Tajawal, `#1DA14A`) across the screen center at `opacity:.14`, scaling `.85 → 1` and blurring out over 700ms — as if the letters are being brushed onto the screen. On lesson complete, all words from that lesson bloom in sequence, 180ms apart, layering into a calligraphic stack that settles as a shareable "words you own now" collage. Unmistakable, screenshot-ready, zero assets.
