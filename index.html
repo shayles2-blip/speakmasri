@@ -1230,6 +1230,7 @@ function pullPartnerSubmissions(){
         if(typeof item.en!=="string"||typeof item.ar!=="string"||typeof item.franco!=="string")continue;
         if(!existingEns.has(item.en)){
           const id=await saveCustomPhrase(item.en,item.ar,item.franco);
+          if(!id)continue;
           user.customPhrases.push({en:item.en,ar:item.ar,franco:item.franco,source:"partner",_id:id});
           existingEns.add(item.en);
         }
@@ -1372,7 +1373,16 @@ function renderPartnerPhrases(){
   phrases.forEach((p,i)=>{
     const div=document.createElement("div");
     div.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)";
-    div.innerHTML=`<div><span class="ar" lang="ar">${p.ar}</span> <span class="franco">(${p.franco})</span> — ${p.en}</div>`;
+    const text=document.createElement("div");
+    const ar=document.createElement("span");
+    ar.className="ar";
+    ar.lang="ar";
+    ar.textContent=p.ar;
+    const franco=document.createElement("span");
+    franco.className="franco";
+    franco.textContent=`(${p.franco})`;
+    text.append(ar," ",franco," — ",p.en);
+    div.appendChild(text);
     const del=document.createElement("button");
     del.textContent="🗑️";
     del.style.cssText="background:none;border:none;cursor:pointer;font-size:16px";
@@ -1414,12 +1424,17 @@ function importPartnerPhrases(fileInputEl){
         valid.push({en:item.en,ar:item.ar,franco:item.franco,source:"partner"});
         existingEns.add(item.en);
       }
+      const saved=[];
+      let failed=0;
       for(const item of valid){
         const id=await saveCustomPhrase(item.en,item.ar,item.franco);
+        if(!id){failed++;continue;}
         item._id=id;
+        saved.push(item);
       }
-      user.customPhrases.push(...valid);
+      user.customPhrases.push(...saved);
       renderPartnerPhrases();
+      if(failed)alert(`${failed} phrase${failed===1?"":"s"} couldn't be saved. Please try importing again.`);
     }catch(err){
       alert("That file couldn't be read as a phrase list. Make sure it's the JSON template with en/ar/franco fields.");
     }
@@ -1451,12 +1466,21 @@ function renderPhrasebook(){
   learned.forEach(v=>{
     const row=document.createElement("div");
     row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)";
-    row.innerHTML=`
-      <div>
-        <div class="ar" lang="ar" style="font-size:20px">${v.ar}${registerBadge(v)}</div>
-        <div class="franco">${v.franco}</div>
-        <div style="color:var(--ink-soft);font-size:14px">${v.en}</div>
-      </div>`;
+    const text=document.createElement("div");
+    const ar=document.createElement("div");
+    ar.className="ar";
+    ar.lang="ar";
+    ar.style.fontSize="20px";
+    ar.textContent=v.ar;
+    ar.insertAdjacentHTML("beforeend",registerBadge(v));
+    const franco=document.createElement("div");
+    franco.className="franco";
+    franco.textContent=v.franco;
+    const en=document.createElement("div");
+    en.style.cssText="color:var(--ink-soft);font-size:14px";
+    en.textContent=v.en;
+    text.append(ar,franco,en);
+    row.appendChild(text);
     const btn=document.createElement("button");
     btn.className="audio-btn";
     btn.style.cssText="width:44px;height:44px;font-size:18px;margin:0";
