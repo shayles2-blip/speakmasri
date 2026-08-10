@@ -1413,8 +1413,11 @@ function tab(name){
 }
 
 /* ---------- LEARNING PATH ---------- */
+const ADMIN_EMAILS=["mira@speakmasri.com"];
+function isAdminUser(){return !!(user&&user.email&&ADMIN_EMAILS.includes(user.email.toLowerCase()));}
 function isLessonDone(id){return !!(user.progress[id]&&user.progress[id].done);}
 function isLessonUnlocked(uIdx,lIdx){
+  if(isAdminUser())return true;
   if(uIdx===0&&lIdx===0)return true;
   const flat=[];
   COURSE.units.forEach((u,ui)=>u.lessons.forEach((l,li)=>flat.push({ui,li,id:l.id})));
