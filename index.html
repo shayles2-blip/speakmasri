@@ -917,6 +917,7 @@ input:focus, select:focus {
     <div id="phrasebook" class="hidden">
       <h2>📖 Phrasebook</h2>
       <p style="padding:0 16px 12px;color:var(--ink-soft)">Everything you've unlocked so far — pull this up mid-conversation.</p>
+      <p style="padding:0 16px 12px;color:var(--ink-soft);font-size:12px">Formal = elders, in-laws, show respect · Casual = friends, peers · Intimate = partner only</p>
       <div id="pbList"></div>
     </div>
     <!-- PROFILE -->
@@ -1672,14 +1673,15 @@ function renderPhrasebook(){
     ar.lang="ar";
     ar.style.fontSize="20px";
     ar.textContent=v.ar;
-    ar.insertAdjacentHTML("beforeend",registerBadge(v));
     const franco=document.createElement("div");
     franco.className="franco";
     franco.textContent=v.franco;
     const en=document.createElement("div");
     en.style.cssText="color:var(--ink-soft);font-size:14px";
     en.textContent=vocabText(v);
-    text.append(ar,franco,en);
+    text.append(ar);
+    ar.insertAdjacentHTML("afterend",registerBadge(v));
+    text.append(franco,en);
     row.appendChild(text);
     const btn=document.createElement("button");
     btn.className="audio-btn";
@@ -1701,14 +1703,14 @@ function buildExercises(lesson){
   vocab.forEach(item=>{
     // multiple choice: EN -> AR
     const distractors=shuffle(pool.filter(v=>v.ar!==item.ar)).slice(0,3);
-    list.push({type:"mc",q:vocabText(item),answer:item.ar,franco:item.franco,
+    list.push({type:"mc",q:vocabText(item),answer:item.ar,franco:item.franco,register:item.register,
       opts:shuffle([item.ar,...distractors.map(d=>d.ar)])});
   });
 
   vocab.forEach((item,idx)=>{
     // listen & choose: hear AR -> pick EN
     const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
-    list.push({type:"listen",q:item.ar,answer:item.en,franco:item.franco,
+    list.push({type:"listen",q:item.ar,answer:item.en,franco:item.franco,register:item.register,
       audio:`audio/${lesson.id}_${idx}.mp3`,
       opts:shuffle([item,...distractors]).map(v=>({value:v.en,label:vocabText(v)}))});
   });
@@ -1770,6 +1772,7 @@ function renderExercise(){
 
   if(ex.type==="mc"){
     const q=document.createElement("div");q.className="q";q.textContent="Translate: \""+ex.q+"\"";
+    q.insertAdjacentHTML("beforeend",registerBadge(ex));
     area.appendChild(q);
     ex.opts.forEach(o=>{
       const b=document.createElement("button");
@@ -1779,6 +1782,7 @@ function renderExercise(){
     });
   } else if(ex.type==="listen"){
     const q=document.createElement("div");q.className="q";q.textContent="Listen and choose the meaning";
+    q.insertAdjacentHTML("beforeend",registerBadge(ex));
     area.appendChild(q);
     const audioBtn=document.createElement("button");
     audioBtn.className="audio-btn";audioBtn.textContent="🔊";
@@ -1797,7 +1801,7 @@ function renderExercise(){
     const q=document.createElement("div");q.className="q";q.textContent="Type it in Franco-Arabic";
     area.appendChild(q);
     const sub=document.createElement("div");sub.style.padding="0 16px";
-    sub.innerHTML=`<div class="ar" lang="ar" style="font-size:26px">${ex.ar}${registerBadge(ex)}</div><div style="color:var(--ink-soft);margin-top:4px">${ex.q}</div>`;
+    sub.innerHTML=`<div class="ar" lang="ar" style="font-size:26px">${ex.ar}</div>${registerBadge(ex)}<div style="color:var(--ink-soft);margin-top:4px">${ex.q}</div>`;
     area.appendChild(sub);
     const fw=document.createElement("div");fw.className="fillwrap";
     const inp=document.createElement("input");
@@ -1811,7 +1815,7 @@ function renderExercise(){
     const left=document.createElement("div");left.className="match-col";
     const right=document.createElement("div");right.className="match-col";
     const ens=ex.pairs.map(p=>({value:p.en,label:vocabText(p)}));
-    const ars=shuffle(ex.pairs.map(p=>p.ar));
+    const ars=shuffle(ex.pairs.map(p=>({ar:p.ar,register:p.register})));
     matchState={matched:new Set(),selEn:null,selAr:null,pairs:ex.pairs};
     ens.forEach(en=>{
       const b=document.createElement("button");b.className="opt";b.style.fontSize="15px";b.textContent=en.label;
@@ -1819,10 +1823,11 @@ function renderExercise(){
       b.onclick=()=>matchPick("en",en.value,b);
       left.appendChild(b);
     });
-    ars.forEach(ar=>{
-      const b=document.createElement("button");b.className="opt ar";b.lang="ar";b.style.fontSize="18px";b.textContent=ar;
-      b.dataset.ar=ar;
-      b.onclick=()=>matchPick("ar",ar,b);
+    ars.forEach(pair=>{
+      const b=document.createElement("button");b.className="opt";b.style.fontSize="18px";
+      b.innerHTML=`<span class="ar" lang="ar">${pair.ar}</span>${registerBadge(pair)}`;
+      b.dataset.ar=pair.ar;
+      b.onclick=()=>matchPick("ar",pair.ar,b);
       right.appendChild(b);
     });
     cols.appendChild(left);cols.appendChild(right);
@@ -2000,7 +2005,7 @@ function renderRehearsalItem(){
   const item=rehearsalPack[rehearsalIdx];
   const content=document.getElementById("rehearsal-content");
   content.innerHTML=`
-    <div class="ar" lang="ar" style="font-size:32px;margin-bottom:8px">${item.ar}${registerBadge(item)}</div>
+    <div class="ar" lang="ar" style="font-size:32px;margin-bottom:8px">${item.ar}</div>${registerBadge(item)}
     <div class="franco">${item.franco}</div>
     <div style="color:var(--ink-soft);margin-bottom:16px">${vocabText(item)}</div>
     <button id="hearBtn" class="audio-btn" aria-label="Hear native pronunciation">🔊</button>
@@ -2084,14 +2089,14 @@ function registerBadge(v){
   if(!v||v.register==null)return '';
   const r=v.register;
   if(r==='neutral')return '';
-  let icon,tip;
-  switch(r){
-    case 'intimate': icon='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"></path></svg>'; tip='Say this to your partner'; break;
-    case 'casual': icon='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 9h.01M15 9h.01M8.5 14.5a4.5 4.5 0 0 0 7 0"></path></svg>'; tip='Casual - friends, peers'; break;
-    case 'formal': icon='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 3 14.8 8.7 21 9.6 16.5 14 17.6 20.2 12 17.3 6.4 20.2 7.5 14 3 9.6 9.2 8.7 12 3"></polygon></svg>'; tip='Formal - elders, in-laws, show respect'; break;
-    default: return '';
-  }
-  return `<span style="font-size:13px;margin-left:6px;cursor:help;color:var(--ink-soft)" title="${tip}">${icon}</span>`;
+  const styles={
+    formal:{label:'Formal',color:'var(--clay)',bg:'var(--clay-soft)'},
+    casual:{label:'Casual',color:'var(--teal)',bg:'var(--teal-soft)'},
+    intimate:{label:'Intimate',color:'var(--error)',bg:'var(--error-surface)'}
+  };
+  const s=styles[r];
+  if(!s)return '';
+  return `<span style="display:inline-block;padding:2px 8px;margin-left:6px;border-radius:var(--r-pill);font-size:11px;font-weight:700;color:${s.color};background:${s.bg};vertical-align:middle">${s.label}</span>`;
 }
 
 function speak(text){
@@ -2118,7 +2123,7 @@ function renderMission(){
   const box=document.getElementById("missionBox");
   curMission=curLesson.vocab[Math.floor(Math.random()*curLesson.vocab.length)];
   box.innerHTML=`<div style="font-weight:800;margin-bottom:8px">🎯 Tonight's mission</div>
-    <div>Say this to them: <span class="ar" lang="ar" style="font-size:20px">${curMission.ar}</span>
+    <div>Say this to them: <span class="ar" lang="ar" style="font-size:20px">${curMission.ar}</span>${registerBadge(curMission)}
     <span class="franco">(${curMission.franco})</span> — "${vocabText(curMission)}"</div>
     <button class="btn btn-blue" style="margin-top:12px" id="missionBtn" onclick="markMissionDone()">I said it! ✅</button>`;
 }
