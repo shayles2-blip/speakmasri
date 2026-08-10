@@ -1,0 +1,2221 @@
+{
+  "vocab": [
+    {
+      "lessonId": "l3-1",
+      "idx": 0,
+      "en": "Yes",
+      "ar": "أيوة",
+      "franco": "Aywa",
+      "register": "neutral",
+      "ru": "Да"
+    },
+    {
+      "lessonId": "l3-1",
+      "idx": 1,
+      "en": "No",
+      "ar": "لأ",
+      "franco": "La'",
+      "register": "neutral",
+      "ru": "Нет"
+    },
+    {
+      "lessonId": "l3-1",
+      "idx": 2,
+      "en": "Let's go / Come on",
+      "ar": "يلا",
+      "franco": "Yalla",
+      "register": "casual",
+      "ru": "Погнали / Давай"
+    },
+    {
+      "lessonId": "l3-1",
+      "idx": 3,
+      "en": "Finished / Enough / OK",
+      "ar": "خلاص",
+      "franco": "Khalas",
+      "register": "neutral",
+      "ru": "Всё / Хватит / Ладно"
+    },
+    {
+      "lessonId": "l3-1",
+      "idx": 4,
+      "en": "God willing",
+      "ar": "إن شاء الله",
+      "franco": "Inshallah",
+      "register": "neutral",
+      "ru": "Если Бог даст (дай Бог)"
+    },
+    {
+      "lessonId": "l1-1",
+      "idx": 0,
+      "en": "Hi (informal)",
+      "ar": "إزيك",
+      "franco": "Ezzayak",
+      "register": "casual",
+      "ru": "Привет (неформально)"
+    },
+    {
+      "lessonId": "l1-1",
+      "idx": 1,
+      "en": "Welcome / Hey",
+      "ar": "أهلاً",
+      "franco": "Ahlan",
+      "register": "neutral",
+      "ru": "Добро пожаловать / Привет"
+    },
+    {
+      "lessonId": "l1-1",
+      "idx": 2,
+      "en": "Good morning",
+      "ar": "صباح الخير",
+      "franco": "Sabah el kheir",
+      "register": "neutral",
+      "ru": "Доброе утро"
+    },
+    {
+      "lessonId": "l1-1",
+      "idx": 3,
+      "en": "Good evening",
+      "ar": "مساء الخير",
+      "franco": "Masa el kheir",
+      "register": "neutral",
+      "ru": "Добрый вечер"
+    },
+    {
+      "lessonId": "l1-1",
+      "idx": 4,
+      "en": "Goodbye",
+      "ar": "مع السلامة",
+      "franco": "Ma'a el salama",
+      "register": "neutral",
+      "ru": "До свидания"
+    },
+    {
+      "lessonId": "l1-2",
+      "idx": 0,
+      "en": "How are you? (to a man)",
+      "ar": "عامل إيه",
+      "franco": "3amel eh",
+      "register": "casual",
+      "ru": "Как дела? (мужчине)"
+    },
+    {
+      "lessonId": "l1-2",
+      "idx": 1,
+      "en": "I'm good, thank God",
+      "ar": "كويس الحمد لله",
+      "franco": "kwayyes el7amdulillah",
+      "register": "neutral",
+      "ru": "Хорошо, слава Богу"
+    },
+    {
+      "lessonId": "l1-2",
+      "idx": 2,
+      "en": "Fine / OK",
+      "ar": "تمام",
+      "franco": "Tamam",
+      "register": "neutral",
+      "ru": "Нормально / Окей"
+    },
+    {
+      "lessonId": "l1-2",
+      "idx": 3,
+      "en": "Not good",
+      "ar": "مش كويس",
+      "franco": "Mesh kwayes",
+      "register": "neutral",
+      "ru": "Не очень"
+    },
+    {
+      "lessonId": "l2-1",
+      "idx": 0,
+      "en": "Thank you",
+      "ar": "شكراً",
+      "franco": "Shukran",
+      "register": "neutral",
+      "ru": "Спасибо"
+    },
+    {
+      "lessonId": "l2-1",
+      "idx": 1,
+      "en": "You're welcome",
+      "ar": "العفو",
+      "franco": "el-3afw",
+      "register": "neutral",
+      "ru": "Пожалуйста (в ответ на спасибо)"
+    },
+    {
+      "lessonId": "l2-1",
+      "idx": 2,
+      "en": "Please (to a man)",
+      "ar": "لو سمحت",
+      "franco": "Law samaht",
+      "register": "neutral",
+      "ru": "Пожалуйста (обращаясь к мужчине)"
+    },
+    {
+      "lessonId": "l2-1",
+      "idx": 3,
+      "en": "Sorry / Excuse me",
+      "ar": "آسف",
+      "franco": "Asef",
+      "register": "neutral",
+      "ru": "Извините / Простите"
+    },
+    {
+      "lessonId": "l2-1",
+      "idx": 4,
+      "en": "Never mind / It's OK",
+      "ar": "معلش",
+      "franco": "Ma3lesh",
+      "register": "neutral",
+      "ru": "Ничего страшного / Всё нормально"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 0,
+      "en": "Masha'Allah, this home is so bright! (compliment said when entering)",
+      "ar": "ما شاء الله، البيت منوّر.",
+      "franco": "Ma sha2 Allah el-beet menawwar.",
+      "register": "formal",
+      "ru": "Маша Аллах, какой светлый дом! (комплимент при входе в дом)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 1,
+      "en": "Permission to enter? (polite way to ask before stepping in)",
+      "ar": "أذن؟",
+      "franco": "2zn?",
+      "register": "formal",
+      "ru": "Можно войти? (вежливая просьба перед входом)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 2,
+      "en": "Your home is blessed (complimenting the home)",
+      "ar": "بيتكم مبارك",
+      "franco": "betkom mobarak",
+      "register": "formal",
+      "ru": "Благословенный у вас дом (комплимент хозяевам)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 3,
+      "en": "After you (gesturing for elders to enter first)",
+      "ar": "اتفضلوا الأول",
+      "franco": "etfaddalu el2awel",
+      "register": "formal",
+      "ru": "Проходите, пожалуйста (жест уважения к старшим)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 4,
+      "en": "Welcome, welcome (warm response to guest)",
+      "ar": "أهلاً وسهلاً",
+      "franco": "ahlan wa sahlan",
+      "register": "neutral",
+      "ru": "Проходите, проходите! (тёплый ответ гостю)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 5,
+      "en": "Come in, come in (urging guest to enter)",
+      "ar": "اتفضل اتفضل",
+      "franco": "etfaddal etfaddal",
+      "register": "neutral",
+      "ru": "Проходите, проходите (приглашение войти)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 6,
+      "en": "God keep you safe (response to 'welcome')",
+      "ar": "الله يسلمك",
+      "franco": "allah yesallimak",
+      "register": "neutral",
+      "ru": "Храни вас Бог (ответ на «добро пожаловать»)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 7,
+      "en": "Make yourself at home (casual, to peers)",
+      "ar": "إنت هنا في بيتك",
+      "franco": "enta hena fe betak",
+      "register": "casual",
+      "ru": "Чувствуй себя как дома (по-свойски, ровесникам)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 8,
+      "en": "You honor us (humble response to welcome)",
+      "ar": "شرفتمونا",
+      "franco": "sharraftuna",
+      "register": "formal",
+      "ru": "Вы оказываете нам честь (скромный ответ на приветствие)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 9,
+      "en": "I’m so happy to be here (warm, sincere)",
+      "ar": "أنا فرحان أوي إني جيت",
+      "franco": "ana far7an awi eni geet",
+      "register": "neutral",
+      "ru": "Я так рад, что я здесь (тепло, искренне)"
+    },
+    {
+      "lessonId": "l1-3",
+      "idx": 10,
+      "en": "You’re my heart (intimate, to partner only)",
+      "ar": "إنت قلبي",
+      "franco": "enta 2alby",
+      "register": "intimate",
+      "ru": "Ты — моё сердце (только для любимого человека)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 0,
+      "en": "My name is... (formal, to elders)",
+      "ar": "أنا اسمي...",
+      "franco": "Ana esmi...",
+      "register": "formal",
+      "ru": "Меня зовут... (уважительно, старшим)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 1,
+      "en": "What's your name? (polite, to elders)",
+      "ar": "اسم حضرتك إيه؟",
+      "franco": "Esm 7adrtak eih?",
+      "register": "formal",
+      "ru": "Как вас зовут? (вежливо, старшим)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 2,
+      "en": "This is my mother (introducing her respectfully)",
+      "ar": "دي والدتي.",
+      "franco": "Di waldeti.",
+      "register": "formal",
+      "ru": "Это моя мама (представление с уважением)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 3,
+      "en": "This is my father (introducing him respectfully)",
+      "ar": "ده والدي.",
+      "franco": "Da waldi.",
+      "register": "formal",
+      "ru": "Это мой папа (представление с уважением)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 4,
+      "en": "How should I address your mother? (asking partner)",
+      "ar": "مامتك أناديها بإيه؟",
+      "franco": "Mamtak anadiha bi eih?",
+      "register": "intimate",
+      "ru": "Как мне обращаться к твоей маме? (спрашиваешь у партнёра)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 5,
+      "en": "Call her 'Mama' (partner telling you what to say)",
+      "ar": "قولي لها ماما",
+      "franco": "2oli laha mama",
+      "register": "intimate",
+      "ru": "Зови её «Мама» (партнёр подсказывает, как обращаться)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 6,
+      "en": "This is my aunt (father's sister, respectful)",
+      "ar": "دي عمتي",
+      "franco": "Di 3ammeti",
+      "register": "formal",
+      "ru": "Это моя тётя (сестра отца, уважительно)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 7,
+      "en": "This is my uncle (father's brother, respectful)",
+      "ar": "ده عمي",
+      "franco": "Da 3ami",
+      "register": "formal",
+      "ru": "Это мой дядя (брат отца, уважительно)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 8,
+      "en": "This is my aunt (mother's sister, respectful)",
+      "ar": "دي خالتي",
+      "franco": "Di 5alti",
+      "register": "formal",
+      "ru": "Это моя тётя (сестра мамы, уважительно)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 9,
+      "en": "This is my uncle (mother's brother, respectful)",
+      "ar": "ده خالي",
+      "franco": "Da 5ali",
+      "register": "formal",
+      "ru": "Это мой дядя (брат мамы, уважительно)"
+    },
+    {
+      "lessonId": "l1-4",
+      "idx": 10,
+      "en": "What do I call your older brother? (asking partner)",
+      "ar": "أخوك الكبير أناديه بإيه؟",
+      "franco": "A5ook el kbeer anadih bi eih?",
+      "register": "intimate",
+      "ru": "Как мне называть твоего старшего брата? (спрашиваешь у партнёра)"
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 0,
+      "en": "No, thank you (first polite refusal).",
+      "ar": "لا، شكرًا.",
+      "franco": "La2, shokran.",
+      "register": "formal",
+      "ru": "Нет, спасибо (первый вежливый отказ)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 1,
+      "en": "I swear I'm full (after second helping).",
+      "ar": "والله شبعان.",
+      "franco": "Wallah sha3baan.",
+      "register": "neutral",
+      "ru": "Честное слово, я сыт(а)"
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 2,
+      "en": "Just a little, please (when they insist).",
+      "ar": "شوية بس، لو سمحت.",
+      "franco": "Shwayya bass, law sama7t.",
+      "register": "formal",
+      "ru": "Совсем чуть-чуть, пожалуйста (когда настаивают)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 3,
+      "en": "It's delicious, may God bless your hands (praise to the cook).",
+      "ar": "لذيذ أوي، تسلم إيديك.",
+      "franco": "Lazeez awy, teslam eedeek.",
+      "register": "formal",
+      "ru": "Очень вкусно, у вас золотые руки (похвала повару)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 4,
+      "en": "I can't eat another bite (polite way to stop).",
+      "ar": "مقدرش آكل أكتر من كده.",
+      "franco": "Ma2darsh akol aktar men keda.",
+      "register": "neutral",
+      "ru": "Я больше не могу ни кусочка (вежливый способ остановиться)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 5,
+      "en": "You're spoiling me (when they keep insisting).",
+      "ar": "كتر خيرك.",
+      "franco": "Keteer 5eirik.",
+      "register": "casual",
+      "ru": "Вы меня балуете (когда продолжают настаивать)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 6,
+      "en": "I'll have some later (gentle refusal).",
+      "ar": "هاخد بعدين.",
+      "franco": "Ha5od ba3deen.",
+      "register": "neutral",
+      "ru": "Я попробую попозже (мягкий отказ)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 7,
+      "en": "It's perfect, no need for more (warm but firm).",
+      "ar": "كفاية كده، متشكر.",
+      "franco": "Kefaya keda, motshakker.",
+      "register": "neutral",
+      "ru": "Всё идеально, больше не нужно (тепло, но твёрдо)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 8,
+      "en": "I'll explode if I eat more (humorous refusal).",
+      "ar": "بطني هتنفجر لو كلت أكتر!",
+      "franco": "Batni hatenfegar law kelt aktar!",
+      "register": "casual",
+      "ru": "Я лопну, если съем ещё! (шутливый отказ)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 9,
+      "en": "Just a sip, I'm really full (for tea/juice).",
+      "ar": "رشفة بس، أنا مليان أوي.",
+      "franco": "Rashfa bas, ana melyan awy.",
+      "register": "neutral",
+      "ru": "Только глоточек, я правда больше не могу (для чая/сока)."
+    },
+    {
+      "lessonId": "l1-5",
+      "idx": 10,
+      "en": "You're too kind (to the host after insistence).",
+      "ar": "كتر خيرك.",
+      "franco": "Keteer 5eirik.",
+      "register": "formal",
+      "ru": "Вы слишком добры (хозяину после настойчивых уговоров)."
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 0,
+      "en": "I'm from [country/city], originally.",
+      "ar": "أنا من [بلد/مدينة] أصلا.",
+      "franco": "Ana mn [balad/madina] aslan.",
+      "register": "neutral",
+      "ru": "Я из [страна/город], родом оттуда."
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 1,
+      "en": "I work in [field], but I'm still learning.",
+      "ar": "بشتغل في [مجال]، بس لسه بتعلّم عربي.",
+      "franco": "Bashtaghal fi [magal], bas lissa bet3allam 3arabi.",
+      "register": "neutral",
+      "ru": "Я работаю в сфере [сфера], но всё ещё учусь."
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 2,
+      "en": "My family's small—just my parents and me.",
+      "ar": "عيلتي صغيرة، بابا وماما وأنا بس.",
+      "franco": "3eelti soghayyara, baba w mama w ana bass.",
+      "register": "casual",
+      "ru": "У меня маленькая семья — только родители и я."
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 3,
+      "en": "I’ve been in Egypt for [time], and I love it here.",
+      "ar": "أنا في مصر بقالي [مدة]، وبحبها أوي.",
+      "franco": "Ana fi Masr ba2aly [modda], w ba7ebha awy.",
+      "register": "neutral",
+      "ru": "Я в Египте уже [время], и мне тут очень нравится."
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 4,
+      "en": "I’m staying until [time], God willing.",
+      "ar": "هفضل لحد [وقت]، إن شاء الله.",
+      "franco": "Hafdal le7ad [wa2t], in sha2 Allah.",
+      "register": "formal",
+      "ru": "Я пробуду до [время], если Бог даст."
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 5,
+      "en": "My Arabic is still weak, but I’m trying!",
+      "ar": "عربي ضعيف شوية، بس بجتهد!",
+      "franco": "3arabi da3if shwayya, bas baghtahid!",
+      "register": "casual",
+      "ru": "Мой арабский пока слабый, но я стараюсь!"
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 6,
+      "en": "I have one brother/sister—just us two.",
+      "ar": "لي أخ/أخت واحد بس، إحنا الاتنين.",
+      "franco": "Li akh/okht wa7ed bass, e7na el-etnein.",
+      "register": "neutral",
+      "ru": "У меня один брат/одна сестра — нас двое."
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 7,
+      "en": "I’m here to learn and be part of the family.",
+      "ar": "أنا جاي أتعلم وأبقى واحد من العيلة.",
+      "franco": "Ana gay at3allam w ab2a wa7ed men el-3eela.",
+      "register": "formal",
+      "ru": "Я здесь, чтобы учиться и стать частью семьи."
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 8,
+      "en": "I love Egyptian food—it’s the best!",
+      "ar": "بحب الأكل المصري أوي، أحسن حاجة!",
+      "franco": "Ba7eb el-akl el-masri awi, a7san 7aga!",
+      "register": "casual",
+      "ru": "Обожаю египетскую еду — лучшая в мире!"
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 9,
+      "en": "I’m so happy to meet you all!",
+      "ar": "أنا فرحان أوي إني قابلتكم!",
+      "franco": "Ana far7an awi eni 2abaltkom!",
+      "register": "formal",
+      "ru": "Я так рад, что познакомился со всеми вами!"
+    },
+    {
+      "lessonId": "l1-6",
+      "idx": 10,
+      "en": "I’m still getting used to Cairo—it’s amazing!",
+      "ar": "لسه بتعود على القاهرة… بس حلوة قوي!",
+      "franco": "Lissa bat3awwad 3ala el-2ahera... bas 7elwa awy!",
+      "register": "intimate",
+      "ru": "Я ещё привыкаю к Каиру — но он потрясающий!"
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 0,
+      "en": "This home is so full of blessings, God willing.",
+      "ar": "ما شاء الله البيت ده مليان بركة.",
+      "franco": "Ma sha2 Allah el-beet da melyan baraka.",
+      "register": "neutral",
+      "ru": "В этом доме столько благодати, слава Богу."
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 1,
+      "en": "Your hands are blessed, may God keep them safe.",
+      "ar": "تسلم إيديك، ربنا يحفظك.",
+      "franco": "Teslam eedeek, Rabbena ye7fazak.",
+      "register": "formal",
+      "ru": "Золотые у вас руки, храни вас Бог."
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 2,
+      "en": "The food is incredible, may God bless your hands.",
+      "ar": "الأكل ده تحفة، ربنا يبارك في إيدك.",
+      "franco": "El-akl da to7fa, rabena ybarek fe eedak.",
+      "register": "neutral",
+      "ru": "Еда невероятная, у вас золотые руки."
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 3,
+      "en": "What a beautiful home, God protect it.",
+      "ar": "البيت ده جميل أوي، الله يحميه.",
+      "franco": "El-beet da gameel awy, Allah ye7mayo.",
+      "register": "neutral",
+      "ru": "Какой красивый дом, пусть Бог его хранит."
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 4,
+      "en": "The kids are so well-mannered, God bless them.",
+      "ar": "العيال مهذبين أوي، ربنا يبارك فيهم.",
+      "franco": "El-3eyal mohazbeen awy, rabena ybarek feehom.",
+      "register": "formal",
+      "ru": "Детки такие воспитанные, дай Бог им здоровья."
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 5,
+      "en": "You’ve raised them so well, may God reward you.",
+      "ar": "ربنا يخليهملك، ربنا يجازيك خير.",
+      "franco": "Rabena y5alleehomlak, rabena ygazeek 5eer.",
+      "register": "formal",
+      "ru": "Вы так хорошо их воспитали, пусть Бог вас наградит."
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 6,
+      "en": "This dish is amazing, your hands are golden!",
+      "ar": "الأكل ده حاجة حلوة أوي، إيدك دهب!",
+      "franco": "El-akl da 7aga 7elwa awy, eedak dahab!",
+      "register": "casual",
+      "ru": "Это блюдо — шедевр, у вас золотые руки!"
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 7,
+      "en": "The house smells so good, like heaven!",
+      "ar": "البيت ريحته حلوة أوي، زي الجنة!",
+      "franco": "El-beet rey7to 7elwa awy, zay el-genna!",
+      "register": "casual",
+      "ru": "В доме так вкусно пахнет, как в раю!"
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 8,
+      "en": "You’re all so kind, God bless this family.",
+      "ar": "أنتم طيبين أوي، ربنا يبارك في العيلة دي.",
+      "franco": "Entom taybeen awy, rabena ybarek fel-3eela di.",
+      "register": "formal",
+      "ru": "Вы все такие добрые, благослови Бог эту семью."
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 9,
+      "en": "The kids are adorable, ma sha’ Allah!",
+      "ar": "العيال حلوين أوي، ما شاء الله!",
+      "franco": "El-3eyal 7elween awy, ma sha2 Allah!",
+      "register": "neutral",
+      "ru": "Детки такие милые, маша Аллах!"
+    },
+    {
+      "lessonId": "l1-7",
+      "idx": 10,
+      "en": "I feel so welcome here, thank God.",
+      "ar": "أنا حاسس نفسي في بيتي، الحمد لله.",
+      "franco": "Ana 7ases nafsi fe beety, el-7amd lellah.",
+      "register": "intimate",
+      "ru": "Я чувствую себя здесь как дома, слава Богу."
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 0,
+      "en": "Do you like Egypt?",
+      "ar": "مصر عجبتك؟",
+      "franco": "Masr 3agabtak?",
+      "register": "neutral",
+      "ru": "Тебе нравится Египет?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 1,
+      "en": "Can you handle the spice?",
+      "ar": "بتستحمل الشطة؟",
+      "franco": "Betesta7mel el-shatta?",
+      "register": "casual",
+      "ru": "Ты острое ешь?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 2,
+      "en": "When are you learning Arabic?",
+      "ar": "حضرتك بتتعلم عربي بقالك قد إيه؟",
+      "franco": "Hadratak betet3allam 3arabi ba2alak add eh?",
+      "register": "neutral",
+      "ru": "Как давно ты учишь арабский?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 3,
+      "en": "When’s the wedding?",
+      "ar": "إمتى الجواز؟",
+      "franco": "Emta el gawaz?",
+      "register": "casual",
+      "ru": "Когда свадьба?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 4,
+      "en": "Do you eat ful medames?",
+      "ar": "بتاكلي فول؟",
+      "franco": "Betaakli fool?",
+      "register": "neutral",
+      "ru": "Ты ешь фуль медаммес?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 5,
+      "en": "Are you used to the heat yet?",
+      "ar": "اتعودتي على الحر؟",
+      "franco": "Et3awadti 3ala el 7ar?",
+      "register": "neutral",
+      "ru": "Уже привык(ла) к жаре?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 6,
+      "en": "You’re not leaving us, right?",
+      "ar": "مش هتسيبينا، صح؟",
+      "franco": "Msh hatsibina, sa7?",
+      "register": "intimate",
+      "ru": "Ты ведь нас не бросишь, правда?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 7,
+      "en": "Do you like Egyptian tea?",
+      "ar": "الشاي المصري عجبك؟",
+      "franco": "El shai el masri 3agabak?",
+      "register": "neutral",
+      "ru": "Тебе нравится египетский чай?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 8,
+      "en": "You’ll visit us often, won’t you?",
+      "ar": "هتزورينا كتير، مش كده؟",
+      "franco": "Hatzurina kteer, msh keda?",
+      "register": "formal",
+      "ru": "Будешь нас часто навещать, да?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 9,
+      "en": "You’re not scared of our family, are you?",
+      "ar": "مش خايف من العيلة بتاعتنا، صح؟",
+      "franco": "Msh 5aif men el 3eela beta3tna, sa7?",
+      "register": "casual",
+      "ru": "Ты ведь не боишься нашей семьи, а?"
+    },
+    {
+      "lessonId": "l1-8",
+      "idx": 10,
+      "en": "You’ll get used to us soon, inshallah.",
+      "ar": "هتتعود علينا قريب إن شاء الله.",
+      "franco": "Hatet3awad 3alina 2areeb, in shaa Allah.",
+      "register": "formal",
+      "ru": "Скоро привыкнешь к нам, иншаллах."
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 0,
+      "en": "I didn’t catch that—could you say it again, please?",
+      "ar": "معلش، ممكن تقولها تاني لو سمحت؟",
+      "franco": "Ma3lesh, momken t2olha tani law sama7t?",
+      "register": "formal",
+      "ru": "Я не расслышал — можно ещё раз, пожалуйста?"
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 1,
+      "en": "Sorry, my Arabic is still weak—could you speak a little slower?",
+      "ar": "آسف، عربيتي لسه ضعيفة… ممكن تتكلم أبطأ شوية؟",
+      "franco": "Asif, 3arabiti lissa da3eefa... momken tetkallem abTa2 shwayya?",
+      "register": "formal",
+      "ru": "Простите, мой арабский пока слабый — можно чуть помедленнее?"
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 2,
+      "en": "I missed that—what did you say?",
+      "ar": "ما سمعتش كويس… إيه اللي حضرتك قلته؟",
+      "franco": "Ma seme3tesh kwayyes... eh elli hadratak 2olto?",
+      "register": "neutral",
+      "ru": "Я не уловил — что вы сказали?"
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 3,
+      "en": "Could you repeat that one more time?",
+      "ar": "ممكن تعيديها تاني مرة؟",
+      "franco": "Momken te3idiha tani mara?",
+      "register": "neutral",
+      "ru": "Можно повторить ещё разок?"
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 4,
+      "en": "I didn’t get it—could you explain in simpler words?",
+      "ar": "ما فهمتش، ممكن تشرحي بكلمات أسهل؟",
+      "franco": "Ma fhmtish, momken teshra7i b kalemat as-hal?",
+      "register": "formal",
+      "ru": "Я не понял — можете объяснить попроще?"
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 5,
+      "en": "Wait, I’m lost—what’s going on?",
+      "ar": "استنى، انا تايه، ايه اللي بيحصل؟",
+      "franco": "Estanna, ana tayeh, eih elly bey7sal?",
+      "register": "casual",
+      "ru": "Подожди, я не понял(а)..."
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 6,
+      "en": "Babe, translate this for me quick.",
+      "ar": "يا حبيبي، ترجملي ده بسرعة.",
+      "franco": "Ya 7abibi, taragmli da b sor3a.",
+      "register": "intimate",
+      "ru": "Малыш, переведи мне это быстренько."
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 7,
+      "en": "I didn’t understand—could you say it in English?",
+      "ar": "ما فهمتش، ممكن تقولها بالانجليزي؟",
+      "franco": "Ma fhmtish, momken t2olha bel engelizi?",
+      "register": "neutral",
+      "ru": "Я не понял — можно по-английски?"
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 8,
+      "en": "Hold on, I need to ask [partner’s name] what this means.",
+      "ar": "استنى، لازم اسأل [اسم الشريك] ده معناه ايه.",
+      "franco": "Estanna, lazem as2al [esm el shareek] da ma3nah eih.",
+      "register": "formal",
+      "ru": "Секундочку, мне нужно спросить у [имя партнёра], что это значит."
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 9,
+      "en": "Sorry, my brain froze—could you repeat?",
+      "ar": "آسف، دماغي وقفت… ممكن تعيد؟",
+      "franco": "Asif, demaghi we2fet... momken te3eed?",
+      "register": "casual",
+      "ru": "Простите, у меня мозг завис — можно повторить?"
+    },
+    {
+      "lessonId": "l1-9",
+      "idx": 10,
+      "en": "I’m trying to follow, but it’s too fast.",
+      "ar": "بحاول أتابع بس الكلام سريع أوي.",
+      "franco": "Ba7awel atabe3 bas el-kalam saree3 awy.",
+      "register": "neutral",
+      "ru": "Я пытаюсь понять, но слишком быстро."
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 0,
+      "en": "Oops, my tongue got tangled!",
+      "ar": "لساني اتلخبط!",
+      "franco": "Lesani etlakhbat!",
+      "register": "neutral",
+      "ru": "Ой, язык заплёлся!"
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 1,
+      "en": "Sorry, my brain short-circuited for a second!",
+      "ar": "آسف، دماغي فصلت ثانية.",
+      "franco": "Asif, demaghi faslet sanya.",
+      "register": "casual",
+      "ru": "Простите, у меня мозг коротнул на секунду!"
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 2,
+      "en": "I swear I’m not usually this clumsy… today’s just not my day!",
+      "ar": "والله ما أنا كده عادة… النهارده مش يومي!",
+      "franco": "WAllah ma ana keda 3ada… elnaharda msh yomi!",
+      "register": "neutral",
+      "ru": "Честное слово, обычно я не такой неуклюжий… просто сегодня не мой день!"
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 3,
+      "en": "Forgive me, I’m still learning the Egyptian way!",
+      "ar": "سامحني، أنا لسه بتعلّم اللهجة المصرية.",
+      "franco": "Same7ni, ana lissa bet3allam el-lahga el-masreyya.",
+      "register": "formal",
+      "ru": "Простите, я ещё учусь египетским обычаям!"
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 4,
+      "en": "Oh no, did I just say that out loud? My bad!",
+      "ar": "يا نهار أبيض… أنا قلت كده بصوت عالي؟ معلش!",
+      "franco": "Ya nahar abyad... ana 2olt keda be-sot 3ali? ma3lesh!",
+      "register": "casual",
+      "ru": "Ой нет, я правда это вслух сказал? Виноват!"
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 5,
+      "en": "Babe, save me—I just called your dad ‘ya 7abibi’ by accident!",
+      "ar": "يا بيبي إلحقني—أنا ناديت باباك «يا حبيبي» بالغلط!",
+      "franco": "Ya baby el7a2ni—ana nadet babak \"ya 7abibi\" bel ghalat!",
+      "register": "intimate",
+      "ru": "Малыш, спасай — я только что назвал твоего папу «йа хабиби» по ошибке!"
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 6,
+      "en": "Oh no, I messed up! Sorry about that.",
+      "ar": "يا نهار أبيض، غلطت! آسف والله.",
+      "franco": "Ya nahar abyad, ghalatt! Asif wallah.",
+      "register": "casual",
+      "ru": "Ой нет, я накосячил(а)!"
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 7,
+      "en": "I didn’t mean to say that—my tongue slipped!",
+      "ar": "ما قصدتش أقول كده، لساني اتخطى!",
+      "franco": "Ma 2asadtish a2ool keda, lesani etkhatta!",
+      "register": "casual",
+      "ru": "Я не хотел(а) это сказать..."
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 8,
+      "en": "Forgive me, I got confused with the names.",
+      "ar": "سامحني، اتخبطت في الأسماء.",
+      "franco": "Samehni, etkhabatt fil asma2.",
+      "register": "neutral",
+      "ru": "Простите, я запутался в именах."
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 9,
+      "en": "I swear I didn’t mean to refuse—your food is amazing!",
+      "ar": "والله ما قصدت أرفض، الأكل عندك تحفة!",
+      "franco": "Wallah ma 2asadt arfaD, el akel 3andak to7fa!",
+      "register": "casual",
+      "ru": "Честное слово, я не хотел(а) отказаться..."
+    },
+    {
+      "lessonId": "l1-10",
+      "idx": 10,
+      "en": "I’m so embarrassed—let’s just laugh it off!",
+      "ar": "أنا خجلان أوي، خلينا نضحك عليها!",
+      "franco": "Ana khaglan awi, khalina ned7ak 3aleiha!",
+      "register": "intimate",
+      "ru": "Мне так неловко — давайте просто посмеёмся над этим!"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 0,
+      "en": "Thank you so much for the wonderful day (said to the hosts)",
+      "ar": "الف شكر على اليوم الجميل ده",
+      "franco": "Alf shokr 3ala el youm el gamil da",
+      "register": "formal",
+      "ru": "Огромное спасибо за этот чудесный день (хозяевам)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 1,
+      "en": "God bless your hands (for the food/effort, said to the hostess)",
+      "ar": "الله يخلي إيديك",
+      "franco": "Allah ye5ally eedyak",
+      "register": "formal",
+      "ru": "У вас золотые руки (за угощение/старания, хозяйке)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 2,
+      "en": "We ate so well, may God keep you (said after a meal)",
+      "ar": "أكلنا حلو أوي، ربنا يخليك.",
+      "franco": "Akalna 7elw awy, Rabbena ye5alleek.",
+      "register": "formal",
+      "ru": "Мы так вкусно поели, храни вас Бог (после трапезы)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 3,
+      "en": "We had such a great time, we’ll come back soon (promising return)",
+      "ar": "استمتعنا أوي هنرجع تاني قريب",
+      "franco": "Estamta3na awy, hanraga tany 2areeb",
+      "register": "neutral",
+      "ru": "Было так здорово, мы скоро вернёмся (обещание вернуться)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 4,
+      "en": "May God keep your home safe and happy (blessing for the household)",
+      "ar": "ربنا يخلي بيتكم عامر وسعيد",
+      "franco": "Rabbena ye5ally beetkom 3amer we sa3eed",
+      "register": "formal",
+      "ru": "Пусть Бог хранит ваш дом счастливым (благословение семье)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 5,
+      "en": "Don’t tire yourself out (said to the hostess as you leave)",
+      "ar": "ما تتعبيش نفسك",
+      "franco": "Ma tet3abish nafsak",
+      "register": "formal",
+      "ru": "Не утруждайте себя (хозяйке при уходе)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 6,
+      "en": "We’ll see you soon, God willing (casual but warm)",
+      "ar": "نشوفك قريب إن شاء الله",
+      "franco": "Neshoufak 2areeb, in sha2 Allah",
+      "register": "neutral",
+      "ru": "Скоро увидимся, если Бог даст (тепло, по-свойски)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 7,
+      "en": "Take care of yourself (said to elders as you leave)",
+      "ar": "خلي بالك من نفسك",
+      "franco": "5ally balak men nafsak",
+      "register": "formal",
+      "ru": "Берегите себя (старшим при прощании)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 8,
+      "en": "I’ll call you when I get home (said to partner)",
+      "ar": "هكلمك لما أوصل",
+      "franco": "Hakallimak lamma awsal",
+      "register": "intimate",
+      "ru": "Я позвоню тебе, когда доберусь домой (партнёру)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 9,
+      "en": "May God keep you all (final blessing before leaving)",
+      "ar": "ربنا معاكم",
+      "franco": "Rabbena ma3akom",
+      "register": "formal",
+      "ru": "Храни вас всех Бог (последнее благословение перед уходом)"
+    },
+    {
+      "lessonId": "l1-11",
+      "idx": 10,
+      "en": "Goodbye, stay safe (final farewell)",
+      "ar": "مع السلامة خلي بالك",
+      "franco": "Ma3a el salama, 5ally balak",
+      "register": "neutral",
+      "ru": "До свидания, берегите себя (прощание)"
+    },
+    {
+      "lessonId": "l2-2",
+      "idx": 0,
+      "en": "Darling / Sweetheart (to partner)",
+      "ar": "حبيبي / حبيبتي",
+      "franco": "7abibi / 7abibti",
+      "register": "intimate",
+      "ru": "Любимый / Любимая (партнёру)"
+    },
+    {
+      "lessonId": "l2-2",
+      "idx": 1,
+      "en": "Respectful way to address mother-in-law (like 'Mama')",
+      "ar": "ماما",
+      "franco": "mama",
+      "register": "formal",
+      "ru": "Уважительное обращение к свекрови/тёще (как «Мама»)"
+    },
+    {
+      "lessonId": "l2-2",
+      "idx": 2,
+      "en": "Respectful way to address father-in-law (like 'Baba')",
+      "ar": "بابا",
+      "franco": "baba",
+      "register": "formal",
+      "ru": "Уважительное обращение к свёкру/тестю (как «Папа»)"
+    },
+    {
+      "lessonId": "l2-2",
+      "idx": 3,
+      "en": "How Egyptians actually say 'I love you' (casual, natural)",
+      "ar": "باحبك",
+      "franco": "ba7ebak / ba7ebik",
+      "register": "intimate",
+      "ru": "Как египтяне на самом деле говорят «Я тебя люблю» (живое, естественное)"
+    },
+    {
+      "lessonId": "l2-2",
+      "idx": 4,
+      "en": "Asking 'How is your family?' (as Egyptians say it)",
+      "ar": "العيلة عاملة إيه؟",
+      "franco": "el-3eela 3amla eh?",
+      "register": "casual",
+      "ru": "Вопрос «Как семья?» (по-египетски)"
+    },
+    {
+      "lessonId": "l2-2",
+      "idx": 5,
+      "en": "Saying 'God keep them safe' (common after mentioning family)",
+      "ar": "الله يِخَلِّيهم",
+      "franco": "Allah y5alleehom",
+      "register": "neutral",
+      "ru": "«Храни их Бог» (принято говорить, упомянув семью)"
+    },
+    {
+      "lessonId": "l3-2",
+      "idx": 0,
+      "en": "Eid greeting (to anyone)",
+      "ar": "كل سنة وانت طيب",
+      "franco": "kol sana w enta tayyeb",
+      "register": "neutral",
+      "ru": "Поздравление с Идом (кому угодно)"
+    },
+    {
+      "lessonId": "l3-2",
+      "idx": 1,
+      "en": "Blessing/wish to elders",
+      "ar": "الله يخليك لنا",
+      "franco": "Allah yekhalleek lana",
+      "register": "formal",
+      "ru": "Благословение/пожелание старшим"
+    },
+    {
+      "lessonId": "l3-2",
+      "idx": 2,
+      "en": "Complimenting the host's cooking/hospitality",
+      "ar": "الأكل تحفة، تسلم إيدِك",
+      "franco": "el-akl tu7fa, teslam eedek",
+      "register": "neutral",
+      "ru": "Комплимент хозяйке за готовку/гостеприимство"
+    },
+    {
+      "lessonId": "l3-2",
+      "idx": 3,
+      "en": "Asking politely for more food",
+      "ar": "ممكن آخد زيادة شوية؟",
+      "franco": "momken akhod zeyada shwayya?",
+      "register": "neutral",
+      "ru": "Вежливая просьба о добавке"
+    },
+    {
+      "lessonId": "l3-2",
+      "idx": 4,
+      "en": "Compliment about how nice everyone looks",
+      "ar": "كلكم شكلكم حلو أوي",
+      "franco": "kolkom sheklokom 7elw awi",
+      "register": "neutral",
+      "ru": "Комплимент: как все хорошо выглядят"
+    },
+    {
+      "lessonId": "l3-2",
+      "idx": 5,
+      "en": "Offering to help (useful at family gatherings)",
+      "ar": "أساعد في إيه؟",
+      "franco": "asa3ed fi eh?",
+      "register": "neutral",
+      "ru": "Предложение помочь (полезно на семейных посиделках)"
+    },
+    {
+      "lessonId": "l4-1",
+      "idx": 0,
+      "en": "one",
+      "ar": "واحد",
+      "franco": "wa7ed",
+      "register": "neutral",
+      "ru": "один"
+    },
+    {
+      "lessonId": "l4-1",
+      "idx": 1,
+      "en": "two",
+      "ar": "اتنين",
+      "franco": "etnein",
+      "register": "neutral",
+      "ru": "два"
+    },
+    {
+      "lessonId": "l4-1",
+      "idx": 2,
+      "en": "three",
+      "ar": "تلاتة",
+      "franco": "talata",
+      "register": "neutral",
+      "ru": "три"
+    },
+    {
+      "lessonId": "l4-1",
+      "idx": 3,
+      "en": "five",
+      "ar": "خمسة",
+      "franco": "khamsa",
+      "register": "neutral",
+      "ru": "пять"
+    },
+    {
+      "lessonId": "l4-1",
+      "idx": 4,
+      "en": "ten",
+      "ar": "عشرة",
+      "franco": "3ashra",
+      "register": "neutral",
+      "ru": "десять"
+    },
+    {
+      "lessonId": "l4-2",
+      "idx": 0,
+      "en": "How much is this?",
+      "ar": "بكام ده؟",
+      "franco": "bekam da?",
+      "register": "neutral",
+      "ru": "Сколько это стоит?"
+    },
+    {
+      "lessonId": "l4-2",
+      "idx": 1,
+      "en": "That's too expensive!",
+      "ar": "ده غالي أوي!",
+      "franco": "da ghali awi!",
+      "register": "neutral",
+      "ru": "Это слишком дорого!"
+    },
+    {
+      "lessonId": "l4-2",
+      "idx": 2,
+      "en": "Come on, make it a good price",
+      "ar": "يلا بقى، اعملهولي بسعر حلو",
+      "franco": "yalla ba2a, e3mholi bese3r 7elw",
+      "register": "casual",
+      "ru": "Да ладно, скинь немного"
+    },
+    {
+      "lessonId": "l4-2",
+      "idx": 3,
+      "en": "Twenty pounds, final",
+      "ar": "عشرين جنيه وخلاص",
+      "franco": "3eshreen geneh w khalas",
+      "register": "casual",
+      "ru": "Двадцать фунтов, и всё"
+    },
+    {
+      "lessonId": "l4-2",
+      "idx": 4,
+      "en": "Do you have change?",
+      "ar": "معاك فكة؟",
+      "franco": "ma3ak fakka?",
+      "register": "neutral",
+      "ru": "У вас есть сдача?"
+    },
+    {
+      "lessonId": "l4-3",
+      "idx": 0,
+      "en": "How much to downtown?",
+      "ar": "بكام لوسط البلد؟",
+      "franco": "bekam le west el balad?",
+      "register": "neutral",
+      "ru": "Сколько до центра?"
+    },
+    {
+      "lessonId": "l4-3",
+      "idx": 1,
+      "en": "Turn on the meter, please",
+      "ar": "شغّل العدّاد لو سمحت",
+      "franco": "shaghal el 3addad law sama7t",
+      "register": "neutral",
+      "ru": "Включите счётчик, пожалуйста"
+    },
+    {
+      "lessonId": "l4-3",
+      "idx": 2,
+      "en": "Stop here on the side",
+      "ar": "على جنب هنا",
+      "franco": "3ala gamb hena",
+      "register": "neutral",
+      "ru": "Остановите здесь, у обочины"
+    },
+    {
+      "lessonId": "l4-3",
+      "idx": 3,
+      "en": "Keep the change",
+      "ar": "خلي الباقي ليك",
+      "franco": "khali el ba2i leek",
+      "register": "neutral",
+      "ru": "Сдачи не надо"
+    },
+    {
+      "lessonId": "l4-3",
+      "idx": 4,
+      "en": "That's not the normal fare",
+      "ar": "دي مش الأجرة العادية",
+      "franco": "di mesh el ogra el 3adeya",
+      "register": "neutral",
+      "ru": "Это не обычная цена"
+    },
+    {
+      "lessonId": "l5-1",
+      "idx": 0,
+      "en": "A tea, please",
+      "ar": "شاي لو سمحت",
+      "franco": "shay law sama7t",
+      "register": "neutral",
+      "ru": "Чай, пожалуйста"
+    },
+    {
+      "lessonId": "l5-1",
+      "idx": 1,
+      "en": "Coffee, medium sugar",
+      "ar": "قهوة مظبوط",
+      "franco": "ahwa mazboot",
+      "register": "neutral",
+      "ru": "Кофе, средней сладости"
+    },
+    {
+      "lessonId": "l5-1",
+      "idx": 2,
+      "en": "Without sugar",
+      "ar": "سادة",
+      "franco": "sada",
+      "register": "neutral",
+      "ru": "Без сахара"
+    },
+    {
+      "lessonId": "l5-1",
+      "idx": 3,
+      "en": "A fresh mango juice",
+      "ar": "عصير مانجا فريش",
+      "franco": "3aseer manga fresh",
+      "register": "neutral",
+      "ru": "Свежий манговый сок"
+    },
+    {
+      "lessonId": "l5-1",
+      "idx": 4,
+      "en": "Waiter! (getting attention)",
+      "ar": "يا أسطى!",
+      "franco": "ya osta!",
+      "register": "casual",
+      "ru": "Официант! (привлечь внимание)"
+    },
+    {
+      "lessonId": "l5-2",
+      "idx": 0,
+      "en": "One medium koshary",
+      "ar": "واحد كشري وسط",
+      "franco": "wa7ed koshari wasat",
+      "register": "neutral",
+      "ru": "Один кошари, средний"
+    },
+    {
+      "lessonId": "l5-2",
+      "idx": 1,
+      "en": "Extra fried onions",
+      "ar": "تقلية زيادة",
+      "franco": "ta2leya zeyada",
+      "register": "neutral",
+      "ru": "Побольше жареного лука"
+    },
+    {
+      "lessonId": "l5-2",
+      "idx": 2,
+      "en": "Easy on the hot sauce",
+      "ar": "شطة خفيف",
+      "franco": "shatta khafeef",
+      "register": "neutral",
+      "ru": "Поменьше острого соуса"
+    },
+    {
+      "lessonId": "l5-2",
+      "idx": 3,
+      "en": "Take away",
+      "ar": "تيك أواي",
+      "franco": "take away",
+      "register": "neutral",
+      "ru": "С собой"
+    },
+    {
+      "lessonId": "l5-2",
+      "idx": 4,
+      "en": "Eating in",
+      "ar": "هنا جوه",
+      "franco": "hena gowa",
+      "register": "neutral",
+      "ru": "Здесь"
+    },
+    {
+      "lessonId": "l5-3",
+      "idx": 0,
+      "en": "What do you recommend?",
+      "ar": "ترشحلي إيه؟",
+      "franco": "torasha7li eh?",
+      "register": "neutral",
+      "ru": "Что посоветуете?"
+    },
+    {
+      "lessonId": "l5-3",
+      "idx": 1,
+      "en": "I'd like this one",
+      "ar": "عايز ده",
+      "franco": "3ayez da",
+      "register": "neutral",
+      "ru": "Мне вот это"
+    },
+    {
+      "lessonId": "l5-3",
+      "idx": 2,
+      "en": "No meat, I'm vegetarian",
+      "ar": "من غير لحمة، أنا مباكلش لحمة",
+      "franco": "men gheir la7ma, ana mabakolsh la7ma",
+      "register": "neutral",
+      "ru": "Без мяса, я вегетарианец"
+    },
+    {
+      "lessonId": "l5-3",
+      "idx": 3,
+      "en": "The bill, please",
+      "ar": "الحساب لو سمحت",
+      "franco": "el 7esab law sama7t",
+      "register": "neutral",
+      "ru": "Счёт, пожалуйста"
+    },
+    {
+      "lessonId": "l5-3",
+      "idx": 4,
+      "en": "It was really delicious",
+      "ar": "كان تحفة والله",
+      "franco": "kan to7fa wallahi",
+      "register": "neutral",
+      "ru": "Было очень вкусно, честное слово"
+    }
+  ],
+  "lessonTitles": [
+    {
+      "id": "l3-1",
+      "title": "Yes, No & Common",
+      "title_ru": "Да, нет и самое важное"
+    },
+    {
+      "id": "l1-1",
+      "title": "Hello & Hi",
+      "title_ru": "Привет и здравствуй"
+    },
+    {
+      "id": "l1-2",
+      "title": "How are you?",
+      "title_ru": "Как дела?"
+    },
+    {
+      "id": "l2-1",
+      "title": "Please & Thanks",
+      "title_ru": "Пожалуйста и спасибо"
+    },
+    {
+      "id": "l1-3",
+      "title": "At the Door: Blessings & Being Welcomed In",
+      "title_ru": "На пороге: благословения и тёплый приём"
+    },
+    {
+      "id": "l1-4",
+      "title": "Introductions: Names, Titles & Who's Who",
+      "title_ru": "Знакомство: имена, обращения и кто есть кто"
+    },
+    {
+      "id": "l1-5",
+      "title": "Tea, Juice & the Art of Refusing Then Accepting",
+      "title_ru": "Чай, сок и искусство сначала отказаться, а потом согласиться"
+    },
+    {
+      "id": "l1-6",
+      "title": "Telling Them About Yourself",
+      "title_ru": "Рассказываем о себе"
+    },
+    {
+      "id": "l1-7",
+      "title": "Compliments That Land",
+      "title_ru": "Комплименты, которые попадают в цель"
+    },
+    {
+      "id": "l1-8",
+      "title": "The Questions They'll Ask You",
+      "title_ru": "Вопросы, которые вам обязательно зададут"
+    },
+    {
+      "id": "l1-9",
+      "title": "When You're Lost: Asking for Slower, Simpler, Again",
+      "title_ru": "Когда не понимаешь: просим помедленнее, попроще, ещё раз"
+    },
+    {
+      "id": "l1-10",
+      "title": "If You Mess Up: Apologizing & Laughing It Off",
+      "title_ru": "Если накосячил: как извиниться и обратить всё в шутку"
+    },
+    {
+      "id": "l1-11",
+      "title": "Leaving Well: Goodbyes, Thanks & See You Again",
+      "title_ru": "Уходим красиво: прощание, благодарность и «до скорого»"
+    },
+    {
+      "id": "l2-2",
+      "title": "Family & Terms of Endearment",
+      "title_ru": "Семья и ласковые обращения"
+    },
+    {
+      "id": "l3-2",
+      "title": "Eid & Family Gatherings",
+      "title_ru": "Ид и семейные посиделки"
+    },
+    {
+      "id": "l4-1",
+      "title": "Counting 1–10 العدّ من واحد لعشرة",
+      "title_ru": "Считаем от 1 до 10 العدّ من واحد لعشرة"
+    },
+    {
+      "id": "l4-2",
+      "title": "How Much? بكام؟",
+      "title_ru": "Сколько стоит? بكام؟"
+    },
+    {
+      "id": "l4-3",
+      "title": "Taxi & Fares التاكسي والأجرة",
+      "title_ru": "Такси и оплата التاكسي والأجرة"
+    },
+    {
+      "id": "l5-1",
+      "title": "At the Café على القهوة",
+      "title_ru": "В кафе على القهوة"
+    },
+    {
+      "id": "l5-2",
+      "title": "The Koshary Stand عند الكشري",
+      "title_ru": "У ларька с кошари عند الكشري"
+    },
+    {
+      "id": "l5-3",
+      "title": "Ordering & Paying الطلب والحساب",
+      "title_ru": "Заказ и оплата الطلب والحساب"
+    }
+  ],
+  "unitTitles": [
+    {
+      "id": "u0",
+      "title": "Everyday Basics أساسيات يومية",
+      "title_ru": "Основы на каждый день أساسيات يومية"
+    },
+    {
+      "id": "u1",
+      "title": "Scenario: Meeting Her Family for the First Time",
+      "title_ru": "Сценарий: первая встреча с её семьёй"
+    },
+    {
+      "id": "u2",
+      "title": "Scenario: Getting Close with Mom & Dad",
+      "title_ru": "Сценарий: сближаемся с мамой и папой"
+    },
+    {
+      "id": "u3",
+      "title": "Scenario: A Special Occasion (Eid & Celebrations)",
+      "title_ru": "Сценарий: особый повод (Ид и праздники)"
+    },
+    {
+      "id": "u4",
+      "title": "Scenario: Out & About Together",
+      "title_ru": "Сценарий: гуляем и ездим вместе"
+    },
+    {
+      "id": "u5",
+      "title": "Scenario: Cooking & Eating Together",
+      "title_ru": "Сценарий: готовим и едим вместе"
+    }
+  ],
+  "uiStrings": [
+    {
+      "key": "ui.speakmasri_learn_egyptian_arabic_masri",
+      "text": "SpeakMasri – Learn Egyptian Arabic (Masri)",
+      "context": "visible text in title",
+      "ru": "SpeakMasri – Учи египетский арабский (Масри)"
+    },
+    {
+      "key": "settings.base_language",
+      "text": "Base language",
+      "context": "aria-label on div",
+      "ru": "Основной язык"
+    },
+    {
+      "key": "nav.learn",
+      "text": "Learn",
+      "context": "visible text in p",
+      "ru": "Обучение"
+    },
+    {
+      "key": "ui.egyptian_arabic_masri",
+      "text": "Egyptian Arabic (Masri)",
+      "context": "visible text in b",
+      "ru": "Египетский арабский (Масри)"
+    },
+    {
+      "key": "ui.through_short_practical_lessons_built_around_real_li",
+      "text": "through short, practical lessons built around real-life situations.",
+      "context": "visible text in p",
+      "ru": "через короткие практические уроки по реальным жизненным ситуациям."
+    },
+    {
+      "key": "ui.try_a_lesson_free_no_account_needed",
+      "text": "Try a lesson free — no account needed.",
+      "context": "visible text in strong",
+      "ru": "Попробуйте урок бесплатно — регистрация не нужна."
+    },
+    {
+      "key": "btn.try_lesson_free",
+      "text": "Try a Lesson Free",
+      "context": "visible text in button",
+      "ru": "Попробовать бесплатно"
+    },
+    {
+      "key": "btn.login",
+      "text": "Log In",
+      "context": "visible text in button",
+      "ru": "Войти"
+    },
+    {
+      "key": "btn.signup",
+      "text": "Sign Up",
+      "context": "visible text in button",
+      "ru": "Регистрация"
+    },
+    {
+      "key": "placeholder.name",
+      "text": "Name (for signup)",
+      "context": "placeholder on input",
+      "ru": "Имя (для регистрации)"
+    },
+    {
+      "key": "placeholder.email",
+      "text": "Email",
+      "context": "placeholder on input",
+      "ru": "Электронная почта"
+    },
+    {
+      "key": "placeholder.pass",
+      "text": "Password (min 8 characters)",
+      "context": "placeholder on input",
+      "ru": "Пароль (мин. 8 символов)"
+    },
+    {
+      "key": "ui.what_s_your_learning_goal_optional",
+      "text": "What's your learning goal? (optional)",
+      "context": "visible text in option",
+      "ru": "Какая у вас цель? (необязательно)"
+    },
+    {
+      "key": "ui.egyptian_partner_in_laws",
+      "text": "Egyptian partner / in-laws",
+      "context": "visible text in option",
+      "ru": "Египетский партнёр / его семья"
+    },
+    {
+      "key": "ui.upcoming_trip_to_egypt",
+      "text": "Upcoming trip to Egypt",
+      "context": "visible text in option",
+      "ru": "Предстоящая поездка в Египет"
+    },
+    {
+      "key": "ui.reconnecting_with_heritage",
+      "text": "Reconnecting with heritage",
+      "context": "visible text in option",
+      "ru": "Возвращение к корням"
+    },
+    {
+      "key": "ui.other",
+      "text": "Other",
+      "context": "visible text in option",
+      "ru": "Другое"
+    },
+    {
+      "key": "ui.back",
+      "text": "← Back",
+      "context": "visible text in button",
+      "ru": "← Назад"
+    },
+    {
+      "key": "ui.forgot_password",
+      "text": "Forgot password?",
+      "context": "visible text in button",
+      "ru": "Забыли пароль?"
+    },
+    {
+      "key": "ui.privacy_policy",
+      "text": "Privacy Policy",
+      "context": "visible text in a",
+      "ru": "Политика конфиденциальности"
+    },
+    {
+      "key": "ui.terms_of_service",
+      "text": "Terms of Service",
+      "context": "visible text in a",
+      "ru": "Условия использования"
+    },
+    {
+      "key": "ui.said",
+      "text": "said",
+      "context": "visible text in div",
+      "ru": "произнёс"
+    },
+    {
+      "key": "ui.verify_your_email_to_secure_your_account",
+      "text": "Verify your email to secure your account",
+      "context": "visible text in span",
+      "ru": "Подтвердите почту, чтобы защитить аккаунт"
+    },
+    {
+      "key": "ui.resendverificationbtn",
+      "text": "Resend",
+      "context": "visible text in button",
+      "ru": "Отправить снова"
+    },
+    {
+      "key": "aria.dismiss_email_verification_reminder",
+      "text": "Dismiss email verification reminder",
+      "context": "aria-label on button",
+      "ru": "Скрыть напоминание о подтверждении почты"
+    },
+    {
+      "key": "ui.phrasebook",
+      "text": "📖 Phrasebook",
+      "context": "visible text in h2",
+      "ru": "📖 Разговорник"
+    },
+    {
+      "key": "ui.everything_you_ve_unlocked_so_far_pull_this_up_mid_c",
+      "text": "Everything you've unlocked so far — pull this up mid-conversation.",
+      "context": "visible text in p",
+      "ru": "Всё, что вы уже открыли — подглядывайте прямо во время разговора."
+    },
+    {
+      "key": "ui.formal_elders_in_laws_show_respect_casual_friends_pe",
+      "text": "Formal = elders, in-laws, show respect · Casual = friends, peers · Intimate = partner only",
+      "context": "visible text in p",
+      "ru": "Формально — со старшими и роднёй, с уважением · Неформально — с друзьями и ровесниками · Интимно — только с партнёром"
+    },
+    {
+      "key": "ui.total_xp",
+      "text": "Total XP",
+      "context": "visible text in div",
+      "ru": "Всего XP"
+    },
+    {
+      "key": "ui.phrases_said",
+      "text": "Phrases Said",
+      "context": "visible text in div",
+      "ru": "Фраз произнесено"
+    },
+    {
+      "key": "ui.your_moments",
+      "text": "Your moments",
+      "context": "visible text in div",
+      "ru": "Ваши моменты"
+    },
+    {
+      "key": "ui.partner_phrases",
+      "text": "Partner Phrases",
+      "context": "visible text in div",
+      "ru": "Фразы от партнёра"
+    },
+    {
+      "key": "ui.send_your_partner_this_link_they_add_family_names_in",
+      "text": "Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.",
+      "context": "visible text in p",
+      "ru": "Отправьте эту ссылку партнёру — он добавит имена родных, семейные шутки и всё, что они реально говорят, прямо с телефона. Ему не нужен аккаунт."
+    },
+    {
+      "key": "ui.sharelinkbtn",
+      "text": "🔗 Share Link With Partner",
+      "context": "visible text in button",
+      "ru": "🔗 Поделиться ссылкой с партнёром"
+    },
+    {
+      "key": "ui.prefer_the_json_file_instead",
+      "text": "Prefer the JSON file instead?",
+      "context": "visible text in summary",
+      "ru": "Предпочитаете JSON-файл?"
+    },
+    {
+      "key": "ui.template",
+      "text": "⬇️ Template",
+      "context": "visible text in button",
+      "ru": "⬇️ Шаблон"
+    },
+    {
+      "key": "ui.import",
+      "text": "⬆️ Import",
+      "context": "visible text in label",
+      "ru": "⬆️ Импорт"
+    },
+    {
+      "key": "ui.account",
+      "text": "Account",
+      "context": "visible text in div",
+      "ru": "Аккаунт"
+    },
+    {
+      "key": "ui.editnamebtn",
+      "text": "✏️ Edit name",
+      "context": "visible text in button",
+      "ru": "✏️ Изменить имя"
+    },
+    {
+      "key": "placeholder.your_name",
+      "text": "Your name",
+      "context": "placeholder on input",
+      "ru": "Ваше имя"
+    },
+    {
+      "key": "ui.savenamebtn",
+      "text": "Save",
+      "context": "visible text in button",
+      "ru": "Сохранить"
+    },
+    {
+      "key": "ui.cancel",
+      "text": "Cancel",
+      "context": "visible text in button",
+      "ru": "Отмена"
+    },
+    {
+      "key": "ui.change_password",
+      "text": "🔒 Change Password",
+      "context": "visible text in button",
+      "ru": "🔒 Сменить пароль"
+    },
+    {
+      "key": "btn.logout",
+      "text": "Log Out",
+      "context": "visible text in button",
+      "ru": "Выйти"
+    },
+    {
+      "key": "nav.phrasebook",
+      "text": "Phrasebook",
+      "context": "aria-label on button",
+      "ru": "Разговорник"
+    },
+    {
+      "key": "nav.profile",
+      "text": "Profile",
+      "context": "aria-label on button",
+      "ru": "Профиль"
+    },
+    {
+      "key": "aria.quit_lesson",
+      "text": "Quit lesson",
+      "context": "aria-label on button",
+      "ru": "Выйти из урока"
+    },
+    {
+      "key": "btn.check",
+      "text": "Check",
+      "context": "visible text in button",
+      "ru": "Проверить"
+    },
+    {
+      "key": "ui.donetitle",
+      "text": "Lesson Complete!",
+      "context": "visible text in h1",
+      "ru": "Урок пройден!"
+    },
+    {
+      "key": "ui.xp_earned",
+      "text": "XP Earned",
+      "context": "visible text in div",
+      "ru": "Получено XP"
+    },
+    {
+      "key": "ui.accuracy",
+      "text": "Accuracy",
+      "context": "visible text in div",
+      "ru": "Точность"
+    },
+    {
+      "key": "ui.rehearse_this_lesson",
+      "text": "🎙️ Rehearse This Lesson",
+      "context": "visible text in button",
+      "ru": "🎙️ Отрепетировать урок"
+    },
+    {
+      "key": "btn.continue",
+      "text": "Continue",
+      "context": "visible text in button",
+      "ru": "Продолжить"
+    },
+    {
+      "key": "ui.name_can_t_be_empty",
+      "text": "Name can't be empty.",
+      "context": "JavaScript text assignment",
+      "ru": "Имя не может быть пустым."
+    },
+    {
+      "key": "ui.saved",
+      "text": "Saved ✓",
+      "context": "JavaScript text assignment",
+      "ru": "Сохранено ✓"
+    },
+    {
+      "key": "ui.couldn_t_save_try_again",
+      "text": "Couldn't save. Try again.",
+      "context": "JavaScript text assignment",
+      "ru": "Не удалось сохранить. Попробуйте ещё раз."
+    },
+    {
+      "key": "ui.no_email_on_file",
+      "text": "No email on file.",
+      "context": "JavaScript text assignment",
+      "ru": "Электронная почта не указана."
+    },
+    {
+      "key": "ui.check_your_email_for_a_reset_link",
+      "text": "Check your email for a reset link.",
+      "context": "JavaScript text assignment",
+      "ru": "Проверьте почту — там ссылка для сброса пароля."
+    },
+    {
+      "key": "ui.couldn_t_send_reset_email_try_again",
+      "text": "Couldn't send reset email. Try again.",
+      "context": "JavaScript text assignment",
+      "ru": "Не удалось отправить письмо. Попробуйте ещё раз."
+    },
+    {
+      "key": "ui.fill_in_all_fields_to_sign_up",
+      "text": "Fill in all fields to sign up.",
+      "context": "JavaScript text assignment",
+      "ru": "Заполните все поля для регистрации."
+    },
+    {
+      "key": "ui.password_must_be_at_least_8_characters",
+      "text": "Password must be at least 8 characters.",
+      "context": "JavaScript text assignment",
+      "ru": "Пароль должен быть не менее 8 символов."
+    },
+    {
+      "key": "ui.enter_your_email_above_first_then_tap_forgot_passwor",
+      "text": "Enter your email above first, then tap Forgot password.",
+      "context": "JavaScript text assignment",
+      "ru": "Сначала введите почту выше, затем нажмите «Забыли пароль?»."
+    },
+    {
+      "key": "ui.copied",
+      "text": "Copied! ✅",
+      "context": "JavaScript text assignment",
+      "ru": "Скопировано! ✅"
+    },
+    {
+      "key": "ui.sent",
+      "text": "Sent! ✅",
+      "context": "JavaScript text assignment",
+      "ru": "Отправлено! ✅"
+    },
+    {
+      "key": "exercise.listen_prompt",
+      "text": "Listen and choose the meaning",
+      "context": "JavaScript text assignment",
+      "ru": "Послушайте и выберите значение"
+    },
+    {
+      "key": "exercise.franco_prompt",
+      "text": "Type it in Franco-Arabic",
+      "context": "JavaScript text assignment",
+      "ru": "Напишите франко-арабицей"
+    },
+    {
+      "key": "ui.e_g_shukran",
+      "text": "e.g. Shukran",
+      "context": "JavaScript text assignment",
+      "ru": "напр. Shukran"
+    },
+    {
+      "key": "exercise.match_prompt",
+      "text": "Match the pairs",
+      "context": "JavaScript text assignment",
+      "ru": "Соедините пары"
+    },
+    {
+      "key": "ui.recording",
+      "text": "🔴 Recording...",
+      "context": "JavaScript text assignment",
+      "ru": "🔴 Запись..."
+    },
+    {
+      "key": "ui.hold_to_record",
+      "text": "🎙️ Hold to Record",
+      "context": "JavaScript text assignment",
+      "ru": "🎙️ Удерживайте для записи"
+    },
+    {
+      "key": "ui.nice",
+      "text": "Nice! 🎉",
+      "context": "JavaScript text assignment",
+      "ru": "Отлично! 🎉"
+    },
+    {
+      "key": "ui.nice_sign_up_to_save_this_progress",
+      "text": "Nice! Sign up to save this progress",
+      "context": "JavaScript text assignment",
+      "ru": "Отлично! Зарегистрируйтесь, чтобы сохранить прогресс"
+    },
+    {
+      "key": "msg.that_file_couldn_t_be_read_as_a_phrase_list_make_sur",
+      "text": "That file couldn't be read as a phrase list. Make sure it's the JSON template with en/ar/franco fields.",
+      "context": "dialog message",
+      "ru": "Этот файл не удалось прочитать как список фраз. Убедитесь, что это JSON-шаблон с полями en/ar/franco."
+    },
+    {
+      "key": "msg.quit_this_lesson_you_ll_lose_your_progress_in_it",
+      "text": "Quit this lesson? You'll lose your progress in it.",
+      "context": "dialog message",
+      "ru": "Выйти из урока? Прогресс в нём будет потерян."
+    },
+    {
+      "key": "register.formal",
+      "text": "Formal",
+      "context": "register pill label",
+      "ru": "Формально"
+    },
+    {
+      "key": "register.casual",
+      "text": "Casual",
+      "context": "register pill label",
+      "ru": "Неформально"
+    },
+    {
+      "key": "register.intimate",
+      "text": "Intimate",
+      "context": "register pill label",
+      "ru": "Интимно"
+    },
+    {
+      "key": "msg.this_email_is_already_registered",
+      "text": "This email is already registered.",
+      "context": "authentication error message",
+      "ru": "Эта почта уже зарегистрирована."
+    },
+    {
+      "key": "msg.incorrect_password",
+      "text": "Incorrect password.",
+      "context": "authentication error message",
+      "ru": "Неверный пароль."
+    },
+    {
+      "key": "msg.invalid_email_or_password",
+      "text": "Invalid email or password.",
+      "context": "authentication error message",
+      "ru": "Неверная почта или пароль."
+    },
+    {
+      "key": "msg.password_should_be_at_least_6_characters",
+      "text": "Password should be at least 6 characters.",
+      "context": "authentication error message",
+      "ru": "Пароль должен быть не менее 6 символов."
+    },
+    {
+      "key": "msg.please_enter_a_valid_email_address",
+      "text": "Please enter a valid email address.",
+      "context": "authentication error message",
+      "ru": "Введите корректный адрес электронной почты."
+    },
+    {
+      "key": "msg.no_account_found_with_this_email",
+      "text": "No account found with this email.",
+      "context": "authentication error message",
+      "ru": "Аккаунт с такой почтой не найден."
+    },
+    {
+      "key": "msg.something_went_wrong_please_try_again",
+      "text": "Something went wrong. Please try again.",
+      "context": "authentication error message",
+      "ru": "Что-то пошло не так. Попробуйте ещё раз."
+    },
+    {
+      "key": "ui.copy_this_link_to_send_your_partner",
+      "text": "Copy this link to send your partner:",
+      "context": "copy-link prompt",
+      "ru": "Скопируйте эту ссылку и отправьте партнёру:"
+    },
+    {
+      "key": "msg.no_moments_yet_finish_a_lesson_and_try_the_mission_t",
+      "text": "No moments yet — finish a lesson and try the mission tonight.",
+      "context": "empty moments message",
+      "ru": "Пока нет моментов — пройдите урок и попробуйте задание сегодня вечером."
+    },
+    {
+      "key": "msg.no_partner_phrases_yet",
+      "text": "No partner phrases yet.",
+      "context": "empty partner-phrases message",
+      "ru": "Пока нет фраз от партнёра."
+    },
+    {
+      "key": "aria.delete_phrase",
+      "text": "Delete phrase",
+      "context": "aria-label on delete button",
+      "ru": "Удалить фразу"
+    },
+    {
+      "key": "msg.nothing_unlocked_yet_finish_your_first_lesson",
+      "text": "Nothing unlocked yet — finish your first lesson.",
+      "context": "empty phrasebook message",
+      "ru": "Пока ничего не открыто — пройдите первый урок."
+    },
+    {
+      "key": "exercise.translate_prompt",
+      "text": "Translate:",
+      "context": "multiple-choice exercise instruction",
+      "ru": "Переведите:"
+    },
+    {
+      "key": "ui.correct",
+      "text": "Correct!",
+      "context": "positive exercise feedback",
+      "ru": "Верно!"
+    },
+    {
+      "key": "ui.not_quite",
+      "text": "Not quite",
+      "context": "incorrect exercise feedback",
+      "ru": "Не совсем"
+    },
+    {
+      "key": "ui.answer",
+      "text": "Answer:",
+      "context": "answer reveal label",
+      "ru": "Ответ:"
+    },
+    {
+      "key": "ui.tonight_s_mission",
+      "text": "Tonight's mission",
+      "context": "mission heading",
+      "ru": "Задание на вечер"
+    },
+    {
+      "key": "ui.say_this_to_them",
+      "text": "Say this to them:",
+      "context": "mission instruction",
+      "ru": "Скажите им:"
+    },
+    {
+      "key": "ui.i_said_it",
+      "text": "I said it!",
+      "context": "mission completion button",
+      "ru": "Я это сказал!"
+    },
+    {
+      "key": "ui.finish",
+      "text": "Finish",
+      "context": "rehearsal button",
+      "ru": "Готово"
+    },
+    {
+      "key": "ui.next",
+      "text": "Next",
+      "context": "rehearsal button",
+      "ru": "Дальше"
+    },
+    {
+      "key": "aria.hear_native_pronunciation",
+      "text": "Hear native pronunciation",
+      "context": "aria-label on audio button",
+      "ru": "Послушать произношение носителя"
+    },
+    {
+      "key": "aria.hold_to_record_yourself",
+      "text": "Hold to record yourself",
+      "context": "aria-label on recording button",
+      "ru": "Удерживайте, чтобы записать себя"
+    },
+    {
+      "key": "ui.mic_access_not_available_just_practice_saying_it_out",
+      "text": "Mic access not available — just practice saying it out loud",
+      "context": "microphone fallback instruction",
+      "ru": "Микрофон недоступен — просто тренируйтесь произносить вслух"
+    },
+    {
+      "key": "ui.all_done",
+      "text": "All done!",
+      "context": "rehearsal completion heading",
+      "ru": "Всё готово!"
+    },
+    {
+      "key": "msg.you_ve_practiced_the_whole_lesson",
+      "text": "You've practiced the whole lesson.",
+      "context": "rehearsal completion message",
+      "ru": "Вы отрепетировали весь урок."
+    },
+    {
+      "key": "ui.back_to_lessons",
+      "text": "Back to lessons",
+      "context": "rehearsal completion button",
+      "ru": "К урокам"
+    },
+    {
+      "key": "demo.phrase.my_love",
+      "text": "My love",
+      "context": "standalone landing-page demo phrase",
+      "ru": "Любовь моя"
+    },
+    {
+      "key": "demo.phrase.how_are_you",
+      "text": "How are you",
+      "context": "standalone landing-page demo phrase",
+      "ru": "Как дела"
+    }
+  ]
+}

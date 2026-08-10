@@ -833,7 +833,7 @@ input:focus, select:focus {
       <span class="auth-blob auth-blob-2"></span>
       <span class="auth-blob auth-blob-3"></span>
     </div>
-    <div class="lang-toggle landing-in landing-in-1" role="group" aria-label="Base language" style="margin-bottom:12px">
+    <div class="lang-toggle landing-in landing-in-1" role="group" aria-label="Base language" data-i18n-aria-label="settings.base_language" style="margin-bottom:12px">
       <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
       <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
     </div>
@@ -851,7 +851,7 @@ input:focus, select:focus {
     </div>
     <h1 class="brand landing-in landing-in-2" style="margin:0">SpeakMasri</h1>
     <div class="ar landing-in landing-in-2" lang="ar" style="font-size:20px;color:var(--primary-hover);margin-top:2px">اتكلم مصري</div>
-    <p class="landing-in landing-in-3" style="color:var(--ink-soft);margin:8px 0 20px;font-size:15px">Learn <b>Egyptian Arabic (Masri)</b> through short, practical lessons built around real-life situations. <strong>Try a lesson free — no account needed.</strong></p>
+    <p class="landing-in landing-in-3" style="color:var(--ink-soft);margin:8px 0 20px;font-size:15px"><span data-i18n="nav.learn">Learn</span> <b data-i18n="ui.egyptian_arabic_masri">Egyptian Arabic (Masri)</b> <span data-i18n="ui.through_short_practical_lessons_built_around_real_li">through short, practical lessons built around real-life situations.</span> <strong data-i18n="ui.try_a_lesson_free_no_account_needed">Try a lesson free — no account needed.</strong></p>
     <div id="phraseCard" class="landing-in landing-in-4" style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border-light);border-radius:var(--r-md);padding:12px 16px;margin-bottom:20px;box-shadow:var(--shadow-card)">
       <div style="text-align:left">
         <div id="phraseAr" class="ar phrase-fade" lang="ar" style="font-size:20px">شكراً</div>
@@ -860,64 +860,64 @@ input:focus, select:focus {
       <div id="phraseEn" class="phrase-fade" style="color:var(--ink-soft)">Thank you</div>
     </div>
     <div id="authChoice">
-      <button class="btn btn-sheen landing-in landing-in-5" onclick="startGuestLesson()">Try a Lesson Free</button>
+      <button class="btn btn-sheen landing-in landing-in-5" onclick="startGuestLesson()" data-i18n="btn.try_lesson_free">Try a Lesson Free</button>
       <div class="landing-in landing-in-5" style="margin-top:14px">
-        <button type="button" onclick="showLogin()" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Log In</button>
+        <button type="button" onclick="showLogin()" data-i18n="btn.login" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Log In</button>
         <span style="color:var(--ink-soft);margin:0 2px">&middot;</span>
-        <button type="button" onclick="showSignup()" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Sign Up</button>
+        <button type="button" onclick="showSignup()" data-i18n="btn.signup" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Sign Up</button>
       </div>
     </div>
 
     <div id="authForm" class="hidden">
       <div id="nameField" class="hidden">
-        <input id="name" placeholder="Name (for signup)" autocomplete="name">
+        <input id="name" placeholder="Name (for signup)" data-i18n-placeholder="placeholder.name" autocomplete="name">
       </div>
-      <input id="email" placeholder="Email" type="email" autocomplete="email">
-      <input id="pass" placeholder="Password (min 8 characters)" type="password" autocomplete="current-password">
+      <input id="email" placeholder="Email" data-i18n-placeholder="placeholder.email" type="email" autocomplete="email">
+      <input id="pass" placeholder="Password (min 8 characters)" data-i18n-placeholder="placeholder.pass" type="password" autocomplete="current-password">
       <div id="motivationField" class="hidden">
         <select id="motivation">
-          <option value="">What's your learning goal? (optional)</option>
-          <option value="partner">Egyptian partner / in-laws</option>
-          <option value="traveler">Upcoming trip to Egypt</option>
-          <option value="heritage">Reconnecting with heritage</option>
-          <option value="other">Other</option>
+          <option value="" data-i18n="ui.what_s_your_learning_goal_optional">What's your learning goal? (optional)</option>
+          <option value="partner" data-i18n="ui.egyptian_partner_in_laws">Egyptian partner / in-laws</option>
+          <option value="traveler" data-i18n="ui.upcoming_trip_to_egypt">Upcoming trip to Egypt</option>
+          <option value="heritage" data-i18n="ui.reconnecting_with_heritage">Reconnecting with heritage</option>
+          <option value="other" data-i18n="ui.other">Other</option>
         </select>
       </div>
       <div id="authErr" role="alert" style="color:var(--brick);font-weight:600;margin:8px 0"></div>
       <div id="authMsg" role="status" style="color:var(--teal);font-weight:600;margin:8px 0"></div>
-      <button id="signupSubmit" class="btn hidden" onclick="signup()">Sign Up</button>
-      <button id="loginSubmit" class="btn btn-ghost hidden" onclick="login()">Log In</button>
+      <button id="signupSubmit" class="btn hidden" onclick="signup()" data-i18n="btn.signup">Sign Up</button>
+      <button id="loginSubmit" class="btn btn-ghost hidden" onclick="login()" data-i18n="btn.login">Log In</button>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-        <button type="button" onclick="backToChoice()" style="background:none;border:none;color:var(--ink-soft);font-size:13px;text-decoration:underline;cursor:pointer">&larr; Back</button>
+        <button type="button" onclick="backToChoice()" data-i18n="ui.back" style="background:none;border:none;color:var(--ink-soft);font-size:13px;text-decoration:underline;cursor:pointer">&larr; Back</button>
         <div id="forgotLink" class="hidden">
-          <button type="button" onclick="resetPassword()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>
+          <button type="button" onclick="resetPassword()" data-i18n="ui.forgot_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>
         </div>
       </div>
     </div>
 
     <div style="margin-top:20px;font-size:12px;color:var(--ink-soft)">
-      <a href="privacy.html" style="color:var(--ink-soft)">Privacy Policy</a> &middot; <a href="terms.html" style="color:var(--ink-soft)">Terms of Service</a>
+      <a href="privacy.html" style="color:var(--ink-soft)" data-i18n="ui.privacy_policy">Privacy Policy</a> &middot; <a href="terms.html" style="color:var(--ink-soft)" data-i18n="ui.terms_of_service">Terms of Service</a>
     </div>
   </div>
 
   <!-- MAIN -->
   <div id="main" class="hidden">
     <div class="top">
-      <div class="stat">💬 <span id="milestoneCount">0</span> said</div>
+      <div class="stat">💬 <span id="milestoneCount">0</span> <span data-i18n="ui.said">said</span></div>
       <div class="stat" style="color:var(--gold)">⭐ <span id="xp">0</span></div>
     </div>
     <div id="emailVerificationBanner" class="hidden" role="status" style="display:flex;align-items:center;gap:10px;margin:0 16px 12px;padding:12px 14px;background:var(--gold-soft);border:1px solid var(--gold);border-radius:var(--r-md);color:var(--text-main);font-size:13px">
-      <span style="flex:1">Verify your email to secure your account</span>
-      <button id="resendVerificationBtn" type="button" onclick="resendEmailVerification()" style="background:none;border:none;color:var(--teal);font-weight:700;text-decoration:underline;cursor:pointer;padding:2px">Resend</button>
-      <button type="button" onclick="dismissEmailVerificationBanner()" aria-label="Dismiss email verification reminder" style="background:none;border:none;color:var(--ink-soft);font-size:18px;line-height:1;cursor:pointer;padding:2px">&times;</button>
+      <span style="flex:1" data-i18n="ui.verify_your_email_to_secure_your_account">Verify your email to secure your account</span>
+      <button id="resendVerificationBtn" type="button" data-i18n="ui.resendverificationbtn" onclick="resendEmailVerification()" style="background:none;border:none;color:var(--teal);font-weight:700;text-decoration:underline;cursor:pointer;padding:2px">Resend</button>
+      <button type="button" onclick="dismissEmailVerificationBanner()" aria-label="Dismiss email verification reminder" data-i18n-aria-label="aria.dismiss_email_verification_reminder" style="background:none;border:none;color:var(--ink-soft);font-size:18px;line-height:1;cursor:pointer;padding:2px">&times;</button>
     </div>
     <!-- LEARN -->
     <div id="learn"></div>
     <!-- PHRASEBOOK -->
     <div id="phrasebook" class="hidden">
-      <h2>📖 Phrasebook</h2>
-      <p style="padding:0 16px 12px;color:var(--ink-soft)">Everything you've unlocked so far — pull this up mid-conversation.</p>
-      <p style="padding:0 16px 12px;color:var(--ink-soft);font-size:12px">Formal = elders, in-laws, show respect · Casual = friends, peers · Intimate = partner only</p>
+      <h2 data-i18n="ui.phrasebook">📖 Phrasebook</h2>
+      <p style="padding:0 16px 12px;color:var(--ink-soft)" data-i18n="ui.everything_you_ve_unlocked_so_far_pull_this_up_mid_c">Everything you've unlocked so far — pull this up mid-conversation.</p>
+      <p style="padding:0 16px 12px;color:var(--ink-soft);font-size:12px" data-i18n="ui.formal_elders_in_laws_show_respect_casual_friends_pe">Formal = elders, in-laws, show respect · Casual = friends, peers · Intimate = partner only</p>
       <div id="pbList"></div>
     </div>
     <!-- PROFILE -->
@@ -937,24 +937,24 @@ input:focus, select:focus {
       <h2 id="pName"></h2>
       <p style="color:var(--ink-soft)" id="pEmail"></p>
       <div style="display:flex;justify-content:space-around;margin:24px 0">
-        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold)" id="pXp">0</div>Total XP</div>
-        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pMilestones">0</div>Phrases Said</div>
+        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold)" id="pXp">0</div><span data-i18n="ui.total_xp">Total XP</span></div>
+        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pMilestones">0</div><span data-i18n="ui.phrases_said">Phrases Said</span></div>
       </div>
       <div style="text-align:left;padding:0 16px">
-        <div style="font-weight:800;margin-bottom:8px">Your moments</div>
+        <div style="font-weight:800;margin-bottom:8px" data-i18n="ui.your_moments">Your moments</div>
         <div id="milestoneLog" style="color:var(--ink-soft);font-size:14px"></div>
       </div>
       <div style="height:24px"></div>
       <div style="text-align:left;padding:0 16px">
-        <div style="font-weight:800;margin-bottom:4px">Partner Phrases</div>
-        <p style="color:var(--ink-soft);font-size:13px;margin-bottom:10px">Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.</p>
-        <button class="btn" id="shareLinkBtn" style="margin-bottom:10px" onclick="sharePartnerLink()">🔗 Share Link With Partner</button>
+        <div style="font-weight:800;margin-bottom:4px" data-i18n="ui.partner_phrases">Partner Phrases</div>
+        <p style="color:var(--ink-soft);font-size:13px;margin-bottom:10px" data-i18n="ui.send_your_partner_this_link_they_add_family_names_in">Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.</p>
+        <button class="btn" id="shareLinkBtn" data-i18n="ui.sharelinkbtn" style="margin-bottom:10px" onclick="sharePartnerLink()">🔗 Share Link With Partner</button>
         <details style="margin-bottom:10px">
-          <summary style="color:var(--ink-soft);font-size:13px;cursor:pointer">Prefer the JSON file instead?</summary>
+          <summary style="color:var(--ink-soft);font-size:13px;cursor:pointer" data-i18n="ui.prefer_the_json_file_instead">Prefer the JSON file instead?</summary>
           <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn btn-ghost" style="font-size:13px;padding:10px" onclick="downloadPhraseTemplate()">⬇️ Template</button>
+            <button class="btn btn-ghost" style="font-size:13px;padding:10px" onclick="downloadPhraseTemplate()" data-i18n="ui.template">⬇️ Template</button>
             <label class="btn btn-ghost" style="font-size:13px;padding:10px;text-align:center;cursor:pointer">
-              ⬆️ Import
+              <span data-i18n="ui.import">⬆️ Import</span>
               <input type="file" id="partnerFileInput" accept=".json" style="display:none" onchange="importPartnerPhrases(this)">
             </label>
           </div>
@@ -963,59 +963,59 @@ input:focus, select:focus {
       </div>
       <div style="height:24px"></div>
       <div style="text-align:left;padding:0 16px">
-        <div style="font-weight:800;margin-bottom:8px">Account</div>
-        <button type="button" id="editNameBtn" onclick="showNameEdit()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer;display:block;margin-bottom:8px">✏️ Edit name</button>
+        <div style="font-weight:800;margin-bottom:8px" data-i18n="ui.account">Account</div>
+        <button type="button" id="editNameBtn" data-i18n="ui.editnamebtn" onclick="showNameEdit()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer;display:block;margin-bottom:8px">✏️ Edit name</button>
         <div id="nameEditBox" style="display:none;margin-bottom:8px">
-          <input type="text" id="nameEditInput" maxlength="40" placeholder="Your name">
+          <input type="text" id="nameEditInput" maxlength="40" placeholder="Your name" data-i18n-placeholder="placeholder.your_name">
           <div style="display:flex;gap:8px;margin-top:4px">
-            <button class="btn" id="saveNameBtn" style="flex:1;padding:10px;font-size:14px" onclick="saveDisplayName(document.getElementById('nameEditInput').value)">Save</button>
-            <button class="btn btn-ghost" style="flex:1;padding:10px;font-size:14px" onclick="hideNameEdit()">Cancel</button>
+            <button class="btn" id="saveNameBtn" data-i18n="ui.savenamebtn" style="flex:1;padding:10px;font-size:14px" onclick="saveDisplayName(document.getElementById('nameEditInput').value)">Save</button>
+            <button class="btn btn-ghost" style="flex:1;padding:10px;font-size:14px" onclick="hideNameEdit()" data-i18n="ui.cancel">Cancel</button>
           </div>
           <div id="nameEditMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
         </div>
-        <button type="button" onclick="changePasswordFromProfile()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">🔒 Change Password</button>
+        <button type="button" onclick="changePasswordFromProfile()" data-i18n="ui.change_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">🔒 Change Password</button>
         <div id="pwMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
-        <div style="font-weight:800;margin:12px 0 8px">Base language</div>
-        <div class="lang-toggle" role="group" aria-label="Base language">
+        <div style="font-weight:800;margin:12px 0 8px" data-i18n="settings.base_language">Base language</div>
+        <div class="lang-toggle" role="group" aria-label="Base language" data-i18n-aria-label="settings.base_language">
           <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
           <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
         </div>
       </div>
       <div style="height:16px"></div>
-      <button class="btn btn-ghost" onclick="logout()">Log Out</button>
+      <button class="btn btn-ghost" onclick="logout()" data-i18n="btn.logout">Log Out</button>
     </div>
     <div class="nav">
-      <button class="active" id="nLearn" onclick="tab('learn')" aria-label="Learn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></button>
-      <button id="nPhrasebook" onclick="tab('phrasebook')" aria-label="Phrasebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11a1 1 0 0 1 1 1v17a2 2 0 0 0-2-2H3z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13a1 1 0 0 0-1 1v17a2 2 0 0 1 2-2h7z"/></svg></button>
-      <button id="nProfile" onclick="tab('profile')" aria-label="Profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
+      <button class="active" id="nLearn" onclick="tab('learn')" aria-label="Learn" data-i18n-aria-label="nav.learn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></button>
+      <button id="nPhrasebook" onclick="tab('phrasebook')" aria-label="Phrasebook" data-i18n-aria-label="nav.phrasebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11a1 1 0 0 1 1 1v17a2 2 0 0 0-2-2H3z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13a1 1 0 0 0-1 1v17a2 2 0 0 1 2-2h7z"/></svg></button>
+      <button id="nProfile" onclick="tab('profile')" aria-label="Profile" data-i18n-aria-label="nav.profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
   </div>
 
   <!-- LESSON -->
   <div id="lesson" class="hidden">
     <div class="top">
-      <button onclick="quitLesson()" aria-label="Quit lesson" style="background:none;border:none;font-size:24px;cursor:pointer;padding:10px;min-width:44px;min-height:44px">✕</button>
+      <button onclick="quitLesson()" aria-label="Quit lesson" data-i18n-aria-label="aria.quit_lesson" style="background:none;border:none;font-size:24px;cursor:pointer;padding:10px;min-width:44px;min-height:44px">✕</button>
       <div class="progbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progbarEl"><div class="progfill" id="prog"></div></div>
     </div>
     <div id="exArea"></div>
     <div id="fbArea" aria-live="polite"></div>
-    <div id="checkWrap"><button class="btn" id="checkBtn" onclick="check()" disabled>Check</button></div>
+    <div id="checkWrap"><button class="btn" id="checkBtn" onclick="check()" disabled data-i18n="btn.check">Check</button></div>
   </div>
 
   <!-- COMPLETE -->
   <div id="done" class="hidden center">
     <div class="confetti">🎉</div>
-    <h1 id="doneTitle">Lesson Complete!</h1>
+    <h1 id="doneTitle" data-i18n="ui.donetitle">Lesson Complete!</h1>
     <div style="display:flex;justify-content:space-around;margin:24px 0">
       <div class="stat-pop" style="background:var(--gold-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--gold)">
-        <div style="font-size:22px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold)" id="dXp">+10</div>XP Earned</div>
+        <div style="font-size:22px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold)" id="dXp">+10</div><span data-i18n="ui.xp_earned">XP Earned</span></div>
       <div class="stat-pop" style="background:var(--teal-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--teal)">
-        <div style="font-size:22px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--teal)" id="dAcc">100%</div>Accuracy</div>
+        <div style="font-size:22px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--teal)" id="dAcc">100%</div><span data-i18n="ui.accuracy">Accuracy</span></div>
     </div>
     <div id="missionBox" style="background:var(--clay-soft);border:1.5px dashed var(--clay);border-radius:var(--r-lg);margin:16px;padding:16px;text-align:left"></div>
     <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px">
-      <button class="btn btn-ghost" onclick="startRehearsal()">🎙️ Rehearse This Lesson</button>
-      <button class="btn" onclick="finishLesson()">Continue</button>
+      <button class="btn btn-ghost" onclick="startRehearsal()" data-i18n="ui.rehearse_this_lesson">🎙️ Rehearse This Lesson</button>
+      <button class="btn" onclick="finishLesson()" data-i18n="btn.continue">Continue</button>
     </div>
   </div>
 
@@ -1029,38 +1029,38 @@ input:focus, select:focus {
 <script>
 /* ===== AGENT 5: NATIVE EGYPTIAN CONTENT — scenario-based (partner/in-laws journey) ===== */
 const COURSE={units:[
- {id:"u0",title:"Everyday Basics أساسيات يومية",lessons:[
-  {id:"l3-1",title:"Yes, No & Common",xp:10,vocab:[{en:"Yes",ar:"أيوة",franco:"Aywa",register:"neutral"},{en:"No",ar:"لأ",franco:"La'",register:"neutral"},{en:"Let's go / Come on",ar:"يلا",franco:"Yalla",register:"casual"},{en:"Finished / Enough / OK",ar:"خلاص",franco:"Khalas",register:"neutral"},{en:"God willing",ar:"إن شاء الله",franco:"Inshallah",register:"neutral"}]}
+ {id:"u0",title:"Everyday Basics أساسيات يومية",title_ru:"Основы на каждый день أساسيات يومية",lessons:[
+  {id:"l3-1",title:"Yes, No & Common",title_ru:"Да, нет и самое важное",xp:10,vocab:[{en:"Yes",ar:"أيوة",franco:"Aywa",register:"neutral",ru:"Да"},{en:"No",ar:"لأ",franco:"La'",register:"neutral",ru:"Нет"},{en:"Let's go / Come on",ar:"يلا",franco:"Yalla",register:"casual",ru:"Погнали / Давай"},{en:"Finished / Enough / OK",ar:"خلاص",franco:"Khalas",register:"neutral",ru:"Всё / Хватит / Ладно"},{en:"God willing",ar:"إن شاء الله",franco:"Inshallah",register:"neutral",ru:"Если Бог даст (дай Бог)"}]}
  ]},
- {id:"u1",title:"Scenario: Meeting Her Family for the First Time",lessons:[
-  {id:"l1-1",title:"Hello & Hi",xp:10,vocab:[{en:"Hi (informal)",ar:"إزيك",franco:"Ezzayak",register:"casual"},{en:"Welcome / Hey",ar:"أهلاً",franco:"Ahlan",register:"neutral"},{en:"Good morning",ar:"صباح الخير",franco:"Sabah el kheir",register:"neutral"},{en:"Good evening",ar:"مساء الخير",franco:"Masa el kheir",register:"neutral"},{en:"Goodbye",ar:"مع السلامة",franco:"Ma'a el salama",register:"neutral"}]},
-  {id:"l1-2",title:"How are you?",xp:10,vocab:[{en:"How are you? (to a man)",ar:"عامل إيه",franco:"3amel eh",register:"casual"},{en:"I'm good, thank God",ar:"كويس الحمد لله",franco:"kwayyes el7amdulillah",register:"neutral"},{en:"Fine / OK",ar:"تمام",franco:"Tamam",register:"neutral"},{en:"Not good",ar:"مش كويس",franco:"Mesh kwayes",register:"neutral"}]},
-  {id:"l2-1",title:"Please & Thanks",xp:10,vocab:[{en:"Thank you",ar:"شكراً",franco:"Shukran",register:"neutral"},{en:"You're welcome",ar:"العفو",franco:"el-3afw",register:"neutral"},{en:"Please (to a man)",ar:"لو سمحت",franco:"Law samaht",register:"neutral"},{en:"Sorry / Excuse me",ar:"آسف",franco:"Asef",register:"neutral"},{en:"Never mind / It's OK",ar:"معلش",franco:"Ma3lesh",register:"neutral"}]},
-  {id:"l1-3",title:"At the Door: Blessings & Being Welcomed In",xp:10,vocab:[{en:"Masha'Allah, this home is so bright! (compliment said when entering)",ar:"ما شاء الله، البيت منوّر.",franco:"Ma sha2 Allah el-beet menawwar.",register:"formal"},{en:"Permission to enter? (polite way to ask before stepping in)",ar:"أذن؟",franco:"2zn?",register:"formal"},{en:"Your home is blessed (complimenting the home)",ar:"بيتكم مبارك",franco:"betkom mobarak",register:"formal"},{en:"After you (gesturing for elders to enter first)",ar:"اتفضلوا الأول",franco:"etfaddalu el2awel",register:"formal"},{en:"Welcome, welcome (warm response to guest)",ar:"أهلاً وسهلاً",franco:"ahlan wa sahlan",register:"neutral"},{en:"Come in, come in (urging guest to enter)",ar:"اتفضل اتفضل",franco:"etfaddal etfaddal",register:"neutral"},{en:"God keep you safe (response to 'welcome')",ar:"الله يسلمك",franco:"allah yesallimak",register:"neutral"},{en:"Make yourself at home (casual, to peers)",ar:"إنت هنا في بيتك",franco:"enta hena fe betak",register:"casual"},{en:"You honor us (humble response to welcome)",ar:"شرفتمونا",franco:"sharraftuna",register:"formal"},{en:"I’m so happy to be here (warm, sincere)",ar:"أنا فرحان أوي إني جيت",franco:"ana far7an awi eni geet",register:"neutral"},{en:"You’re my heart (intimate, to partner only)",ar:"إنت قلبي",franco:"enta 2alby",register:"intimate"}]},
-  {id:"l1-4",title:"Introductions: Names, Titles & Who's Who",xp:10,vocab:[{en:"My name is... (formal, to elders)",ar:"أنا اسمي...",franco:"Ana esmi...",register:"formal"},{en:"What's your name? (polite, to elders)",ar:"اسم حضرتك إيه؟",franco:"Esm 7adrtak eih?",register:"formal"},{en:"This is my mother (introducing her respectfully)",ar:"دي والدتي.",franco:"Di waldeti.",register:"formal"},{en:"This is my father (introducing him respectfully)",ar:"ده والدي.",franco:"Da waldi.",register:"formal"},{en:"How should I address your mother? (asking partner)",ar:"مامتك أناديها بإيه؟",franco:"Mamtak anadiha bi eih?",register:"intimate"},{en:"Call her 'Mama' (partner telling you what to say)",ar:"قولي لها ماما",franco:"2oli laha mama",register:"intimate"},{en:"This is my aunt (father's sister, respectful)",ar:"دي عمتي",franco:"Di 3ammeti",register:"formal"},{en:"This is my uncle (father's brother, respectful)",ar:"ده عمي",franco:"Da 3ami",register:"formal"},{en:"This is my aunt (mother's sister, respectful)",ar:"دي خالتي",franco:"Di 5alti",register:"formal"},{en:"This is my uncle (mother's brother, respectful)",ar:"ده خالي",franco:"Da 5ali",register:"formal"},{en:"What do I call your older brother? (asking partner)",ar:"أخوك الكبير أناديه بإيه؟",franco:"A5ook el kbeer anadih bi eih?",register:"intimate"}]},
-  {id:"l1-5",title:"Tea, Juice & the Art of Refusing Then Accepting",xp:10,vocab:[{en:"No, thank you (first polite refusal).",ar:"لا، شكرًا.",franco:"La2, shokran.",register:"formal"},{en:"I swear I'm full (after second helping).",ar:"والله شبعان.",franco:"Wallah sha3baan.",register:"neutral"},{en:"Just a little, please (when they insist).",ar:"شوية بس، لو سمحت.",franco:"Shwayya bass, law sama7t.",register:"formal"},{en:"It's delicious, may God bless your hands (praise to the cook).",ar:"لذيذ أوي، تسلم إيديك.",franco:"Lazeez awy, teslam eedeek.",register:"formal"},{en:"I can't eat another bite (polite way to stop).",ar:"مقدرش آكل أكتر من كده.",franco:"Ma2darsh akol aktar men keda.",register:"neutral"},{en:"You're spoiling me (when they keep insisting).",ar:"كتر خيرك.",franco:"Keteer 5eirik.",register:"casual"},{en:"I'll have some later (gentle refusal).",ar:"هاخد بعدين.",franco:"Ha5od ba3deen.",register:"neutral"},{en:"It's perfect, no need for more (warm but firm).",ar:"كفاية كده، متشكر.",franco:"Kefaya keda, motshakker.",register:"neutral"},{en:"I'll explode if I eat more (humorous refusal).",ar:"بطني هتنفجر لو كلت أكتر!",franco:"Batni hatenfegar law kelt aktar!",register:"casual"},{en:"Just a sip, I'm really full (for tea/juice).",ar:"رشفة بس، أنا مليان أوي.",franco:"Rashfa bas, ana melyan awy.",register:"neutral"},{en:"You're too kind (to the host after insistence).",ar:"كتر خيرك.",franco:"Keteer 5eirik.",register:"formal"}]},
-  {id:"l1-6",title:"Telling Them About Yourself",xp:10,vocab:[{en:"I'm from [country/city], originally.",ar:"أنا من [بلد/مدينة] أصلا.",franco:"Ana mn [balad/madina] aslan.",register:"neutral"},{en:"I work in [field], but I'm still learning.",ar:"بشتغل في [مجال]، بس لسه بتعلّم عربي.",franco:"Bashtaghal fi [magal], bas lissa bet3allam 3arabi.",register:"neutral"},{en:"My family's small—just my parents and me.",ar:"عيلتي صغيرة، بابا وماما وأنا بس.",franco:"3eelti soghayyara, baba w mama w ana bass.",register:"casual"},{en:"I’ve been in Egypt for [time], and I love it here.",ar:"أنا في مصر بقالي [مدة]، وبحبها أوي.",franco:"Ana fi Masr ba2aly [modda], w ba7ebha awy.",register:"neutral"},{en:"I’m staying until [time], God willing.",ar:"هفضل لحد [وقت]، إن شاء الله.",franco:"Hafdal le7ad [wa2t], in sha2 Allah.",register:"formal"},{en:"My Arabic is still weak, but I’m trying!",ar:"عربي ضعيف شوية، بس بجتهد!",franco:"3arabi da3if shwayya, bas baghtahid!",register:"casual"},{en:"I have one brother/sister—just us two.",ar:"لي أخ/أخت واحد بس، إحنا الاتنين.",franco:"Li akh/okht wa7ed bass, e7na el-etnein.",register:"neutral"},{en:"I’m here to learn and be part of the family.",ar:"أنا جاي أتعلم وأبقى واحد من العيلة.",franco:"Ana gay at3allam w ab2a wa7ed men el-3eela.",register:"formal"},{en:"I love Egyptian food—it’s the best!",ar:"بحب الأكل المصري أوي، أحسن حاجة!",franco:"Ba7eb el-akl el-masri awi, a7san 7aga!",register:"casual"},{en:"I’m so happy to meet you all!",ar:"أنا فرحان أوي إني قابلتكم!",franco:"Ana far7an awi eni 2abaltkom!",register:"formal"},{en:"I’m still getting used to Cairo—it’s amazing!",ar:"لسه بتعود على القاهرة… بس حلوة قوي!",franco:"Lissa bat3awwad 3ala el-2ahera... bas 7elwa awy!",register:"intimate"}]},
-  {id:"l1-7",title:"Compliments That Land",xp:10,vocab:[{en:"This home is so full of blessings, God willing.",ar:"ما شاء الله البيت ده مليان بركة.",franco:"Ma sha2 Allah el-beet da melyan baraka.",register:"neutral"},{en:"Your hands are blessed, may God keep them safe.",ar:"تسلم إيديك، ربنا يحفظك.",franco:"Teslam eedeek, Rabbena ye7fazak.",register:"formal"},{en:"The food is incredible, may God bless your hands.",ar:"الأكل ده تحفة، ربنا يبارك في إيدك.",franco:"El-akl da to7fa, rabena ybarek fe eedak.",register:"neutral"},{en:"What a beautiful home, God protect it.",ar:"البيت ده جميل أوي، الله يحميه.",franco:"El-beet da gameel awy, Allah ye7mayo.",register:"neutral"},{en:"The kids are so well-mannered, God bless them.",ar:"العيال مهذبين أوي، ربنا يبارك فيهم.",franco:"El-3eyal mohazbeen awy, rabena ybarek feehom.",register:"formal"},{en:"You’ve raised them so well, may God reward you.",ar:"ربنا يخليهملك، ربنا يجازيك خير.",franco:"Rabena y5alleehomlak, rabena ygazeek 5eer.",register:"formal"},{en:"This dish is amazing, your hands are golden!",ar:"الأكل ده حاجة حلوة أوي، إيدك دهب!",franco:"El-akl da 7aga 7elwa awy, eedak dahab!",register:"casual"},{en:"The house smells so good, like heaven!",ar:"البيت ريحته حلوة أوي، زي الجنة!",franco:"El-beet rey7to 7elwa awy, zay el-genna!",register:"casual"},{en:"You’re all so kind, God bless this family.",ar:"أنتم طيبين أوي، ربنا يبارك في العيلة دي.",franco:"Entom taybeen awy, rabena ybarek fel-3eela di.",register:"formal"},{en:"The kids are adorable, ma sha’ Allah!",ar:"العيال حلوين أوي، ما شاء الله!",franco:"El-3eyal 7elween awy, ma sha2 Allah!",register:"neutral"},{en:"I feel so welcome here, thank God.",ar:"أنا حاسس نفسي في بيتي، الحمد لله.",franco:"Ana 7ases nafsi fe beety, el-7amd lellah.",register:"intimate"}]},
-  {id:"l1-8",title:"The Questions They'll Ask You",xp:10,vocab:[{en:"Do you like Egypt?",ar:"مصر عجبتك؟",franco:"Masr 3agabtak?",register:"neutral"},{en:"Can you handle the spice?",ar:"بتستحمل الشطة؟",franco:"Betesta7mel el-shatta?",register:"casual"},{en:"When are you learning Arabic?",ar:"حضرتك بتتعلم عربي بقالك قد إيه؟",franco:"Hadratak betet3allam 3arabi ba2alak add eh?",register:"neutral"},{en:"When’s the wedding?",ar:"إمتى الجواز؟",franco:"Emta el gawaz?",register:"casual"},{en:"Do you eat ful medames?",ar:"بتاكلي فول؟",franco:"Betaakli fool?",register:"neutral"},{en:"Are you used to the heat yet?",ar:"اتعودتي على الحر؟",franco:"Et3awadti 3ala el 7ar?",register:"neutral"},{en:"You’re not leaving us, right?",ar:"مش هتسيبينا، صح؟",franco:"Msh hatsibina, sa7?",register:"intimate"},{en:"Do you like Egyptian tea?",ar:"الشاي المصري عجبك؟",franco:"El shai el masri 3agabak?",register:"neutral"},{en:"You’ll visit us often, won’t you?",ar:"هتزورينا كتير، مش كده؟",franco:"Hatzurina kteer, msh keda?",register:"formal"},{en:"You’re not scared of our family, are you?",ar:"مش خايف من العيلة بتاعتنا، صح؟",franco:"Msh 5aif men el 3eela beta3tna, sa7?",register:"casual"},{en:"You’ll get used to us soon, inshallah.",ar:"هتتعود علينا قريب إن شاء الله.",franco:"Hatet3awad 3alina 2areeb, in shaa Allah.",register:"formal"}]},
-  {id:"l1-9",title:"When You're Lost: Asking for Slower, Simpler, Again",xp:10,vocab:[{en:"I didn’t catch that—could you say it again, please?",ar:"معلش، ممكن تقولها تاني لو سمحت؟",franco:"Ma3lesh, momken t2olha tani law sama7t?",register:"formal"},{en:"Sorry, my Arabic is still weak—could you speak a little slower?",ar:"آسف، عربيتي لسه ضعيفة… ممكن تتكلم أبطأ شوية؟",franco:"Asif, 3arabiti lissa da3eefa... momken tetkallem abTa2 shwayya?",register:"formal"},{en:"I missed that—what did you say?",ar:"ما سمعتش كويس… إيه اللي حضرتك قلته؟",franco:"Ma seme3tesh kwayyes... eh elli hadratak 2olto?",register:"neutral"},{en:"Could you repeat that one more time?",ar:"ممكن تعيديها تاني مرة؟",franco:"Momken te3idiha tani mara?",register:"neutral"},{en:"I didn’t get it—could you explain in simpler words?",ar:"ما فهمتش، ممكن تشرحي بكلمات أسهل؟",franco:"Ma fhmtish, momken teshra7i b kalemat as-hal?",register:"formal"},{en:"Wait, I’m lost—what’s going on?",ar:"استنى، انا تايه، ايه اللي بيحصل؟",franco:"Estanna, ana tayeh, eih elly bey7sal?",register:"casual"},{en:"Babe, translate this for me quick.",ar:"يا حبيبي، ترجملي ده بسرعة.",franco:"Ya 7abibi, taragmli da b sor3a.",register:"intimate"},{en:"I didn’t understand—could you say it in English?",ar:"ما فهمتش، ممكن تقولها بالانجليزي؟",franco:"Ma fhmtish, momken t2olha bel engelizi?",register:"neutral"},{en:"Hold on, I need to ask [partner’s name] what this means.",ar:"استنى، لازم اسأل [اسم الشريك] ده معناه ايه.",franco:"Estanna, lazem as2al [esm el shareek] da ma3nah eih.",register:"formal"},{en:"Sorry, my brain froze—could you repeat?",ar:"آسف، دماغي وقفت… ممكن تعيد؟",franco:"Asif, demaghi we2fet... momken te3eed?",register:"casual"},{en:"I’m trying to follow, but it’s too fast.",ar:"بحاول أتابع بس الكلام سريع أوي.",franco:"Ba7awel atabe3 bas el-kalam saree3 awy.",register:"neutral"}]},
-  {id:"l1-10",title:"If You Mess Up: Apologizing & Laughing It Off",xp:10,vocab:[{en:"Oops, my tongue got tangled!",ar:"لساني اتلخبط!",franco:"Lesani etlakhbat!",register:"neutral"},{en:"Sorry, my brain short-circuited for a second!",ar:"آسف، دماغي فصلت ثانية.",franco:"Asif, demaghi faslet sanya.",register:"casual"},{en:"I swear I’m not usually this clumsy… today’s just not my day!",ar:"والله ما أنا كده عادة… النهارده مش يومي!",franco:"WAllah ma ana keda 3ada… elnaharda msh yomi!",register:"neutral"},{en:"Forgive me, I’m still learning the Egyptian way!",ar:"سامحني، أنا لسه بتعلّم اللهجة المصرية.",franco:"Same7ni, ana lissa bet3allam el-lahga el-masreyya.",register:"formal"},{en:"Oh no, did I just say that out loud? My bad!",ar:"يا نهار أبيض… أنا قلت كده بصوت عالي؟ معلش!",franco:"Ya nahar abyad... ana 2olt keda be-sot 3ali? ma3lesh!",register:"casual"},{en:"Babe, save me—I just called your dad ‘ya 7abibi’ by accident!",ar:"يا بيبي إلحقني—أنا ناديت باباك «يا حبيبي» بالغلط!",franco:"Ya baby el7a2ni—ana nadet babak \"ya 7abibi\" bel ghalat!",register:"intimate"},{en:"Oh no, I messed up! Sorry about that.",ar:"يا نهار أبيض، غلطت! آسف والله.",franco:"Ya nahar abyad, ghalatt! Asif wallah.",register:"casual"},{en:"I didn’t mean to say that—my tongue slipped!",ar:"ما قصدتش أقول كده، لساني اتخطى!",franco:"Ma 2asadtish a2ool keda, lesani etkhatta!",register:"casual"},{en:"Forgive me, I got confused with the names.",ar:"سامحني، اتخبطت في الأسماء.",franco:"Samehni, etkhabatt fil asma2.",register:"neutral"},{en:"I swear I didn’t mean to refuse—your food is amazing!",ar:"والله ما قصدت أرفض، الأكل عندك تحفة!",franco:"Wallah ma 2asadt arfaD, el akel 3andak to7fa!",register:"casual"},{en:"I’m so embarrassed—let’s just laugh it off!",ar:"أنا خجلان أوي، خلينا نضحك عليها!",franco:"Ana khaglan awi, khalina ned7ak 3aleiha!",register:"intimate"}]},
-  {id:"l1-11",title:"Leaving Well: Goodbyes, Thanks & See You Again",xp:10,vocab:[{en:"Thank you so much for the wonderful day (said to the hosts)",ar:"الف شكر على اليوم الجميل ده",franco:"Alf shokr 3ala el youm el gamil da",register:"formal"},{en:"God bless your hands (for the food/effort, said to the hostess)",ar:"الله يخلي إيديك",franco:"Allah ye5ally eedyak",register:"formal"},{en:"We ate so well, may God keep you (said after a meal)",ar:"أكلنا حلو أوي، ربنا يخليك.",franco:"Akalna 7elw awy, Rabbena ye5alleek.",register:"formal"},{en:"We had such a great time, we’ll come back soon (promising return)",ar:"استمتعنا أوي هنرجع تاني قريب",franco:"Estamta3na awy, hanraga tany 2areeb",register:"neutral"},{en:"May God keep your home safe and happy (blessing for the household)",ar:"ربنا يخلي بيتكم عامر وسعيد",franco:"Rabbena ye5ally beetkom 3amer we sa3eed",register:"formal"},{en:"Don’t tire yourself out (said to the hostess as you leave)",ar:"ما تتعبيش نفسك",franco:"Ma tet3abish nafsak",register:"formal"},{en:"We’ll see you soon, God willing (casual but warm)",ar:"نشوفك قريب إن شاء الله",franco:"Neshoufak 2areeb, in sha2 Allah",register:"neutral"},{en:"Take care of yourself (said to elders as you leave)",ar:"خلي بالك من نفسك",franco:"5ally balak men nafsak",register:"formal"},{en:"I’ll call you when I get home (said to partner)",ar:"هكلمك لما أوصل",franco:"Hakallimak lamma awsal",register:"intimate"},{en:"May God keep you all (final blessing before leaving)",ar:"ربنا معاكم",franco:"Rabbena ma3akom",register:"formal"},{en:"Goodbye, stay safe (final farewell)",ar:"مع السلامة خلي بالك",franco:"Ma3a el salama, 5ally balak",register:"neutral"}]}
+ {id:"u1",title:"Scenario: Meeting Her Family for the First Time",title_ru:"Сценарий: первая встреча с её семьёй",lessons:[
+  {id:"l1-1",title:"Hello & Hi",title_ru:"Привет и здравствуй",xp:10,vocab:[{en:"Hi (informal)",ar:"إزيك",franco:"Ezzayak",register:"casual",ru:"Привет (неформально)"},{en:"Welcome / Hey",ar:"أهلاً",franco:"Ahlan",register:"neutral",ru:"Добро пожаловать / Привет"},{en:"Good morning",ar:"صباح الخير",franco:"Sabah el kheir",register:"neutral",ru:"Доброе утро"},{en:"Good evening",ar:"مساء الخير",franco:"Masa el kheir",register:"neutral",ru:"Добрый вечер"},{en:"Goodbye",ar:"مع السلامة",franco:"Ma'a el salama",register:"neutral",ru:"До свидания"}]},
+  {id:"l1-2",title:"How are you?",title_ru:"Как дела?",xp:10,vocab:[{en:"How are you? (to a man)",ar:"عامل إيه",franco:"3amel eh",register:"casual",ru:"Как дела? (мужчине)"},{en:"I'm good, thank God",ar:"كويس الحمد لله",franco:"kwayyes el7amdulillah",register:"neutral",ru:"Хорошо, слава Богу"},{en:"Fine / OK",ar:"تمام",franco:"Tamam",register:"neutral",ru:"Нормально / Окей"},{en:"Not good",ar:"مش كويس",franco:"Mesh kwayes",register:"neutral",ru:"Не очень"}]},
+  {id:"l2-1",title:"Please & Thanks",title_ru:"Пожалуйста и спасибо",xp:10,vocab:[{en:"Thank you",ar:"شكراً",franco:"Shukran",register:"neutral",ru:"Спасибо"},{en:"You're welcome",ar:"العفو",franco:"el-3afw",register:"neutral",ru:"Пожалуйста (в ответ на спасибо)"},{en:"Please (to a man)",ar:"لو سمحت",franco:"Law samaht",register:"neutral",ru:"Пожалуйста (обращаясь к мужчине)"},{en:"Sorry / Excuse me",ar:"آسف",franco:"Asef",register:"neutral",ru:"Извините / Простите"},{en:"Never mind / It's OK",ar:"معلش",franco:"Ma3lesh",register:"neutral",ru:"Ничего страшного / Всё нормально"}]},
+  {id:"l1-3",title:"At the Door: Blessings & Being Welcomed In",title_ru:"На пороге: благословения и тёплый приём",xp:10,vocab:[{en:"Masha'Allah, this home is so bright! (compliment said when entering)",ar:"ما شاء الله، البيت منوّر.",franco:"Ma sha2 Allah el-beet menawwar.",register:"formal",ru:"Маша Аллах, какой светлый дом! (комплимент при входе в дом)"},{en:"Permission to enter? (polite way to ask before stepping in)",ar:"أذن؟",franco:"2zn?",register:"formal",ru:"Можно войти? (вежливая просьба перед входом)"},{en:"Your home is blessed (complimenting the home)",ar:"بيتكم مبارك",franco:"betkom mobarak",register:"formal",ru:"Благословенный у вас дом (комплимент хозяевам)"},{en:"After you (gesturing for elders to enter first)",ar:"اتفضلوا الأول",franco:"etfaddalu el2awel",register:"formal",ru:"Проходите, пожалуйста (жест уважения к старшим)"},{en:"Welcome, welcome (warm response to guest)",ar:"أهلاً وسهلاً",franco:"ahlan wa sahlan",register:"neutral",ru:"Проходите, проходите! (тёплый ответ гостю)"},{en:"Come in, come in (urging guest to enter)",ar:"اتفضل اتفضل",franco:"etfaddal etfaddal",register:"neutral",ru:"Проходите, проходите (приглашение войти)"},{en:"God keep you safe (response to 'welcome')",ar:"الله يسلمك",franco:"allah yesallimak",register:"neutral",ru:"Храни вас Бог (ответ на «добро пожаловать»)"},{en:"Make yourself at home (casual, to peers)",ar:"إنت هنا في بيتك",franco:"enta hena fe betak",register:"casual",ru:"Чувствуй себя как дома (по-свойски, ровесникам)"},{en:"You honor us (humble response to welcome)",ar:"شرفتمونا",franco:"sharraftuna",register:"formal",ru:"Вы оказываете нам честь (скромный ответ на приветствие)"},{en:"I’m so happy to be here (warm, sincere)",ar:"أنا فرحان أوي إني جيت",franco:"ana far7an awi eni geet",register:"neutral",ru:"Я так рад, что я здесь (тепло, искренне)"},{en:"You’re my heart (intimate, to partner only)",ar:"إنت قلبي",franco:"enta 2alby",register:"intimate",ru:"Ты — моё сердце (только для любимого человека)"}]},
+  {id:"l1-4",title:"Introductions: Names, Titles & Who's Who",title_ru:"Знакомство: имена, обращения и кто есть кто",xp:10,vocab:[{en:"My name is... (formal, to elders)",ar:"أنا اسمي...",franco:"Ana esmi...",register:"formal",ru:"Меня зовут... (уважительно, старшим)"},{en:"What's your name? (polite, to elders)",ar:"اسم حضرتك إيه؟",franco:"Esm 7adrtak eih?",register:"formal",ru:"Как вас зовут? (вежливо, старшим)"},{en:"This is my mother (introducing her respectfully)",ar:"دي والدتي.",franco:"Di waldeti.",register:"formal",ru:"Это моя мама (представление с уважением)"},{en:"This is my father (introducing him respectfully)",ar:"ده والدي.",franco:"Da waldi.",register:"formal",ru:"Это мой папа (представление с уважением)"},{en:"How should I address your mother? (asking partner)",ar:"مامتك أناديها بإيه؟",franco:"Mamtak anadiha bi eih?",register:"intimate",ru:"Как мне обращаться к твоей маме? (спрашиваешь у партнёра)"},{en:"Call her 'Mama' (partner telling you what to say)",ar:"قولي لها ماما",franco:"2oli laha mama",register:"intimate",ru:"Зови её «Мама» (партнёр подсказывает, как обращаться)"},{en:"This is my aunt (father's sister, respectful)",ar:"دي عمتي",franco:"Di 3ammeti",register:"formal",ru:"Это моя тётя (сестра отца, уважительно)"},{en:"This is my uncle (father's brother, respectful)",ar:"ده عمي",franco:"Da 3ami",register:"formal",ru:"Это мой дядя (брат отца, уважительно)"},{en:"This is my aunt (mother's sister, respectful)",ar:"دي خالتي",franco:"Di 5alti",register:"formal",ru:"Это моя тётя (сестра мамы, уважительно)"},{en:"This is my uncle (mother's brother, respectful)",ar:"ده خالي",franco:"Da 5ali",register:"formal",ru:"Это мой дядя (брат мамы, уважительно)"},{en:"What do I call your older brother? (asking partner)",ar:"أخوك الكبير أناديه بإيه؟",franco:"A5ook el kbeer anadih bi eih?",register:"intimate",ru:"Как мне называть твоего старшего брата? (спрашиваешь у партнёра)"}]},
+  {id:"l1-5",title:"Tea, Juice & the Art of Refusing Then Accepting",title_ru:"Чай, сок и искусство сначала отказаться, а потом согласиться",xp:10,vocab:[{en:"No, thank you (first polite refusal).",ar:"لا، شكرًا.",franco:"La2, shokran.",register:"formal",ru:"Нет, спасибо (первый вежливый отказ)."},{en:"I swear I'm full (after second helping).",ar:"والله شبعان.",franco:"Wallah sha3baan.",register:"neutral",ru:"Честное слово, я сыт(а)"},{en:"Just a little, please (when they insist).",ar:"شوية بس، لو سمحت.",franco:"Shwayya bass, law sama7t.",register:"formal",ru:"Совсем чуть-чуть, пожалуйста (когда настаивают)."},{en:"It's delicious, may God bless your hands (praise to the cook).",ar:"لذيذ أوي، تسلم إيديك.",franco:"Lazeez awy, teslam eedeek.",register:"formal",ru:"Очень вкусно, у вас золотые руки (похвала повару)."},{en:"I can't eat another bite (polite way to stop).",ar:"مقدرش آكل أكتر من كده.",franco:"Ma2darsh akol aktar men keda.",register:"neutral",ru:"Я больше не могу ни кусочка (вежливый способ остановиться)."},{en:"You're spoiling me (when they keep insisting).",ar:"كتر خيرك.",franco:"Keteer 5eirik.",register:"casual",ru:"Вы меня балуете (когда продолжают настаивать)."},{en:"I'll have some later (gentle refusal).",ar:"هاخد بعدين.",franco:"Ha5od ba3deen.",register:"neutral",ru:"Я попробую попозже (мягкий отказ)."},{en:"It's perfect, no need for more (warm but firm).",ar:"كفاية كده، متشكر.",franco:"Kefaya keda, motshakker.",register:"neutral",ru:"Всё идеально, больше не нужно (тепло, но твёрдо)."},{en:"I'll explode if I eat more (humorous refusal).",ar:"بطني هتنفجر لو كلت أكتر!",franco:"Batni hatenfegar law kelt aktar!",register:"casual",ru:"Я лопну, если съем ещё! (шутливый отказ)."},{en:"Just a sip, I'm really full (for tea/juice).",ar:"رشفة بس، أنا مليان أوي.",franco:"Rashfa bas, ana melyan awy.",register:"neutral",ru:"Только глоточек, я правда больше не могу (для чая/сока)."},{en:"You're too kind (to the host after insistence).",ar:"كتر خيرك.",franco:"Keteer 5eirik.",register:"formal",ru:"Вы слишком добры (хозяину после настойчивых уговоров)."}]},
+  {id:"l1-6",title:"Telling Them About Yourself",title_ru:"Рассказываем о себе",xp:10,vocab:[{en:"I'm from [country/city], originally.",ar:"أنا من [بلد/مدينة] أصلا.",franco:"Ana mn [balad/madina] aslan.",register:"neutral",ru:"Я из [страна/город], родом оттуда."},{en:"I work in [field], but I'm still learning.",ar:"بشتغل في [مجال]، بس لسه بتعلّم عربي.",franco:"Bashtaghal fi [magal], bas lissa bet3allam 3arabi.",register:"neutral",ru:"Я работаю в сфере [сфера], но всё ещё учусь."},{en:"My family's small—just my parents and me.",ar:"عيلتي صغيرة، بابا وماما وأنا بس.",franco:"3eelti soghayyara, baba w mama w ana bass.",register:"casual",ru:"У меня маленькая семья — только родители и я."},{en:"I’ve been in Egypt for [time], and I love it here.",ar:"أنا في مصر بقالي [مدة]، وبحبها أوي.",franco:"Ana fi Masr ba2aly [modda], w ba7ebha awy.",register:"neutral",ru:"Я в Египте уже [время], и мне тут очень нравится."},{en:"I’m staying until [time], God willing.",ar:"هفضل لحد [وقت]، إن شاء الله.",franco:"Hafdal le7ad [wa2t], in sha2 Allah.",register:"formal",ru:"Я пробуду до [время], если Бог даст."},{en:"My Arabic is still weak, but I’m trying!",ar:"عربي ضعيف شوية، بس بجتهد!",franco:"3arabi da3if shwayya, bas baghtahid!",register:"casual",ru:"Мой арабский пока слабый, но я стараюсь!"},{en:"I have one brother/sister—just us two.",ar:"لي أخ/أخت واحد بس، إحنا الاتنين.",franco:"Li akh/okht wa7ed bass, e7na el-etnein.",register:"neutral",ru:"У меня один брат/одна сестра — нас двое."},{en:"I’m here to learn and be part of the family.",ar:"أنا جاي أتعلم وأبقى واحد من العيلة.",franco:"Ana gay at3allam w ab2a wa7ed men el-3eela.",register:"formal",ru:"Я здесь, чтобы учиться и стать частью семьи."},{en:"I love Egyptian food—it’s the best!",ar:"بحب الأكل المصري أوي، أحسن حاجة!",franco:"Ba7eb el-akl el-masri awi, a7san 7aga!",register:"casual",ru:"Обожаю египетскую еду — лучшая в мире!"},{en:"I’m so happy to meet you all!",ar:"أنا فرحان أوي إني قابلتكم!",franco:"Ana far7an awi eni 2abaltkom!",register:"formal",ru:"Я так рад, что познакомился со всеми вами!"},{en:"I’m still getting used to Cairo—it’s amazing!",ar:"لسه بتعود على القاهرة… بس حلوة قوي!",franco:"Lissa bat3awwad 3ala el-2ahera... bas 7elwa awy!",register:"intimate",ru:"Я ещё привыкаю к Каиру — но он потрясающий!"}]},
+  {id:"l1-7",title:"Compliments That Land",title_ru:"Комплименты, которые попадают в цель",xp:10,vocab:[{en:"This home is so full of blessings, God willing.",ar:"ما شاء الله البيت ده مليان بركة.",franco:"Ma sha2 Allah el-beet da melyan baraka.",register:"neutral",ru:"В этом доме столько благодати, слава Богу."},{en:"Your hands are blessed, may God keep them safe.",ar:"تسلم إيديك، ربنا يحفظك.",franco:"Teslam eedeek, Rabbena ye7fazak.",register:"formal",ru:"Золотые у вас руки, храни вас Бог."},{en:"The food is incredible, may God bless your hands.",ar:"الأكل ده تحفة، ربنا يبارك في إيدك.",franco:"El-akl da to7fa, rabena ybarek fe eedak.",register:"neutral",ru:"Еда невероятная, у вас золотые руки."},{en:"What a beautiful home, God protect it.",ar:"البيت ده جميل أوي، الله يحميه.",franco:"El-beet da gameel awy, Allah ye7mayo.",register:"neutral",ru:"Какой красивый дом, пусть Бог его хранит."},{en:"The kids are so well-mannered, God bless them.",ar:"العيال مهذبين أوي، ربنا يبارك فيهم.",franco:"El-3eyal mohazbeen awy, rabena ybarek feehom.",register:"formal",ru:"Детки такие воспитанные, дай Бог им здоровья."},{en:"You’ve raised them so well, may God reward you.",ar:"ربنا يخليهملك، ربنا يجازيك خير.",franco:"Rabena y5alleehomlak, rabena ygazeek 5eer.",register:"formal",ru:"Вы так хорошо их воспитали, пусть Бог вас наградит."},{en:"This dish is amazing, your hands are golden!",ar:"الأكل ده حاجة حلوة أوي، إيدك دهب!",franco:"El-akl da 7aga 7elwa awy, eedak dahab!",register:"casual",ru:"Это блюдо — шедевр, у вас золотые руки!"},{en:"The house smells so good, like heaven!",ar:"البيت ريحته حلوة أوي، زي الجنة!",franco:"El-beet rey7to 7elwa awy, zay el-genna!",register:"casual",ru:"В доме так вкусно пахнет, как в раю!"},{en:"You’re all so kind, God bless this family.",ar:"أنتم طيبين أوي، ربنا يبارك في العيلة دي.",franco:"Entom taybeen awy, rabena ybarek fel-3eela di.",register:"formal",ru:"Вы все такие добрые, благослови Бог эту семью."},{en:"The kids are adorable, ma sha’ Allah!",ar:"العيال حلوين أوي، ما شاء الله!",franco:"El-3eyal 7elween awy, ma sha2 Allah!",register:"neutral",ru:"Детки такие милые, маша Аллах!"},{en:"I feel so welcome here, thank God.",ar:"أنا حاسس نفسي في بيتي، الحمد لله.",franco:"Ana 7ases nafsi fe beety, el-7amd lellah.",register:"intimate",ru:"Я чувствую себя здесь как дома, слава Богу."}]},
+  {id:"l1-8",title:"The Questions They'll Ask You",title_ru:"Вопросы, которые вам обязательно зададут",xp:10,vocab:[{en:"Do you like Egypt?",ar:"مصر عجبتك؟",franco:"Masr 3agabtak?",register:"neutral",ru:"Тебе нравится Египет?"},{en:"Can you handle the spice?",ar:"بتستحمل الشطة؟",franco:"Betesta7mel el-shatta?",register:"casual",ru:"Ты острое ешь?"},{en:"When are you learning Arabic?",ar:"حضرتك بتتعلم عربي بقالك قد إيه؟",franco:"Hadratak betet3allam 3arabi ba2alak add eh?",register:"neutral",ru:"Как давно ты учишь арабский?"},{en:"When’s the wedding?",ar:"إمتى الجواز؟",franco:"Emta el gawaz?",register:"casual",ru:"Когда свадьба?"},{en:"Do you eat ful medames?",ar:"بتاكلي فول؟",franco:"Betaakli fool?",register:"neutral",ru:"Ты ешь фуль медаммес?"},{en:"Are you used to the heat yet?",ar:"اتعودتي على الحر؟",franco:"Et3awadti 3ala el 7ar?",register:"neutral",ru:"Уже привык(ла) к жаре?"},{en:"You’re not leaving us, right?",ar:"مش هتسيبينا، صح؟",franco:"Msh hatsibina, sa7?",register:"intimate",ru:"Ты ведь нас не бросишь, правда?"},{en:"Do you like Egyptian tea?",ar:"الشاي المصري عجبك؟",franco:"El shai el masri 3agabak?",register:"neutral",ru:"Тебе нравится египетский чай?"},{en:"You’ll visit us often, won’t you?",ar:"هتزورينا كتير، مش كده؟",franco:"Hatzurina kteer, msh keda?",register:"formal",ru:"Будешь нас часто навещать, да?"},{en:"You’re not scared of our family, are you?",ar:"مش خايف من العيلة بتاعتنا، صح؟",franco:"Msh 5aif men el 3eela beta3tna, sa7?",register:"casual",ru:"Ты ведь не боишься нашей семьи, а?"},{en:"You’ll get used to us soon, inshallah.",ar:"هتتعود علينا قريب إن شاء الله.",franco:"Hatet3awad 3alina 2areeb, in shaa Allah.",register:"formal",ru:"Скоро привыкнешь к нам, иншаллах."}]},
+  {id:"l1-9",title:"When You're Lost: Asking for Slower, Simpler, Again",title_ru:"Когда не понимаешь: просим помедленнее, попроще, ещё раз",xp:10,vocab:[{en:"I didn’t catch that—could you say it again, please?",ar:"معلش، ممكن تقولها تاني لو سمحت؟",franco:"Ma3lesh, momken t2olha tani law sama7t?",register:"formal",ru:"Я не расслышал — можно ещё раз, пожалуйста?"},{en:"Sorry, my Arabic is still weak—could you speak a little slower?",ar:"آسف، عربيتي لسه ضعيفة… ممكن تتكلم أبطأ شوية؟",franco:"Asif, 3arabiti lissa da3eefa... momken tetkallem abTa2 shwayya?",register:"formal",ru:"Простите, мой арабский пока слабый — можно чуть помедленнее?"},{en:"I missed that—what did you say?",ar:"ما سمعتش كويس… إيه اللي حضرتك قلته؟",franco:"Ma seme3tesh kwayyes... eh elli hadratak 2olto?",register:"neutral",ru:"Я не уловил — что вы сказали?"},{en:"Could you repeat that one more time?",ar:"ممكن تعيديها تاني مرة؟",franco:"Momken te3idiha tani mara?",register:"neutral",ru:"Можно повторить ещё разок?"},{en:"I didn’t get it—could you explain in simpler words?",ar:"ما فهمتش، ممكن تشرحي بكلمات أسهل؟",franco:"Ma fhmtish, momken teshra7i b kalemat as-hal?",register:"formal",ru:"Я не понял — можете объяснить попроще?"},{en:"Wait, I’m lost—what’s going on?",ar:"استنى، انا تايه، ايه اللي بيحصل؟",franco:"Estanna, ana tayeh, eih elly bey7sal?",register:"casual",ru:"Подожди, я не понял(а)..."},{en:"Babe, translate this for me quick.",ar:"يا حبيبي، ترجملي ده بسرعة.",franco:"Ya 7abibi, taragmli da b sor3a.",register:"intimate",ru:"Малыш, переведи мне это быстренько."},{en:"I didn’t understand—could you say it in English?",ar:"ما فهمتش، ممكن تقولها بالانجليزي؟",franco:"Ma fhmtish, momken t2olha bel engelizi?",register:"neutral",ru:"Я не понял — можно по-английски?"},{en:"Hold on, I need to ask [partner’s name] what this means.",ar:"استنى، لازم اسأل [اسم الشريك] ده معناه ايه.",franco:"Estanna, lazem as2al [esm el shareek] da ma3nah eih.",register:"formal",ru:"Секундочку, мне нужно спросить у [имя партнёра], что это значит."},{en:"Sorry, my brain froze—could you repeat?",ar:"آسف، دماغي وقفت… ممكن تعيد؟",franco:"Asif, demaghi we2fet... momken te3eed?",register:"casual",ru:"Простите, у меня мозг завис — можно повторить?"},{en:"I’m trying to follow, but it’s too fast.",ar:"بحاول أتابع بس الكلام سريع أوي.",franco:"Ba7awel atabe3 bas el-kalam saree3 awy.",register:"neutral",ru:"Я пытаюсь понять, но слишком быстро."}]},
+  {id:"l1-10",title:"If You Mess Up: Apologizing & Laughing It Off",title_ru:"Если накосячил: как извиниться и обратить всё в шутку",xp:10,vocab:[{en:"Oops, my tongue got tangled!",ar:"لساني اتلخبط!",franco:"Lesani etlakhbat!",register:"neutral",ru:"Ой, язык заплёлся!"},{en:"Sorry, my brain short-circuited for a second!",ar:"آسف، دماغي فصلت ثانية.",franco:"Asif, demaghi faslet sanya.",register:"casual",ru:"Простите, у меня мозг коротнул на секунду!"},{en:"I swear I’m not usually this clumsy… today’s just not my day!",ar:"والله ما أنا كده عادة… النهارده مش يومي!",franco:"WAllah ma ana keda 3ada… elnaharda msh yomi!",register:"neutral",ru:"Честное слово, обычно я не такой неуклюжий… просто сегодня не мой день!"},{en:"Forgive me, I’m still learning the Egyptian way!",ar:"سامحني، أنا لسه بتعلّم اللهجة المصرية.",franco:"Same7ni, ana lissa bet3allam el-lahga el-masreyya.",register:"formal",ru:"Простите, я ещё учусь египетским обычаям!"},{en:"Oh no, did I just say that out loud? My bad!",ar:"يا نهار أبيض… أنا قلت كده بصوت عالي؟ معلش!",franco:"Ya nahar abyad... ana 2olt keda be-sot 3ali? ma3lesh!",register:"casual",ru:"Ой нет, я правда это вслух сказал? Виноват!"},{en:"Babe, save me—I just called your dad ‘ya 7abibi’ by accident!",ar:"يا بيبي إلحقني—أنا ناديت باباك «يا حبيبي» بالغلط!",franco:"Ya baby el7a2ni—ana nadet babak \"ya 7abibi\" bel ghalat!",register:"intimate",ru:"Малыш, спасай — я только что назвал твоего папу «йа хабиби» по ошибке!"},{en:"Oh no, I messed up! Sorry about that.",ar:"يا نهار أبيض، غلطت! آسف والله.",franco:"Ya nahar abyad, ghalatt! Asif wallah.",register:"casual",ru:"Ой нет, я накосячил(а)!"},{en:"I didn’t mean to say that—my tongue slipped!",ar:"ما قصدتش أقول كده، لساني اتخطى!",franco:"Ma 2asadtish a2ool keda, lesani etkhatta!",register:"casual",ru:"Я не хотел(а) это сказать..."},{en:"Forgive me, I got confused with the names.",ar:"سامحني، اتخبطت في الأسماء.",franco:"Samehni, etkhabatt fil asma2.",register:"neutral",ru:"Простите, я запутался в именах."},{en:"I swear I didn’t mean to refuse—your food is amazing!",ar:"والله ما قصدت أرفض، الأكل عندك تحفة!",franco:"Wallah ma 2asadt arfaD, el akel 3andak to7fa!",register:"casual",ru:"Честное слово, я не хотел(а) отказаться..."},{en:"I’m so embarrassed—let’s just laugh it off!",ar:"أنا خجلان أوي، خلينا نضحك عليها!",franco:"Ana khaglan awi, khalina ned7ak 3aleiha!",register:"intimate",ru:"Мне так неловко — давайте просто посмеёмся над этим!"}]},
+  {id:"l1-11",title:"Leaving Well: Goodbyes, Thanks & See You Again",title_ru:"Уходим красиво: прощание, благодарность и «до скорого»",xp:10,vocab:[{en:"Thank you so much for the wonderful day (said to the hosts)",ar:"الف شكر على اليوم الجميل ده",franco:"Alf shokr 3ala el youm el gamil da",register:"formal",ru:"Огромное спасибо за этот чудесный день (хозяевам)"},{en:"God bless your hands (for the food/effort, said to the hostess)",ar:"الله يخلي إيديك",franco:"Allah ye5ally eedyak",register:"formal",ru:"У вас золотые руки (за угощение/старания, хозяйке)"},{en:"We ate so well, may God keep you (said after a meal)",ar:"أكلنا حلو أوي، ربنا يخليك.",franco:"Akalna 7elw awy, Rabbena ye5alleek.",register:"formal",ru:"Мы так вкусно поели, храни вас Бог (после трапезы)"},{en:"We had such a great time, we’ll come back soon (promising return)",ar:"استمتعنا أوي هنرجع تاني قريب",franco:"Estamta3na awy, hanraga tany 2areeb",register:"neutral",ru:"Было так здорово, мы скоро вернёмся (обещание вернуться)"},{en:"May God keep your home safe and happy (blessing for the household)",ar:"ربنا يخلي بيتكم عامر وسعيد",franco:"Rabbena ye5ally beetkom 3amer we sa3eed",register:"formal",ru:"Пусть Бог хранит ваш дом счастливым (благословение семье)"},{en:"Don’t tire yourself out (said to the hostess as you leave)",ar:"ما تتعبيش نفسك",franco:"Ma tet3abish nafsak",register:"formal",ru:"Не утруждайте себя (хозяйке при уходе)"},{en:"We’ll see you soon, God willing (casual but warm)",ar:"نشوفك قريب إن شاء الله",franco:"Neshoufak 2areeb, in sha2 Allah",register:"neutral",ru:"Скоро увидимся, если Бог даст (тепло, по-свойски)"},{en:"Take care of yourself (said to elders as you leave)",ar:"خلي بالك من نفسك",franco:"5ally balak men nafsak",register:"formal",ru:"Берегите себя (старшим при прощании)"},{en:"I’ll call you when I get home (said to partner)",ar:"هكلمك لما أوصل",franco:"Hakallimak lamma awsal",register:"intimate",ru:"Я позвоню тебе, когда доберусь домой (партнёру)"},{en:"May God keep you all (final blessing before leaving)",ar:"ربنا معاكم",franco:"Rabbena ma3akom",register:"formal",ru:"Храни вас всех Бог (последнее благословение перед уходом)"},{en:"Goodbye, stay safe (final farewell)",ar:"مع السلامة خلي بالك",franco:"Ma3a el salama, 5ally balak",register:"neutral",ru:"До свидания, берегите себя (прощание)"}]}
  ]},
- {id:"u2",title:"Scenario: Getting Close with Mom & Dad",lessons:[
-  {id:"l2-2",title:"Family & Terms of Endearment",xp:10,vocab:[{en:"Darling / Sweetheart (to partner)",ar:"حبيبي / حبيبتي",franco:"7abibi / 7abibti",register:"intimate"},{en:"Respectful way to address mother-in-law (like 'Mama')",ar:"ماما",franco:"mama",register:"formal"},{en:"Respectful way to address father-in-law (like 'Baba')",ar:"بابا",franco:"baba",register:"formal"},{en:"How Egyptians actually say 'I love you' (casual, natural)",ar:"باحبك",franco:"ba7ebak / ba7ebik",register:"intimate"},{en:"Asking 'How is your family?' (as Egyptians say it)",ar:"العيلة عاملة إيه؟",franco:"el-3eela 3amla eh?",register:"casual"},{en:"Saying 'God keep them safe' (common after mentioning family)",ar:"الله يِخَلِّيهم",franco:"Allah y5alleehom",register:"neutral"}]}
+ {id:"u2",title:"Scenario: Getting Close with Mom & Dad",title_ru:"Сценарий: сближаемся с мамой и папой",lessons:[
+  {id:"l2-2",title:"Family & Terms of Endearment",title_ru:"Семья и ласковые обращения",xp:10,vocab:[{en:"Darling / Sweetheart (to partner)",ar:"حبيبي / حبيبتي",franco:"7abibi / 7abibti",register:"intimate",ru:"Любимый / Любимая (партнёру)"},{en:"Respectful way to address mother-in-law (like 'Mama')",ar:"ماما",franco:"mama",register:"formal",ru:"Уважительное обращение к свекрови/тёще (как «Мама»)"},{en:"Respectful way to address father-in-law (like 'Baba')",ar:"بابا",franco:"baba",register:"formal",ru:"Уважительное обращение к свёкру/тестю (как «Папа»)"},{en:"How Egyptians actually say 'I love you' (casual, natural)",ar:"باحبك",franco:"ba7ebak / ba7ebik",register:"intimate",ru:"Как египтяне на самом деле говорят «Я тебя люблю» (живое, естественное)"},{en:"Asking 'How is your family?' (as Egyptians say it)",ar:"العيلة عاملة إيه؟",franco:"el-3eela 3amla eh?",register:"casual",ru:"Вопрос «Как семья?» (по-египетски)"},{en:"Saying 'God keep them safe' (common after mentioning family)",ar:"الله يِخَلِّيهم",franco:"Allah y5alleehom",register:"neutral",ru:"«Храни их Бог» (принято говорить, упомянув семью)"}]}
  ]},
- {id:"u3",title:"Scenario: A Special Occasion (Eid & Celebrations)",lessons:[
-  {id:"l3-2",title:"Eid & Family Gatherings",xp:10,vocab:[{en:"Eid greeting (to anyone)",ar:"كل سنة وانت طيب",franco:"kol sana w enta tayyeb",register:"neutral"},{en:"Blessing/wish to elders",ar:"الله يخليك لنا",franco:"Allah yekhalleek lana",register:"formal"},{en:"Complimenting the host's cooking/hospitality",ar:"الأكل تحفة، تسلم إيدِك",franco:"el-akl tu7fa, teslam eedek",register:"neutral"},{en:"Asking politely for more food",ar:"ممكن آخد زيادة شوية؟",franco:"momken akhod zeyada shwayya?",register:"neutral"},{en:"Compliment about how nice everyone looks",ar:"كلكم شكلكم حلو أوي",franco:"kolkom sheklokom 7elw awi",register:"neutral"},{en:"Offering to help (useful at family gatherings)",ar:"أساعد في إيه؟",franco:"asa3ed fi eh?",register:"neutral"}]}
+ {id:"u3",title:"Scenario: A Special Occasion (Eid & Celebrations)",title_ru:"Сценарий: особый повод (Ид и праздники)",lessons:[
+  {id:"l3-2",title:"Eid & Family Gatherings",title_ru:"Ид и семейные посиделки",xp:10,vocab:[{en:"Eid greeting (to anyone)",ar:"كل سنة وانت طيب",franco:"kol sana w enta tayyeb",register:"neutral",ru:"Поздравление с Идом (кому угодно)"},{en:"Blessing/wish to elders",ar:"الله يخليك لنا",franco:"Allah yekhalleek lana",register:"formal",ru:"Благословение/пожелание старшим"},{en:"Complimenting the host's cooking/hospitality",ar:"الأكل تحفة، تسلم إيدِك",franco:"el-akl tu7fa, teslam eedek",register:"neutral",ru:"Комплимент хозяйке за готовку/гостеприимство"},{en:"Asking politely for more food",ar:"ممكن آخد زيادة شوية؟",franco:"momken akhod zeyada shwayya?",register:"neutral",ru:"Вежливая просьба о добавке"},{en:"Compliment about how nice everyone looks",ar:"كلكم شكلكم حلو أوي",franco:"kolkom sheklokom 7elw awi",register:"neutral",ru:"Комплимент: как все хорошо выглядят"},{en:"Offering to help (useful at family gatherings)",ar:"أساعد في إيه؟",franco:"asa3ed fi eh?",register:"neutral",ru:"Предложение помочь (полезно на семейных посиделках)"}]}
  ]},
- {id:"u4",title:"Scenario: Out & About Together",lessons:[
-  {id:"l4-1",title:"Counting 1–10 العدّ من واحد لعشرة",xp:10,vocab:[{en:"one",ar:"واحد",franco:"wa7ed",register:"neutral"},{en:"two",ar:"اتنين",franco:"etnein",register:"neutral"},{en:"three",ar:"تلاتة",franco:"talata",register:"neutral"},{en:"five",ar:"خمسة",franco:"khamsa",register:"neutral"},{en:"ten",ar:"عشرة",franco:"3ashra",register:"neutral"}]},
-  {id:"l4-2",title:"How Much? بكام؟",xp:10,vocab:[{en:"How much is this?",ar:"بكام ده؟",franco:"bekam da?",register:"neutral"},{en:"That's too expensive!",ar:"ده غالي أوي!",franco:"da ghali awi!",register:"neutral"},{en:"Come on, make it a good price",ar:"يلا بقى، اعملهولي بسعر حلو",franco:"yalla ba2a, e3mholi bese3r 7elw",register:"casual"},{en:"Twenty pounds, final",ar:"عشرين جنيه وخلاص",franco:"3eshreen geneh w khalas",register:"casual"},{en:"Do you have change?",ar:"معاك فكة؟",franco:"ma3ak fakka?",register:"neutral"}]},
-  {id:"l4-3",title:"Taxi & Fares التاكسي والأجرة",xp:10,vocab:[{en:"How much to downtown?",ar:"بكام لوسط البلد؟",franco:"bekam le west el balad?",register:"neutral"},{en:"Turn on the meter, please",ar:"شغّل العدّاد لو سمحت",franco:"shaghal el 3addad law sama7t",register:"neutral"},{en:"Stop here on the side",ar:"على جنب هنا",franco:"3ala gamb hena",register:"neutral"},{en:"Keep the change",ar:"خلي الباقي ليك",franco:"khali el ba2i leek",register:"neutral"},{en:"That's not the normal fare",ar:"دي مش الأجرة العادية",franco:"di mesh el ogra el 3adeya",register:"neutral"}]}
+ {id:"u4",title:"Scenario: Out & About Together",title_ru:"Сценарий: гуляем и ездим вместе",lessons:[
+  {id:"l4-1",title:"Counting 1–10 العدّ من واحد لعشرة",title_ru:"Считаем от 1 до 10 العدّ من واحد لعشرة",xp:10,vocab:[{en:"one",ar:"واحد",franco:"wa7ed",register:"neutral",ru:"один"},{en:"two",ar:"اتنين",franco:"etnein",register:"neutral",ru:"два"},{en:"three",ar:"تلاتة",franco:"talata",register:"neutral",ru:"три"},{en:"five",ar:"خمسة",franco:"khamsa",register:"neutral",ru:"пять"},{en:"ten",ar:"عشرة",franco:"3ashra",register:"neutral",ru:"десять"}]},
+  {id:"l4-2",title:"How Much? بكام؟",title_ru:"Сколько стоит? بكام؟",xp:10,vocab:[{en:"How much is this?",ar:"بكام ده؟",franco:"bekam da?",register:"neutral",ru:"Сколько это стоит?"},{en:"That's too expensive!",ar:"ده غالي أوي!",franco:"da ghali awi!",register:"neutral",ru:"Это слишком дорого!"},{en:"Come on, make it a good price",ar:"يلا بقى، اعملهولي بسعر حلو",franco:"yalla ba2a, e3mholi bese3r 7elw",register:"casual",ru:"Да ладно, скинь немного"},{en:"Twenty pounds, final",ar:"عشرين جنيه وخلاص",franco:"3eshreen geneh w khalas",register:"casual",ru:"Двадцать фунтов, и всё"},{en:"Do you have change?",ar:"معاك فكة؟",franco:"ma3ak fakka?",register:"neutral",ru:"У вас есть сдача?"}]},
+  {id:"l4-3",title:"Taxi & Fares التاكسي والأجرة",title_ru:"Такси и оплата التاكسي والأجرة",xp:10,vocab:[{en:"How much to downtown?",ar:"بكام لوسط البلد؟",franco:"bekam le west el balad?",register:"neutral",ru:"Сколько до центра?"},{en:"Turn on the meter, please",ar:"شغّل العدّاد لو سمحت",franco:"shaghal el 3addad law sama7t",register:"neutral",ru:"Включите счётчик, пожалуйста"},{en:"Stop here on the side",ar:"على جنب هنا",franco:"3ala gamb hena",register:"neutral",ru:"Остановите здесь, у обочины"},{en:"Keep the change",ar:"خلي الباقي ليك",franco:"khali el ba2i leek",register:"neutral",ru:"Сдачи не надо"},{en:"That's not the normal fare",ar:"دي مش الأجرة العادية",franco:"di mesh el ogra el 3adeya",register:"neutral",ru:"Это не обычная цена"}]}
  ]},
- {id:"u5",title:"Scenario: Cooking & Eating Together",lessons:[
-  {id:"l5-1",title:"At the Café على القهوة",xp:10,vocab:[{en:"A tea, please",ar:"شاي لو سمحت",franco:"shay law sama7t",register:"neutral"},{en:"Coffee, medium sugar",ar:"قهوة مظبوط",franco:"ahwa mazboot",register:"neutral"},{en:"Without sugar",ar:"سادة",franco:"sada",register:"neutral"},{en:"A fresh mango juice",ar:"عصير مانجا فريش",franco:"3aseer manga fresh",register:"neutral"},{en:"Waiter! (getting attention)",ar:"يا أسطى!",franco:"ya osta!",register:"casual"}]},
-  {id:"l5-2",title:"The Koshary Stand عند الكشري",xp:10,vocab:[{en:"One medium koshary",ar:"واحد كشري وسط",franco:"wa7ed koshari wasat",register:"neutral"},{en:"Extra fried onions",ar:"تقلية زيادة",franco:"ta2leya zeyada",register:"neutral"},{en:"Easy on the hot sauce",ar:"شطة خفيف",franco:"shatta khafeef",register:"neutral"},{en:"Take away",ar:"تيك أواي",franco:"take away",register:"neutral"},{en:"Eating in",ar:"هنا جوه",franco:"hena gowa",register:"neutral"}]},
-  {id:"l5-3",title:"Ordering & Paying الطلب والحساب",xp:10,vocab:[{en:"What do you recommend?",ar:"ترشحلي إيه؟",franco:"torasha7li eh?",register:"neutral"},{en:"I'd like this one",ar:"عايز ده",franco:"3ayez da",register:"neutral"},{en:"No meat, I'm vegetarian",ar:"من غير لحمة، أنا مباكلش لحمة",franco:"men gheir la7ma, ana mabakolsh la7ma",register:"neutral"},{en:"The bill, please",ar:"الحساب لو سمحت",franco:"el 7esab law sama7t",register:"neutral"},{en:"It was really delicious",ar:"كان تحفة والله",franco:"kan to7fa wallahi",register:"neutral"}]}
+ {id:"u5",title:"Scenario: Cooking & Eating Together",title_ru:"Сценарий: готовим и едим вместе",lessons:[
+  {id:"l5-1",title:"At the Café على القهوة",title_ru:"В кафе على القهوة",xp:10,vocab:[{en:"A tea, please",ar:"شاي لو سمحت",franco:"shay law sama7t",register:"neutral",ru:"Чай, пожалуйста"},{en:"Coffee, medium sugar",ar:"قهوة مظبوط",franco:"ahwa mazboot",register:"neutral",ru:"Кофе, средней сладости"},{en:"Without sugar",ar:"سادة",franco:"sada",register:"neutral",ru:"Без сахара"},{en:"A fresh mango juice",ar:"عصير مانجا فريش",franco:"3aseer manga fresh",register:"neutral",ru:"Свежий манговый сок"},{en:"Waiter! (getting attention)",ar:"يا أسطى!",franco:"ya osta!",register:"casual",ru:"Официант! (привлечь внимание)"}]},
+  {id:"l5-2",title:"The Koshary Stand عند الكشري",title_ru:"У ларька с кошари عند الكشري",xp:10,vocab:[{en:"One medium koshary",ar:"واحد كشري وسط",franco:"wa7ed koshari wasat",register:"neutral",ru:"Один кошари, средний"},{en:"Extra fried onions",ar:"تقلية زيادة",franco:"ta2leya zeyada",register:"neutral",ru:"Побольше жареного лука"},{en:"Easy on the hot sauce",ar:"شطة خفيف",franco:"shatta khafeef",register:"neutral",ru:"Поменьше острого соуса"},{en:"Take away",ar:"تيك أواي",franco:"take away",register:"neutral",ru:"С собой"},{en:"Eating in",ar:"هنا جوه",franco:"hena gowa",register:"neutral",ru:"Здесь"}]},
+  {id:"l5-3",title:"Ordering & Paying الطلب والحساب",title_ru:"Заказ и оплата الطلب والحساب",xp:10,vocab:[{en:"What do you recommend?",ar:"ترشحلي إيه؟",franco:"torasha7li eh?",register:"neutral",ru:"Что посоветуете?"},{en:"I'd like this one",ar:"عايز ده",franco:"3ayez da",register:"neutral",ru:"Мне вот это"},{en:"No meat, I'm vegetarian",ar:"من غير لحمة، أنا مباكلش لحمة",franco:"men gheir la7ma, ana mabakolsh la7ma",register:"neutral",ru:"Без мяса, я вегетарианец"},{en:"The bill, please",ar:"الحساب لو سمحت",franco:"el 7esab law sama7t",register:"neutral",ru:"Счёт, пожалуйста"},{en:"It was really delicious",ar:"كان تحفة والله",franco:"kan to7fa wallahi",register:"neutral",ru:"Было очень вкусно, честное слово"}]}
  ]}
 ]};
 
@@ -1075,6 +1075,127 @@ let correctCount=0;
 let selection=null;     // current selection for check()
 let matchState=null;    // state for match exercise
 let refreshLandingPhrase=null;
+
+const STRINGS={
+  "ui.speakmasri_learn_egyptian_arabic_masri":{en:"SpeakMasri – Learn Egyptian Arabic (Masri)",ru:"SpeakMasri – Учи египетский арабский (Масри)"},
+  "settings.base_language":{en:"Base language",ru:"Основной язык"},
+  "nav.learn":{en:"Learn",ru:"Обучение"},
+  "ui.egyptian_arabic_masri":{en:"Egyptian Arabic (Masri)",ru:"Египетский арабский (Масри)"},
+  "ui.through_short_practical_lessons_built_around_real_li":{en:"through short, practical lessons built around real-life situations.",ru:"через короткие практические уроки по реальным жизненным ситуациям."},
+  "ui.try_a_lesson_free_no_account_needed":{en:"Try a lesson free — no account needed.",ru:"Попробуйте урок бесплатно — регистрация не нужна."},
+  "btn.try_lesson_free":{en:"Try a Lesson Free",ru:"Попробовать бесплатно"},
+  "btn.login":{en:"Log In",ru:"Войти"},
+  "btn.signup":{en:"Sign Up",ru:"Регистрация"},
+  "placeholder.name":{en:"Name (for signup)",ru:"Имя (для регистрации)"},
+  "placeholder.email":{en:"Email",ru:"Электронная почта"},
+  "placeholder.pass":{en:"Password (min 8 characters)",ru:"Пароль (мин. 8 символов)"},
+  "ui.what_s_your_learning_goal_optional":{en:"What's your learning goal? (optional)",ru:"Какая у вас цель? (необязательно)"},
+  "ui.egyptian_partner_in_laws":{en:"Egyptian partner / in-laws",ru:"Египетский партнёр / его семья"},
+  "ui.upcoming_trip_to_egypt":{en:"Upcoming trip to Egypt",ru:"Предстоящая поездка в Египет"},
+  "ui.reconnecting_with_heritage":{en:"Reconnecting with heritage",ru:"Возвращение к корням"},
+  "ui.other":{en:"Other",ru:"Другое"},
+  "ui.back":{en:"← Back",ru:"← Назад"},
+  "ui.forgot_password":{en:"Forgot password?",ru:"Забыли пароль?"},
+  "ui.privacy_policy":{en:"Privacy Policy",ru:"Политика конфиденциальности"},
+  "ui.terms_of_service":{en:"Terms of Service",ru:"Условия использования"},
+  "ui.said":{en:"said",ru:"произнёс"},
+  "ui.verify_your_email_to_secure_your_account":{en:"Verify your email to secure your account",ru:"Подтвердите почту, чтобы защитить аккаунт"},
+  "ui.resendverificationbtn":{en:"Resend",ru:"Отправить снова"},
+  "aria.dismiss_email_verification_reminder":{en:"Dismiss email verification reminder",ru:"Скрыть напоминание о подтверждении почты"},
+  "ui.phrasebook":{en:"📖 Phrasebook",ru:"📖 Разговорник"},
+  "ui.everything_you_ve_unlocked_so_far_pull_this_up_mid_c":{en:"Everything you've unlocked so far — pull this up mid-conversation.",ru:"Всё, что вы уже открыли — подглядывайте прямо во время разговора."},
+  "ui.formal_elders_in_laws_show_respect_casual_friends_pe":{en:"Formal = elders, in-laws, show respect · Casual = friends, peers · Intimate = partner only",ru:"Формально — со старшими и роднёй, с уважением · Неформально — с друзьями и ровесниками · Интимно — только с партнёром"},
+  "ui.total_xp":{en:"Total XP",ru:"Всего XP"},
+  "ui.phrases_said":{en:"Phrases Said",ru:"Фраз произнесено"},
+  "ui.your_moments":{en:"Your moments",ru:"Ваши моменты"},
+  "ui.partner_phrases":{en:"Partner Phrases",ru:"Фразы от партнёра"},
+  "ui.send_your_partner_this_link_they_add_family_names_in":{en:"Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.",ru:"Отправьте эту ссылку партнёру — он добавит имена родных, семейные шутки и всё, что они реально говорят, прямо с телефона. Ему не нужен аккаунт."},
+  "ui.sharelinkbtn":{en:"🔗 Share Link With Partner",ru:"🔗 Поделиться ссылкой с партнёром"},
+  "ui.prefer_the_json_file_instead":{en:"Prefer the JSON file instead?",ru:"Предпочитаете JSON-файл?"},
+  "ui.template":{en:"⬇️ Template",ru:"⬇️ Шаблон"},
+  "ui.import":{en:"⬆️ Import",ru:"⬆️ Импорт"},
+  "ui.account":{en:"Account",ru:"Аккаунт"},
+  "ui.editnamebtn":{en:"✏️ Edit name",ru:"✏️ Изменить имя"},
+  "placeholder.your_name":{en:"Your name",ru:"Ваше имя"},
+  "ui.savenamebtn":{en:"Save",ru:"Сохранить"},
+  "ui.cancel":{en:"Cancel",ru:"Отмена"},
+  "ui.change_password":{en:"🔒 Change Password",ru:"🔒 Сменить пароль"},
+  "btn.logout":{en:"Log Out",ru:"Выйти"},
+  "nav.phrasebook":{en:"Phrasebook",ru:"Разговорник"},
+  "nav.profile":{en:"Profile",ru:"Профиль"},
+  "aria.quit_lesson":{en:"Quit lesson",ru:"Выйти из урока"},
+  "btn.check":{en:"Check",ru:"Проверить"},
+  "ui.donetitle":{en:"Lesson Complete!",ru:"Урок пройден!"},
+  "ui.xp_earned":{en:"XP Earned",ru:"Получено XP"},
+  "ui.accuracy":{en:"Accuracy",ru:"Точность"},
+  "ui.rehearse_this_lesson":{en:"🎙️ Rehearse This Lesson",ru:"🎙️ Отрепетировать урок"},
+  "btn.continue":{en:"Continue",ru:"Продолжить"},
+  "ui.name_can_t_be_empty":{en:"Name can't be empty.",ru:"Имя не может быть пустым."},
+  "ui.saved":{en:"Saved ✓",ru:"Сохранено ✓"},
+  "ui.couldn_t_save_try_again":{en:"Couldn't save. Try again.",ru:"Не удалось сохранить. Попробуйте ещё раз."},
+  "ui.no_email_on_file":{en:"No email on file.",ru:"Электронная почта не указана."},
+  "ui.check_your_email_for_a_reset_link":{en:"Check your email for a reset link.",ru:"Проверьте почту — там ссылка для сброса пароля."},
+  "ui.couldn_t_send_reset_email_try_again":{en:"Couldn't send reset email. Try again.",ru:"Не удалось отправить письмо. Попробуйте ещё раз."},
+  "ui.fill_in_all_fields_to_sign_up":{en:"Fill in all fields to sign up.",ru:"Заполните все поля для регистрации."},
+  "ui.password_must_be_at_least_8_characters":{en:"Password must be at least 8 characters.",ru:"Пароль должен быть не менее 8 символов."},
+  "ui.enter_your_email_above_first_then_tap_forgot_passwor":{en:"Enter your email above first, then tap Forgot password.",ru:"Сначала введите почту выше, затем нажмите «Забыли пароль?»."},
+  "ui.copied":{en:"Copied! ✅",ru:"Скопировано! ✅"},
+  "ui.sent":{en:"Sent! ✅",ru:"Отправлено! ✅"},
+  "exercise.listen_prompt":{en:"Listen and choose the meaning",ru:"Послушайте и выберите значение"},
+  "exercise.franco_prompt":{en:"Type it in Franco-Arabic",ru:"Напишите франко-арабицей"},
+  "ui.e_g_shukran":{en:"e.g. Shukran",ru:"напр. Shukran"},
+  "exercise.match_prompt":{en:"Match the pairs",ru:"Соедините пары"},
+  "ui.recording":{en:"🔴 Recording...",ru:"🔴 Запись..."},
+  "ui.hold_to_record":{en:"🎙️ Hold to Record",ru:"🎙️ Удерживайте для записи"},
+  "ui.nice":{en:"Nice! 🎉",ru:"Отлично! 🎉"},
+  "ui.nice_sign_up_to_save_this_progress":{en:"Nice! Sign up to save this progress",ru:"Отлично! Зарегистрируйтесь, чтобы сохранить прогресс"},
+  "msg.that_file_couldn_t_be_read_as_a_phrase_list_make_sur":{en:"That file couldn't be read as a phrase list. Make sure it's the JSON template with en/ar/franco fields.",ru:"Этот файл не удалось прочитать как список фраз. Убедитесь, что это JSON-шаблон с полями en/ar/franco."},
+  "msg.quit_this_lesson_you_ll_lose_your_progress_in_it":{en:"Quit this lesson? You'll lose your progress in it.",ru:"Выйти из урока? Прогресс в нём будет потерян."},
+  "register.formal":{en:"Formal",ru:"Формально"},
+  "register.casual":{en:"Casual",ru:"Неформально"},
+  "register.intimate":{en:"Intimate",ru:"Интимно"},
+  "msg.this_email_is_already_registered":{en:"This email is already registered.",ru:"Эта почта уже зарегистрирована."},
+  "msg.incorrect_password":{en:"Incorrect password.",ru:"Неверный пароль."},
+  "msg.invalid_email_or_password":{en:"Invalid email or password.",ru:"Неверная почта или пароль."},
+  "msg.password_should_be_at_least_6_characters":{en:"Password should be at least 6 characters.",ru:"Пароль должен быть не менее 6 символов."},
+  "msg.please_enter_a_valid_email_address":{en:"Please enter a valid email address.",ru:"Введите корректный адрес электронной почты."},
+  "msg.no_account_found_with_this_email":{en:"No account found with this email.",ru:"Аккаунт с такой почтой не найден."},
+  "msg.something_went_wrong_please_try_again":{en:"Something went wrong. Please try again.",ru:"Что-то пошло не так. Попробуйте ещё раз."},
+  "ui.copy_this_link_to_send_your_partner":{en:"Copy this link to send your partner:",ru:"Скопируйте эту ссылку и отправьте партнёру:"},
+  "msg.no_moments_yet_finish_a_lesson_and_try_the_mission_t":{en:"No moments yet — finish a lesson and try the mission tonight.",ru:"Пока нет моментов — пройдите урок и попробуйте задание сегодня вечером."},
+  "msg.no_partner_phrases_yet":{en:"No partner phrases yet.",ru:"Пока нет фраз от партнёра."},
+  "aria.delete_phrase":{en:"Delete phrase",ru:"Удалить фразу"},
+  "msg.nothing_unlocked_yet_finish_your_first_lesson":{en:"Nothing unlocked yet — finish your first lesson.",ru:"Пока ничего не открыто — пройдите первый урок."},
+  "exercise.translate_prompt":{en:"Translate:",ru:"Переведите:"},
+  "ui.correct":{en:"Correct!",ru:"Верно!"},
+  "ui.not_quite":{en:"Not quite",ru:"Не совсем"},
+  "ui.answer":{en:"Answer:",ru:"Ответ:"},
+  "ui.tonight_s_mission":{en:"Tonight's mission",ru:"Задание на вечер"},
+  "ui.say_this_to_them":{en:"Say this to them:",ru:"Скажите им:"},
+  "ui.i_said_it":{en:"I said it!",ru:"Я это сказал!"},
+  "ui.finish":{en:"Finish",ru:"Готово"},
+  "ui.next":{en:"Next",ru:"Дальше"},
+  "aria.hear_native_pronunciation":{en:"Hear native pronunciation",ru:"Послушать произношение носителя"},
+  "aria.hold_to_record_yourself":{en:"Hold to record yourself",ru:"Удерживайте, чтобы записать себя"},
+  "ui.mic_access_not_available_just_practice_saying_it_out":{en:"Mic access not available — just practice saying it out loud",ru:"Микрофон недоступен — просто тренируйтесь произносить вслух"},
+  "ui.all_done":{en:"All done!",ru:"Всё готово!"},
+  "msg.you_ve_practiced_the_whole_lesson":{en:"You've practiced the whole lesson.",ru:"Вы отрепетировали весь урок."},
+  "ui.back_to_lessons":{en:"Back to lessons",ru:"К урокам"},
+  "demo.phrase.my_love":{en:"My love",ru:"Любовь моя"},
+  "demo.phrase.how_are_you":{en:"How are you",ru:"Как дела"}
+};
+function t(key){
+  const entry=STRINGS[key];
+  if(!entry)return key;
+  return (baseLang!=='en'&&entry[baseLang])?entry[baseLang]:entry.en;
+}
+function applyStaticStrings(){
+  document.title=t('ui.speakmasri_learn_egyptian_arabic_masri');
+  document.documentElement.lang=baseLang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n);});
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder);});
+  document.querySelectorAll('[data-i18n-aria-label]').forEach(el=>{el.setAttribute('aria-label',t(el.dataset.i18nAriaLabel));});
+}
 
 function vocabText(item){return (baseLang!=='en'&&item[baseLang])?item[baseLang]:item.en;}
 function titleText(obj){return (baseLang!=='en'&&obj['title_'+baseLang])?obj['title_'+baseLang]:obj.title;}
@@ -1092,6 +1213,7 @@ async function setBaseLang(lang){
   localStorage.setItem('baseLang',lang);
   if(user)user.baseLang=lang;
   renderBaseLangToggles();
+  applyStaticStrings();
   if(refreshLandingPhrase)refreshLandingPhrase();
   if(user&&!user.isGuest){
     if(!document.getElementById('learn').classList.contains('hidden'))renderPath();
@@ -1108,14 +1230,14 @@ async function setBaseLang(lang){
 
 function getAuthErrorMessage(code){
   const map={
-    'auth/email-already-in-use':'This email is already registered.',
-    'auth/wrong-password':'Incorrect password.',
-    'auth/invalid-credential':'Invalid email or password.',
-    'auth/weak-password':'Password should be at least 6 characters.',
-    'auth/invalid-email':'Please enter a valid email address.',
-    'auth/user-not-found':'No account found with this email.'
+    'auth/email-already-in-use':t('msg.this_email_is_already_registered'),
+    'auth/wrong-password':t('msg.incorrect_password'),
+    'auth/invalid-credential':t('msg.invalid_email_or_password'),
+    'auth/weak-password':t('msg.password_should_be_at_least_6_characters'),
+    'auth/invalid-email':t('msg.please_enter_a_valid_email_address'),
+    'auth/user-not-found':t('msg.no_account_found_with_this_email')
   };
-  return map[code]||'Something went wrong. Please try again.';
+  return map[code]||t('msg.something_went_wrong_please_try_again');
 }
 
 async function loadUserData(){
@@ -1148,6 +1270,7 @@ async function loadUserData(){
   };
   if(user.baseLang)baseLang=user.baseLang;
   renderBaseLangToggles();
+  applyStaticStrings();
 }
 
 async function saveProgress(lessonId,done,score){
@@ -1191,7 +1314,7 @@ async function saveDisplayName(newName){
   const btn=document.getElementById('saveNameBtn');
   const name=(newName||'').trim();
   msg.style.color='var(--error)';
-  if(!name){msg.textContent="Name can't be empty.";return;}
+  if(!name){msg.textContent=t('ui.name_can_t_be_empty');return;}
   const uid=firebase.auth().currentUser.uid;
   try{
     await firebase.firestore().collection('users').doc(uid).update({name});
@@ -1199,11 +1322,11 @@ async function saveDisplayName(newName){
     document.getElementById('pName').textContent=name;
     msg.textContent='';
     const orig=btn.textContent;
-    btn.textContent='Saved ✓';
+    btn.textContent=t('ui.saved');
     setTimeout(()=>{btn.textContent=orig;hideNameEdit();},2000);
   }catch(e){
     msg.style.color='var(--error)';
-    msg.textContent="Couldn't save. Try again.";
+    msg.textContent=t('ui.couldn_t_save_try_again');
     console.error('saveDisplayName error',e);
   }
 }
@@ -1211,14 +1334,14 @@ async function saveDisplayName(newName){
 async function changePasswordFromProfile(){
   const pwMsg=document.getElementById('pwMsg');
   pwMsg.textContent='';
-  if(!user.email){pwMsg.style.color='var(--error)';pwMsg.textContent='No email on file.';return;}
+  if(!user.email){pwMsg.style.color='var(--error)';pwMsg.textContent=t('ui.no_email_on_file');return;}
   try{
     await firebase.auth().sendPasswordResetEmail(user.email);
     pwMsg.style.color='var(--teal)';
-    pwMsg.textContent='Check your email for a reset link.';
+    pwMsg.textContent=t('ui.check_your_email_for_a_reset_link');
   }catch(e){
     pwMsg.style.color='var(--error)';
-    pwMsg.textContent="Couldn't send reset email. Try again.";
+    pwMsg.textContent=t('ui.couldn_t_send_reset_email_try_again');
     console.error('changePasswordFromProfile error',e);
   }
   setTimeout(()=>{pwMsg.textContent='';},5000);
@@ -1260,8 +1383,8 @@ async function signup(){
   const err=document.getElementById("authErr");
   err.textContent="";
   document.getElementById("authMsg").textContent="";
-  if(!name||!email||!pass){err.textContent="Fill in all fields to sign up.";return;}
-  if(pass.length<8){err.textContent="Password must be at least 8 characters.";return;}
+  if(!name||!email||!pass){err.textContent=t('ui.fill_in_all_fields_to_sign_up');return;}
+  if(pass.length<8){err.textContent=t('ui.password_must_be_at_least_8_characters');return;}
   try{
     const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
     cred.user.sendEmailVerification().catch(e=>console.error('Email verification error',e));
@@ -1343,10 +1466,10 @@ async function resetPassword(){
   const err=document.getElementById("authErr");
   const msg=document.getElementById("authMsg");
   err.textContent="";msg.textContent="";
-  if(!email){err.textContent="Enter your email above first, then tap Forgot password.";return;}
+  if(!email){err.textContent=t('ui.enter_your_email_above_first_then_tap_forgot_passwor');return;}
   try{
     await firebase.auth().sendPasswordResetEmail(email);
-    msg.textContent="Check your email for a reset link.";
+    msg.textContent=t('ui.check_your_email_for_a_reset_link');
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
     console.error('Reset password error',e);
@@ -1420,9 +1543,9 @@ function sharePartnerLink(){
   const url=`https://speakmasri.com/partner.html?u=${fbUser.uid}`;
   const btn=document.getElementById("shareLinkBtn");
   navigator.clipboard.writeText(url).then(()=>{
-    if(btn){const orig=btn.textContent;btn.textContent="Copied! ✅";setTimeout(()=>{btn.textContent=orig;},2000);}
+    if(btn){const orig=btn.textContent;btn.textContent=t('ui.copied');setTimeout(()=>{btn.textContent=orig;},2000);}
   }).catch(()=>{
-    prompt("Copy this link to send your partner:",url);
+    prompt(t('ui.copy_this_link_to_send_your_partner'),url);
   });
 }
 
@@ -1474,7 +1597,7 @@ function resendEmailVerification(){
   if(!fbUser||!user||user.isGuest)return;
   fbUser.sendEmailVerification().then(()=>{
     const btn=document.getElementById("resendVerificationBtn");
-    if(btn){const orig=btn.textContent;btn.textContent="Sent! ✅";setTimeout(()=>{btn.textContent=orig;},2000);}
+    if(btn){const orig=btn.textContent;btn.textContent=t('ui.sent');setTimeout(()=>{btn.textContent=orig;},2000);}
   }).catch(e=>console.error('Email verification resend error',e));
 }
 
@@ -1549,7 +1672,7 @@ function renderProfile(){
   countUp(document.getElementById("pMilestones"),milestones.length);
   const log=document.getElementById("milestoneLog");
   if(!milestones.length){
-    log.innerHTML='<p style="color:var(--ink-soft)">No moments yet — finish a lesson and try the mission tonight.</p>';
+    log.innerHTML=`<p style="color:var(--ink-soft)">${t('msg.no_moments_yet_finish_a_lesson_and_try_the_mission_t')}</p>`;
   } else {
     log.innerHTML=milestones.slice().reverse().slice(0,20).map(m=>
       `<div style="padding:8px 0;border-bottom:1px solid var(--line)">
@@ -1568,7 +1691,7 @@ function renderPartnerPhrases(){
   listEl.innerHTML="";
   const phrases=user.customPhrases||[];
   if(phrases.length===0){
-    listEl.innerHTML='<p style="color:var(--ink-soft);font-size:13px">No partner phrases yet.</p>';
+    listEl.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">${t('msg.no_partner_phrases_yet')}</p>`;
     return;
   }
   phrases.forEach((p,i)=>{
@@ -1587,7 +1710,7 @@ function renderPartnerPhrases(){
     const del=document.createElement("button");
     del.textContent="🗑️";
     del.style.cssText="background:none;border:none;cursor:pointer;font-size:16px";
-    del.setAttribute("aria-label","Delete phrase");
+    del.setAttribute("aria-label",t('aria.delete_phrase'));
     del.onclick=()=>deleteCustomPhrase(i);
     div.appendChild(del);
     listEl.appendChild(div);
@@ -1637,7 +1760,7 @@ function importPartnerPhrases(fileInputEl){
       renderPartnerPhrases();
       if(failed)alert(`${failed} phrase${failed===1?"":"s"} couldn't be saved. Please try importing again.`);
     }catch(err){
-      alert("That file couldn't be read as a phrase list. Make sure it's the JSON template with en/ar/franco fields.");
+      alert(t('msg.that_file_couldn_t_be_read_as_a_phrase_list_make_sur'));
     }
     fileInputEl.value="";
   };
@@ -1661,7 +1784,7 @@ function renderPhrasebook(){
   learned.push(...(user.customPhrases||[]));
   list.innerHTML="";
   if(!learned.length){
-    list.innerHTML='<p style="padding:16px;color:var(--ink-soft)">Nothing unlocked yet — finish your first lesson.</p>';
+    list.innerHTML=`<p style="padding:16px;color:var(--ink-soft)">${t('msg.nothing_unlocked_yet_finish_your_first_lesson')}</p>`;
     return;
   }
   learned.forEach(v=>{
@@ -1739,7 +1862,7 @@ function startLesson(lesson){
 }
 
 function quitLesson(){
-  if((exIdx>0||correctCount>0)&&!confirm("Quit this lesson? You'll lose your progress in it."))return;
+  if((exIdx>0||correctCount>0)&&!confirm(t('msg.quit_this_lesson_you_ll_lose_your_progress_in_it')))return;
   document.getElementById("lesson").classList.add("hidden");
   if(user&&user.isGuest){
     user=null;
@@ -1763,7 +1886,7 @@ function renderExercise(){
   document.getElementById("fbArea").innerHTML="";
   document.getElementById("checkWrap").classList.remove("hidden");
   const checkBtn=document.getElementById("checkBtn");
-  checkBtn.textContent="Check";
+  checkBtn.textContent=t('btn.check');
   checkBtn.disabled=true;
   checkBtn.onclick=check;
   const ex=exList[exIdx];
@@ -1771,7 +1894,7 @@ function renderExercise(){
   area.innerHTML="";
 
   if(ex.type==="mc"){
-    const q=document.createElement("div");q.className="q";q.textContent="Translate: \""+ex.q+"\"";
+    const q=document.createElement("div");q.className="q";q.textContent=t('exercise.translate_prompt')+' \"'+ex.q+'\"';
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
     area.appendChild(q);
     ex.opts.forEach(o=>{
@@ -1781,7 +1904,7 @@ function renderExercise(){
       area.appendChild(b);
     });
   } else if(ex.type==="listen"){
-    const q=document.createElement("div");q.className="q";q.textContent="Listen and choose the meaning";
+    const q=document.createElement("div");q.className="q";q.textContent=t('exercise.listen_prompt');
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
     area.appendChild(q);
     const audioBtn=document.createElement("button");
@@ -1798,18 +1921,18 @@ function renderExercise(){
     });
     playAudio(ex.q,ex.audio);
   } else if(ex.type==="fill"){
-    const q=document.createElement("div");q.className="q";q.textContent="Type it in Franco-Arabic";
+    const q=document.createElement("div");q.className="q";q.textContent=t('exercise.franco_prompt');
     area.appendChild(q);
     const sub=document.createElement("div");sub.style.padding="0 16px";
     sub.innerHTML=`<div class="ar" lang="ar" style="font-size:26px">${ex.ar}</div>${registerBadge(ex)}<div style="color:var(--ink-soft);margin-top:4px">${ex.q}</div>`;
     area.appendChild(sub);
     const fw=document.createElement("div");fw.className="fillwrap";
     const inp=document.createElement("input");
-    inp.id="fillInput";inp.placeholder="e.g. Shukran";inp.autocomplete="off";
+    inp.id="fillInput";inp.placeholder=t('ui.e_g_shukran');inp.autocomplete="off";
     inp.oninput=()=>{selection=inp.value;checkBtn.disabled=!inp.value.trim();};
     fw.appendChild(inp);area.appendChild(fw);
   } else if(ex.type==="match"){
-    const q=document.createElement("div");q.className="q";q.textContent="Match the pairs";
+    const q=document.createElement("div");q.className="q";q.textContent=t('exercise.match_prompt');
     area.appendChild(q);
     const cols=document.createElement("div");cols.className="match-cols";
     const left=document.createElement("div");left.className="match-col";
@@ -1972,11 +2095,11 @@ function showFeedback(ok,ex){
                       ex.type==="mc" ? `${ex.answer}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="listen" ? ex.answer : "";
   fb.innerHTML=`<div class="feedback ${ok?"fb-ok":"fb-no"}">
-    <div class="fb-title">${ok?"Correct! ✅":"Not quite ❌"}</div>
-    ${!ok?`<div>Answer: <b>${answerText}</b></div>`:""}
+    <div class="fb-title">${ok?t('ui.correct')+' ✅':t('ui.not_quite')+' ❌'}</div>
+    ${!ok?`<div>${t('ui.answer')} <b>${answerText}</b></div>`:""}
   </div>`;
   const checkBtn=document.getElementById("checkBtn");
-  checkBtn.textContent="Continue";
+  checkBtn.textContent=t('btn.continue');
   checkBtn.disabled=false;
   checkBtn.onclick=nextExercise;
 }
@@ -2008,11 +2131,11 @@ function renderRehearsalItem(){
     <div class="ar" lang="ar" style="font-size:32px;margin-bottom:8px">${item.ar}</div>${registerBadge(item)}
     <div class="franco">${item.franco}</div>
     <div style="color:var(--ink-soft);margin-bottom:16px">${vocabText(item)}</div>
-    <button id="hearBtn" class="audio-btn" aria-label="Hear native pronunciation">🔊</button>
+    <button id="hearBtn" class="audio-btn" aria-label="${t('aria.hear_native_pronunciation')}">🔊</button>
     ${micAvailable
-      ? `<button id="recordBtn" class="btn btn-blue" style="margin-top:16px" aria-label="Hold to record yourself">🎙️ Hold to Record</button>`
-      : `<p style="color:var(--ink-soft);margin-top:16px">Mic access not available — just practice saying it out loud</p>`}
-    <div style="padding:16px"><button id="nextBtn" class="btn btn-ghost">${rehearsalIdx===rehearsalPack.length-1?'Finish':'Next'}</button></div>
+      ? `<button id="recordBtn" class="btn btn-blue" style="margin-top:16px" aria-label="${t('aria.hold_to_record_yourself')}">${t('ui.hold_to_record')}</button>`
+      : `<p style="color:var(--ink-soft);margin-top:16px">${t('ui.mic_access_not_available_just_practice_saying_it_out')}</p>`}
+    <div style="padding:16px"><button id="nextBtn" class="btn btn-ghost">${rehearsalIdx===rehearsalPack.length-1?t('ui.finish'):t('ui.next')}</button></div>
   `;
   document.getElementById("hearBtn").onclick=()=>playAudio(item.ar,`audio/${curLesson.id}_${rehearsalIdx}.mp3`);
   if(micAvailable)setupRecordButton(document.getElementById("recordBtn"));
@@ -2020,8 +2143,8 @@ function renderRehearsalItem(){
     cleanupRecording();
     rehearsalIdx++;
     if(rehearsalIdx>=rehearsalPack.length){
-      content.innerHTML=`<h2>All done! 🎉</h2><p style="color:var(--ink-soft)">You've practiced the whole lesson.</p>
-        <div style="padding:16px"><button id="finishRehearsalBtn" class="btn">Back to lessons</button></div>`;
+      content.innerHTML=`<h2>${t('ui.all_done')} 🎉</h2><p style="color:var(--ink-soft)">${t('msg.you_ve_practiced_the_whole_lesson')}</p>
+        <div style="padding:16px"><button id="finishRehearsalBtn" class="btn">${t('ui.back_to_lessons')}</button></div>`;
       document.getElementById("finishRehearsalBtn").onclick=()=>{
         document.getElementById("rehearsal").classList.add("hidden");
         cleanupRecording();
@@ -2045,7 +2168,7 @@ function startRecording(e){
   e.preventDefault();
   heldDown=true;
   const btn=e.currentTarget;
-  btn.textContent='🔴 Recording...';
+  btn.textContent=t('ui.recording');
   navigator.mediaDevices.getUserMedia({audio:true})
     .then(stream=>{
       if(!heldDown){ stream.getTracks().forEach(t=>t.stop()); return; }
@@ -2090,9 +2213,9 @@ function registerBadge(v){
   const r=v.register;
   if(r==='neutral')return '';
   const styles={
-    formal:{label:'Formal',color:'var(--clay)',bg:'var(--clay-soft)'},
-    casual:{label:'Casual',color:'var(--teal)',bg:'var(--teal-soft)'},
-    intimate:{label:'Intimate',color:'var(--error)',bg:'var(--error-surface)'}
+    formal:{label:t('register.formal'),color:'var(--clay)',bg:'var(--clay-soft)'},
+    casual:{label:t('register.casual'),color:'var(--teal)',bg:'var(--teal-soft)'},
+    intimate:{label:t('register.intimate'),color:'var(--error)',bg:'var(--error-surface)'}
   };
   const s=styles[r];
   if(!s)return '';
@@ -2122,10 +2245,10 @@ let curMission=null;
 function renderMission(){
   const box=document.getElementById("missionBox");
   curMission=curLesson.vocab[Math.floor(Math.random()*curLesson.vocab.length)];
-  box.innerHTML=`<div style="font-weight:800;margin-bottom:8px">🎯 Tonight's mission</div>
-    <div>Say this to them: <span class="ar" lang="ar" style="font-size:20px">${curMission.ar}</span>${registerBadge(curMission)}
+  box.innerHTML=`<div style="font-weight:800;margin-bottom:8px">🎯 ${t('ui.tonight_s_mission')}</div>
+    <div>${t('ui.say_this_to_them')} <span class="ar" lang="ar" style="font-size:20px">${curMission.ar}</span>${registerBadge(curMission)}
     <span class="franco">(${curMission.franco})</span> — "${vocabText(curMission)}"</div>
-    <button class="btn btn-blue" style="margin-top:12px" id="missionBtn" onclick="markMissionDone()">I said it! ✅</button>`;
+    <button class="btn btn-blue" style="margin-top:12px" id="missionBtn" onclick="markMissionDone()">${t('ui.i_said_it')} ✅</button>`;
 }
 
 async function markMissionDone(){
@@ -2156,7 +2279,7 @@ async function markMissionDone(){
     setTimeout(()=>sparkWrap.remove(), 450);
     setTimeout(()=>{
       btn.classList.remove("sealed");
-      btn.textContent="Nice! 🎉";
+      btn.textContent=t('ui.nice');
     }, 700);
   }, 200);
 }
@@ -2232,10 +2355,10 @@ async function finishAsSuccess(){
   countUp(dXpEl,curLesson.xp,{prefix:"+"});
   countUp(dAccEl,acc,{suffix:"%"});
   if(user.isGuest){
-    document.getElementById("doneTitle").textContent="Nice! Sign up to save this progress";
+    document.getElementById("doneTitle").textContent=t('ui.nice_sign_up_to_save_this_progress');
   } else {
     user.progress[curLesson.id]={done:true,score:acc};
-    document.getElementById("doneTitle").textContent="Lesson Complete!";
+    document.getElementById("doneTitle").textContent=t('ui.donetitle');
     await Promise.all([saveProgress(curLesson.id,true,acc),saveXp(user.xp)]);
     analytics.logEvent('lesson_complete',{lesson_id:curLesson.id});
   }
@@ -2260,9 +2383,9 @@ function finishLesson(){
 
 function initLandingAnimations(){
   var phrases = [
-    { ar: "شكراً", franco: "Shukran", en: "Thank you" },
-    { ar: "حبيبي", franco: "Habibi", en: "My love" },
-    { ar: "إزيك", franco: "Ezzayak", en: "How are you" }
+    { ar: "شكراً", franco: "Shukran", en: "Thank you", ru: "Спасибо" },
+    { ar: "حبيبي", franco: "Habibi", en: "My love", ru:STRINGS['demo.phrase.my_love'].ru },
+    { ar: "إزيك", franco: "Ezzayak", en: "How are you", ru:STRINGS['demo.phrase.how_are_you'].ru }
   ];
 
   var arEl = document.getElementById('phraseAr');
@@ -2302,6 +2425,7 @@ function initLandingAnimations(){
 const storedBaseLang=localStorage.getItem('baseLang');
 if(storedBaseLang)baseLang=storedBaseLang;
 renderBaseLangToggles();
+applyStaticStrings();
 if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
 initLandingAnimations();
 firebase.auth().onAuthStateChanged(async(fbUser)=>{

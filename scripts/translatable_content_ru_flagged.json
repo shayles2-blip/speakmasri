@@ -1,0 +1,126 @@
+[
+  {
+    "identifier": "l1-3+3",
+    "issue": "Stiff and formal phrasing ('Прошу вас, проходите первыми') for 'After you'"
+  },
+  {
+    "identifier": "l1-3+4",
+    "issue": "Unnatural repetition ('Добро пожаловать, добро пожаловать') for 'Welcome, welcome'"
+  },
+  {
+    "identifier": "l1-3+7",
+    "issue": "Register mismatch: plural 'Чувствуйте' instead of singular 'Чувствуй' for casual tone to peers"
+  },
+  {
+    "identifier": "l1-5+1",
+    "issue": "Overly dramatic 'Клянусь' for 'I swear' in context of eating (should be 'Честное слово')"
+  },
+  {
+    "identifier": "l1-5+3",
+    "issue": "Literal and unnatural phrasing 'дай Бог здоровья вашим рукам' for 'may God bless your hands'"
+  },
+  {
+    "identifier": "l1-5+9",
+    "issue": "Awkward semantic use of 'наелся' (full of food) for tea/juice"
+  },
+  {
+    "identifier": "l1-6+1",
+    "issue": "Added semantic meaning ('учу арабский') not present in the English source"
+  },
+  {
+    "identifier": "l1-7+0",
+    "issue": "Semantic mismatch: translated 'God willing' to 'маша Аллах' (Masha'Allah) instead of Inshallah"
+  },
+  {
+    "identifier": "l1-7+2",
+    "issue": "Extremely literal translation 'дай Бог здоровья вашим рукам' for 'may God bless your hands'"
+  },
+  {
+    "identifier": "l1-8+1",
+    "issue": "Clinical phrasing 'переносишь' for handling spicy food"
+  },
+  {
+    "identifier": "l1-8+2",
+    "issue": "Semantic mismatch: English asks 'When are you learning', Russian translates as 'How long have you been learning'"
+  },
+  {
+    "identifier": "l1-8+5",
+    "issue": "Assumes female addressee ('привыкла') when English source is neutral"
+  },
+  {
+    "identifier": "l1-9+5",
+    "issue": "Literal translation 'я потерялся' implies being physically lost rather than confused"
+  },
+  {
+    "identifier": "l1-9+10",
+    "issue": "Overly literal 'стараюсь следить' for trying to follow a fast conversation"
+  },
+  {
+    "identifier": "l1-10+6",
+    "issue": "Added semantic meaning ('ей-богу') not present in English"
+  },
+  {
+    "identifier": "l1-10+7",
+    "issue": "Unnatural literal translation 'язык соскользнул' for 'tongue slipped'"
+  },
+  {
+    "identifier": "l1-10+9",
+    "issue": "Overly dramatic 'Клянусь' for 'I swear' in a casual apology context"
+  },
+  {
+    "identifier": "l1-11+1",
+    "issue": "Literal and unnatural translation 'Дай Бог здоровья вашим рукам'"
+  },
+  {
+    "identifier": "l1-11+6",
+    "issue": "Inconsistent terminology for 'God willing' (uses 'иншаллах' here, 'Если Бог даст' elsewhere)"
+  },
+  {
+    "identifier": "l2-2+4",
+    "issue": "Awkward grammar: 'Спрашиваем' (We ask) used for noun phrase 'Asking'"
+  },
+  {
+    "identifier": "l3-2+0",
+    "issue": "Wrong transliteration 'Ейдом' for Eid (should be Ид или Ураза-байрам)"
+  },
+  {
+    "identifier": "l4-2+2",
+    "issue": "Stiff translation 'сделайте хорошую цену' for 'make it a good price'"
+  },
+  {
+    "identifier": "lessonTitles:l1-9",
+    "issue": "Literal 'Когда потерялся' implies physically lost rather than confused"
+  },
+  {
+    "identifier": "lessonTitles:l1-10",
+    "issue": "Awkward phrasing 'извинения и смех' for 'Laughing It Off'"
+  },
+  {
+    "identifier": "lessonTitles:l3-2",
+    "issue": "Wrong transliteration 'Ейд' for Eid"
+  },
+  {
+    "identifier": "unitTitles:u3",
+    "issue": "Wrong transliteration 'Ейд' for Eid"
+  },
+  {
+    "identifier": "nav.learn",
+    "issue": "Used verb 'Учиться' for navigation label 'Learn', noun like 'Обучение' is standard"
+  },
+  {
+    "identifier": "ui.upcoming_trip_to_egypt",
+    "issue": "Stiff phrasing 'Скорая поездка' for 'Upcoming trip'"
+  },
+  {
+    "identifier": "ui.formal_elders_in_laws_show_respect_casual_friends_pe",
+    "issue": "Dropped verbs/particles making the sentence structurally awkward"
+  },
+  {
+    "identifier": "ui.check_your_email_for_a_reset_link",
+    "issue": "Added semantic meaning ('мы отправили ссылку для сброса') not in English"
+  },
+  {
+    "identifier": "ui.mic_access_not_available_just_practice_saying_it_out",
+    "issue": "Tautological phrasing 'Доступ ... недоступен' (Access is inaccessible)"
+  }
+]
