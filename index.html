@@ -1327,6 +1327,16 @@ function backToChoice(){
   document.getElementById('authMsg').textContent='';
 }
 
+function showAuthScreen(){
+  document.getElementById('main').classList.add('hidden');
+  document.getElementById('auth').classList.remove('hidden');
+  document.querySelectorAll('#auth .landing-in').forEach(el=>{
+    el.style.animation='none';
+    el.style.opacity='1';
+    el.style.transform='none';
+  });
+}
+
 async function resetPassword(){
   const email=document.getElementById("email").value.trim().toLowerCase();
   const err=document.getElementById("authErr");
@@ -1424,8 +1434,7 @@ function startGuestLesson(){
 async function logout(){
   try{await firebase.auth().signOut();}catch(e){console.error('Logout error',e);}
   user=null;
-  document.getElementById("main").classList.add("hidden");
-  document.getElementById("auth").classList.remove("hidden");
+  showAuthScreen();
   document.getElementById("name").value="";
   document.getElementById("email").value="";
   document.getElementById("pass").value="";
@@ -1732,7 +1741,7 @@ function quitLesson(){
   document.getElementById("lesson").classList.add("hidden");
   if(user&&user.isGuest){
     user=null;
-    document.getElementById("auth").classList.remove("hidden");
+    showAuthScreen();
     backToChoice();
   } else {
     document.getElementById("main").classList.remove("hidden");
@@ -2235,7 +2244,7 @@ function finishLesson(){
   document.getElementById("done").classList.add("hidden");
   if(user&&user.isGuest){
     user=null;
-    document.getElementById("auth").classList.remove("hidden");
+    showAuthScreen();
     backToChoice();
   } else {
     document.getElementById("main").classList.remove("hidden");
