@@ -928,6 +928,21 @@ input:focus, select:focus {
         </details>
         <div id="partnerPhrasesList" style="color:var(--ink-soft);font-size:14px"></div>
       </div>
+      <div style="height:24px"></div>
+      <div style="text-align:left;padding:0 16px">
+        <div style="font-weight:800;margin-bottom:8px">Account</div>
+        <button type="button" id="editNameBtn" onclick="showNameEdit()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer;display:block;margin-bottom:8px">✏️ Edit name</button>
+        <div id="nameEditBox" style="display:none;margin-bottom:8px">
+          <input type="text" id="nameEditInput" maxlength="40" placeholder="Your name">
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn" id="saveNameBtn" style="flex:1;padding:10px;font-size:14px" onclick="saveDisplayName(document.getElementById('nameEditInput').value)">Save</button>
+            <button class="btn btn-ghost" style="flex:1;padding:10px;font-size:14px" onclick="hideNameEdit()">Cancel</button>
+          </div>
+          <div id="nameEditMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
+        </div>
+        <button type="button" onclick="changePasswordFromProfile()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">🔒 Change Password</button>
+        <div id="pwMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
+      </div>
       <div style="height:16px"></div>
       <button class="btn btn-ghost" onclick="logout()">Log Out</button>
     </div>
@@ -1082,6 +1097,58 @@ async function saveXp(newXpTotal){
   try{
     await firebase.firestore().collection('users').doc(uid).update({xp:newXpTotal});
   }catch(e){console.error('saveXp error',e);}
+}
+
+function showNameEdit(){
+  document.getElementById('nameEditInput').value=user.name||'';
+  document.getElementById('nameEditMsg').textContent='';
+  document.getElementById('editNameBtn').style.display='none';
+  document.getElementById('nameEditBox').style.display='block';
+  document.getElementById('nameEditInput').focus();
+}
+
+function hideNameEdit(){
+  document.getElementById('nameEditBox').style.display='none';
+  document.getElementById('editNameBtn').style.display='block';
+  document.getElementById('nameEditMsg').textContent='';
+}
+
+async function saveDisplayName(newName){
+  const msg=document.getElementById('nameEditMsg');
+  const btn=document.getElementById('saveNameBtn');
+  const name=(newName||'').trim();
+  msg.style.color='var(--error)';
+  if(!name){msg.textContent="Name can't be empty.";return;}
+  const uid=firebase.auth().currentUser.uid;
+  try{
+    await firebase.firestore().collection('users').doc(uid).update({name});
+    user.name=name;
+    document.getElementById('pName').textContent=name;
+    msg.textContent='';
+    const orig=btn.textContent;
+    btn.textContent='Saved ✓';
+    setTimeout(()=>{btn.textContent=orig;hideNameEdit();},2000);
+  }catch(e){
+    msg.style.color='var(--error)';
+    msg.textContent="Couldn't save. Try again.";
+    console.error('saveDisplayName error',e);
+  }
+}
+
+async function changePasswordFromProfile(){
+  const pwMsg=document.getElementById('pwMsg');
+  pwMsg.textContent='';
+  if(!user.email){pwMsg.style.color='var(--error)';pwMsg.textContent='No email on file.';return;}
+  try{
+    await firebase.auth().sendPasswordResetEmail(user.email);
+    pwMsg.style.color='var(--teal)';
+    pwMsg.textContent='Check your email for a reset link.';
+  }catch(e){
+    pwMsg.style.color='var(--error)';
+    pwMsg.textContent="Couldn't send reset email. Try again.";
+    console.error('changePasswordFromProfile error',e);
+  }
+  setTimeout(()=>{pwMsg.textContent='';},5000);
 }
 
 async function saveCustomPhrase(en,ar,franco){
