@@ -841,7 +841,7 @@ input:focus, select:focus {
         <input id="name" placeholder="Name (for signup)" autocomplete="name">
       </div>
       <input id="email" placeholder="Email" type="email" autocomplete="email">
-      <input id="pass" placeholder="Password" type="password" autocomplete="current-password">
+      <input id="pass" placeholder="Password (min 8 characters)" type="password" autocomplete="current-password">
       <div id="motivationField" class="hidden">
         <select id="motivation">
           <option value="">What's your learning goal? (optional)</option>
@@ -873,6 +873,11 @@ input:focus, select:focus {
     <div class="top">
       <div class="stat">💬 <span id="milestoneCount">0</span> said</div>
       <div class="stat" style="color:var(--gold)">⭐ <span id="xp">0</span></div>
+    </div>
+    <div id="emailVerificationBanner" class="hidden" role="status" style="display:flex;align-items:center;gap:10px;margin:0 16px 12px;padding:12px 14px;background:var(--gold-soft);border:1px solid var(--gold);border-radius:var(--r-md);color:var(--text-main);font-size:13px">
+      <span style="flex:1">Verify your email to secure your account</span>
+      <button id="resendVerificationBtn" type="button" onclick="resendEmailVerification()" style="background:none;border:none;color:var(--teal);font-weight:700;text-decoration:underline;cursor:pointer;padding:2px">Resend</button>
+      <button type="button" onclick="dismissEmailVerificationBanner()" aria-label="Dismiss email verification reminder" style="background:none;border:none;color:var(--ink-soft);font-size:18px;line-height:1;cursor:pointer;padding:2px">&times;</button>
     </div>
     <!-- LEARN -->
     <div id="learn"></div>
@@ -1008,6 +1013,7 @@ const COURSE={units:[
 
 /* ===== AGENT 6: APP STATE & LOGIC ===== */
 let user=null;          // logged-in user object
+let emailVerificationBannerDismissed=false;
 let curLesson=null;     // lesson currently in progress
 let exList=[];          // built exercises for current lesson
 let exIdx=0;
@@ -1115,8 +1121,10 @@ async function signup(){
   err.textContent="";
   document.getElementById("authMsg").textContent="";
   if(!name||!email||!pass){err.textContent="Fill in all fields to sign up.";return;}
+  if(pass.length<8){err.textContent="Password must be at least 8 characters.";return;}
   try{
     const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
+    cred.user.sendEmailVerification().catch(e=>console.error('Email verification error',e));
     await firebase.firestore().collection('users').doc(cred.user.uid).set({
       name,motivation,xp:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
@@ -1288,9 +1296,37 @@ async function logout(){
 function enterApp(){
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("main").classList.remove("hidden");
+  checkEmailVerificationBanner();
   refreshTopBar();
   renderPath();
   tab("learn");
+}
+
+async function checkEmailVerificationBanner(){
+  const banner=document.getElementById("emailVerificationBanner");
+  banner.classList.add("hidden");
+  const fbUser=firebase.auth().currentUser;
+  if(emailVerificationBannerDismissed||!user||user.isGuest||!fbUser)return;
+  try{
+    await fbUser.reload();
+    if(firebase.auth().currentUser===fbUser&&user&&!user.isGuest&&!fbUser.emailVerified){
+      banner.classList.remove("hidden");
+    }
+  }catch(e){console.error('Email verification status error',e);}
+}
+
+function dismissEmailVerificationBanner(){
+  emailVerificationBannerDismissed=true;
+  document.getElementById("emailVerificationBanner").classList.add("hidden");
+}
+
+function resendEmailVerification(){
+  const fbUser=firebase.auth().currentUser;
+  if(!fbUser||!user||user.isGuest)return;
+  fbUser.sendEmailVerification().then(()=>{
+    const btn=document.getElementById("resendVerificationBtn");
+    if(btn){const orig=btn.textContent;btn.textContent="Sent! ✅";setTimeout(()=>{btn.textContent=orig;},2000);}
+  }).catch(e=>console.error('Email verification resend error',e));
 }
 
 function refreshTopBar(){
