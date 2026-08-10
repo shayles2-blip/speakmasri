@@ -93,6 +93,32 @@ body {
 
 .hidden { display: none !important; }
 
+.lang-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+.lang-toggle button {
+  width: auto;
+  min-width: 42px;
+  margin: 0;
+  padding: 5px 10px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.lang-toggle button.active {
+  background: var(--primary);
+  color: var(--pico-primary-inverse);
+}
+
 /* app container */
 .app {
   max-width: 480px;
@@ -807,6 +833,10 @@ input:focus, select:focus {
       <span class="auth-blob auth-blob-2"></span>
       <span class="auth-blob auth-blob-3"></span>
     </div>
+    <div class="lang-toggle landing-in landing-in-1" role="group" aria-label="Base language" style="margin-bottom:12px">
+      <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
+      <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
+    </div>
     <div class="logo landing-in landing-in-1">
       <svg viewBox="0 0 100 100" role="img" aria-label="SpeakMasri">
         <circle cx="41" cy="9"  r="3.2" style="fill:var(--gold)"/>
@@ -944,6 +974,11 @@ input:focus, select:focus {
         </div>
         <button type="button" onclick="changePasswordFromProfile()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">🔒 Change Password</button>
         <div id="pwMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
+        <div style="font-weight:800;margin:12px 0 8px">Base language</div>
+        <div class="lang-toggle" role="group" aria-label="Base language">
+          <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
+          <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
+        </div>
       </div>
       <div style="height:16px"></div>
       <button class="btn btn-ghost" onclick="logout()">Log Out</button>
@@ -1030,6 +1065,7 @@ const COURSE={units:[
 
 /* ===== AGENT 6: APP STATE & LOGIC ===== */
 let user=null;          // logged-in user object
+let baseLang='en';      // language the learner starts from
 let emailVerificationBannerDismissed=false;
 let curLesson=null;     // lesson currently in progress
 let exList=[];          // built exercises for current lesson
@@ -1037,6 +1073,37 @@ let exIdx=0;
 let correctCount=0;
 let selection=null;     // current selection for check()
 let matchState=null;    // state for match exercise
+let refreshLandingPhrase=null;
+
+function vocabText(item){return (baseLang!=='en'&&item[baseLang])?item[baseLang]:item.en;}
+function titleText(obj){return (baseLang!=='en'&&obj['title_'+baseLang])?obj['title_'+baseLang]:obj.title;}
+
+function renderBaseLangToggles(){
+  document.querySelectorAll('[data-base-lang]').forEach(btn=>{
+    const active=btn.dataset.baseLang===baseLang;
+    btn.classList.toggle('active',active);
+    btn.setAttribute('aria-pressed',active?'true':'false');
+  });
+}
+
+async function setBaseLang(lang){
+  baseLang=lang;
+  localStorage.setItem('baseLang',lang);
+  if(user)user.baseLang=lang;
+  renderBaseLangToggles();
+  if(refreshLandingPhrase)refreshLandingPhrase();
+  if(user&&!user.isGuest){
+    if(!document.getElementById('learn').classList.contains('hidden'))renderPath();
+    if(!document.getElementById('phrasebook').classList.contains('hidden'))renderPhrasebook();
+    if(!document.getElementById('profile').classList.contains('hidden'))renderProfile();
+  }
+  if(user&&!user.isGuest&&firebase.auth().currentUser){
+    const uid=firebase.auth().currentUser.uid;
+    try{
+      await firebase.firestore().collection('users').doc(uid).update({baseLang:lang});
+    }catch(e){console.error('setBaseLang error',e);}
+  }
+}
 
 function getAuthErrorMessage(code){
   const map={
@@ -1073,10 +1140,13 @@ async function loadUserData(){
     email:firebase.auth().currentUser.email,
     motivation:userData.motivation||'',
     xp:userData.xp||0,
+    baseLang:userData.baseLang||'',
     progress,
     milestones,
     customPhrases
   };
+  if(user.baseLang)baseLang=user.baseLang;
+  renderBaseLangToggles();
 }
 
 async function saveProgress(lessonId,done,score){
@@ -1441,7 +1511,7 @@ function renderPath(){
     const head=document.createElement("div");
     head.className="scenario-head";
     head.innerHTML=`<span class="scenario-icon">${SCENARIO_ICONS[u.id]||"📍"}</span>
-      <span class="scenario-title">${u.title.replace(/^Scenario:\s*/,"")}</span>
+      <span class="scenario-title">${titleText(u).replace(/^Scenario:\s*/,"")}</span>
       <span class="scenario-progress">${doneCount}/${u.lessons.length}</span>`;
     card.appendChild(head);
 
@@ -1452,7 +1522,7 @@ function renderPath(){
       row.className="lesson-row "+(done?"done":(unlocked?"unlocked":""));
       row.disabled=!unlocked;
       row.innerHTML=`<span class="lesson-badge">${done?"✓":(unlocked?(li+1):"🔒")}</span>
-        <span class="lesson-name">${l.title}</span>`;
+        <span class="lesson-name">${titleText(l)}</span>`;
       row.onclick=()=>{if(unlocked)startLesson(l);};
       card.appendChild(row);
     });
@@ -1502,7 +1572,7 @@ function renderPartnerPhrases(){
     const franco=document.createElement("span");
     franco.className="franco";
     franco.textContent=`(${p.franco})`;
-    text.append(ar," ",franco," — ",p.en);
+    text.append(ar," ",franco," — ",vocabText(p));
     div.appendChild(text);
     const del=document.createElement("button");
     del.textContent="🗑️";
@@ -1599,7 +1669,7 @@ function renderPhrasebook(){
     franco.textContent=v.franco;
     const en=document.createElement("div");
     en.style.cssText="color:var(--ink-soft);font-size:14px";
-    en.textContent=v.en;
+    en.textContent=vocabText(v);
     text.append(ar,franco,en);
     row.appendChild(text);
     const btn=document.createElement("button");
@@ -1622,7 +1692,7 @@ function buildExercises(lesson){
   vocab.forEach(item=>{
     // multiple choice: EN -> AR
     const distractors=shuffle(pool.filter(v=>v.ar!==item.ar)).slice(0,3);
-    list.push({type:"mc",q:item.en,answer:item.ar,franco:item.franco,
+    list.push({type:"mc",q:vocabText(item),answer:item.ar,franco:item.franco,
       opts:shuffle([item.ar,...distractors.map(d=>d.ar)])});
   });
 
@@ -1631,12 +1701,12 @@ function buildExercises(lesson){
     const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
     list.push({type:"listen",q:item.ar,answer:item.en,franco:item.franco,
       audio:`audio/${lesson.id}_${idx}.mp3`,
-      opts:shuffle([item.en,...distractors.map(d=>d.en)])});
+      opts:shuffle([item,...distractors]).map(v=>({value:v.en,label:vocabText(v)}))});
   });
 
   vocab.forEach(item=>{
     // fill in the blank: type the Franco transliteration
-    list.push({type:"fill",q:item.en,ar:item.ar,answer:item.franco,register:item.register});
+    list.push({type:"fill",q:vocabText(item),ar:item.ar,answer:item.franco,register:item.register});
   });
 
   if(vocab.length>=2){
@@ -1708,8 +1778,9 @@ function renderExercise(){
     area.appendChild(audioBtn);
     ex.opts.forEach(o=>{
       const b=document.createElement("button");
-      b.className="opt";b.textContent=o;
-      b.onclick=()=>selectOpt(b,o);
+      b.className="opt";b.textContent=o.label;
+      b.dataset.value=o.value;
+      b.onclick=()=>selectOpt(b,o.value);
       area.appendChild(b);
     });
     playAudio(ex.q,ex.audio);
@@ -1730,13 +1801,13 @@ function renderExercise(){
     const cols=document.createElement("div");cols.className="match-cols";
     const left=document.createElement("div");left.className="match-col";
     const right=document.createElement("div");right.className="match-col";
-    const ens=ex.pairs.map(p=>p.en);
+    const ens=ex.pairs.map(p=>({value:p.en,label:vocabText(p)}));
     const ars=shuffle(ex.pairs.map(p=>p.ar));
     matchState={matched:new Set(),selEn:null,selAr:null,pairs:ex.pairs};
     ens.forEach(en=>{
-      const b=document.createElement("button");b.className="opt";b.style.fontSize="15px";b.textContent=en;
-      b.dataset.en=en;
-      b.onclick=()=>matchPick("en",en,b);
+      const b=document.createElement("button");b.className="opt";b.style.fontSize="15px";b.textContent=en.label;
+      b.dataset.en=en.value;
+      b.onclick=()=>matchPick("en",en.value,b);
       left.appendChild(b);
     });
     ars.forEach(ar=>{
@@ -1867,7 +1938,7 @@ function check(){
     ok = selection===ex.answer;
     document.querySelectorAll(".opt").forEach(o=>{
       if(o.classList.contains("sel")){o.classList.add(ok?"correct":"wrong");o.insertAdjacentHTML("beforeend",ok?" ✓":" ✗");targetEl=o;}
-      if(!ok && (o.textContent.trim()===ex.answer)){o.classList.add("correct");o.insertAdjacentHTML("beforeend"," ✓");}
+      if(!ok && ((o.dataset.value!==undefined ? o.dataset.value : o.textContent.trim())===ex.answer)){o.classList.add("correct");o.insertAdjacentHTML("beforeend"," ✓");}
     });
   } else if(ex.type==="fill"){
     const normalizedSelection=normalize(selection||"");
@@ -1922,7 +1993,7 @@ function renderRehearsalItem(){
   content.innerHTML=`
     <div class="ar" lang="ar" style="font-size:32px;margin-bottom:8px">${item.ar}${registerBadge(item)}</div>
     <div class="franco">${item.franco}</div>
-    <div style="color:var(--ink-soft);margin-bottom:16px">${item.en}</div>
+    <div style="color:var(--ink-soft);margin-bottom:16px">${vocabText(item)}</div>
     <button id="hearBtn" class="audio-btn" aria-label="Hear native pronunciation">🔊</button>
     ${micAvailable
       ? `<button id="recordBtn" class="btn btn-blue" style="margin-top:16px" aria-label="Hold to record yourself">🎙️ Hold to Record</button>`
@@ -2039,7 +2110,7 @@ function renderMission(){
   curMission=curLesson.vocab[Math.floor(Math.random()*curLesson.vocab.length)];
   box.innerHTML=`<div style="font-weight:800;margin-bottom:8px">🎯 Tonight's mission</div>
     <div>Say this to them: <span class="ar" lang="ar" style="font-size:20px">${curMission.ar}</span>
-    <span class="franco">(${curMission.franco})</span> — "${curMission.en}"</div>
+    <span class="franco">(${curMission.franco})</span> — "${vocabText(curMission)}"</div>
     <button class="btn btn-blue" style="margin-top:12px" id="missionBtn" onclick="markMissionDone()">I said it! ✅</button>`;
 }
 
@@ -2191,8 +2262,10 @@ function initLandingAnimations(){
   function applyPhrase(p){
     arEl.textContent = p.ar;
     francoEl.textContent = p.franco;
-    enEl.textContent = p.en;
+    enEl.textContent = vocabText(p);
   }
+  refreshLandingPhrase=function(){applyPhrase(phrases[i]);};
+  refreshLandingPhrase();
 
   return setInterval(function(){
     i = (i + 1) % phrases.length;
@@ -2212,6 +2285,9 @@ function initLandingAnimations(){
 }
 
 /* ---------- BOOTSTRAP ---------- */
+const storedBaseLang=localStorage.getItem('baseLang');
+if(storedBaseLang)baseLang=storedBaseLang;
+renderBaseLangToggles();
 if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
 initLandingAnimations();
 firebase.auth().onAuthStateChanged(async(fbUser)=>{
