@@ -1308,6 +1308,7 @@ const STRINGS={
   "nav.profile":{en:"Profile",ru:"Профиль"},
   "aria.quit_lesson":{en:"Quit lesson",ru:"Выйти из урока"},
   "btn.check":{en:"Check",ru:"Проверить"},
+  "ui.got_it":{en:"Got it",ru:"Понятно"},
   "ui.skip":{en:"Skip this one",ru:"Пропустить это задание"},
   "ui.streak":{en:"Streak",ru:"Серия"},
   "ui.halfway_tonight":{en:"Halfway there — keep going for tonight!",ru:"Половина позади — продолжайте, пригодится уже сегодня вечером!"},
@@ -2059,6 +2060,9 @@ function buildExercises(lesson){
   const vocab=lesson.vocab;
   const pool=allVocab();
   const list=[];
+  const introList=vocab.map((item,idx)=>({
+    type:"intro",item,lessonId:lesson.id,idx,audio:audioPath(lesson.id,idx)
+  }));
 
   vocab.forEach(item=>{
     // multiple choice: EN -> AR
@@ -2085,7 +2089,7 @@ function buildExercises(lesson){
     list.push({type:"match",pairs:shuffle(vocab).slice(0,Math.min(4,vocab.length))});
   }
 
-  return shuffle(list);
+  return introList.concat(shuffle(list));
 }
 
 /* ---------- LESSON RUNTIME ---------- */
@@ -2137,7 +2141,41 @@ function renderExercise(){
   const area=document.getElementById("exArea");
   area.innerHTML="";
 
-  if(ex.type==="mc"){
+  if(ex.type==="intro"){
+    document.getElementById("checkWrap").classList.add("hidden");
+    document.getElementById("skipBtn").classList.add("hidden");
+    const intro=document.createElement("div");
+    intro.style.cssText="padding:0 16px;text-align:center";
+    const ar=document.createElement("div");
+    ar.className="ar";
+    ar.lang="ar";
+    ar.style.fontSize="26px";
+    ar.innerHTML=`${ex.item.ar}${registerBadge(ex.item)}`;
+    const franco=document.createElement("div");
+    franco.className="franco";
+    franco.textContent=ex.item.franco;
+    const meaning=document.createElement("div");
+    meaning.style.cssText="color:var(--ink-soft);margin-top:8px";
+    meaning.textContent=vocabText(ex.item);
+    intro.append(ar,franco,meaning);
+    area.appendChild(intro);
+    const audioBtn=document.createElement("button");
+    audioBtn.className="audio-btn";
+    audioBtn.textContent="🔊";
+    audioBtn.setAttribute("aria-label","Play audio");
+    audioBtn.onclick=()=>playAudio(ex.item.ar,ex.audio);
+    audioBtn.style.margin="16px 0";
+    const audioActions=document.createElement("div");
+    audioActions.className="audio-report-actions";
+    audioActions.append(audioBtn,createAudioReportControl({lessonId:ex.lessonId,idx:ex.idx,ar:ex.item.ar,franco:ex.item.franco}));
+    area.appendChild(audioActions);
+    const gotItBtn=document.createElement("button");
+    gotItBtn.className="btn";
+    gotItBtn.textContent=t('ui.got_it');
+    gotItBtn.onclick=nextExercise;
+    area.appendChild(gotItBtn);
+    playAudio(ex.item.ar,ex.audio);
+  } else if(ex.type==="mc"){
     const q=document.createElement("div");q.className="q";q.textContent=t('exercise.translate_prompt')+' \"'+ex.q+'\"';
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
     area.appendChild(q);
