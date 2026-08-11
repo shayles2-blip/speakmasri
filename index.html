@@ -322,6 +322,39 @@ input:focus, select:focus {
   color: var(--text-muted);
   font-weight: 500;
 }
+.scenario-head.location-backdrop {
+  position: relative;
+  min-height: 120px;
+  padding: 18px 52px 18px 18px;
+  background-size: cover;
+  background-position: center;
+}
+.scenario-head.location-backdrop .scenario-icon,
+.scenario-head.location-backdrop .scenario-title,
+.scenario-head.location-backdrop .scenario-progress {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.65);
+}
+.location-audio-btn {
+  position: absolute;
+  z-index: 2;
+  right: 14px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--primary-hover);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+.location-audio-btn:active { transform: scale(0.94); }
 
 /* ===== LESSON LIST (TIMELINE PATH) ===== */
 .lesson-row {
@@ -1387,6 +1420,7 @@ function applyStaticStrings(){
 function vocabText(item){return (baseLang!=='en'&&item[baseLang])?item[baseLang]:item.en;}
 function titleText(obj){return (baseLang!=='en'&&obj['title_'+baseLang])?obj['title_'+baseLang]:obj.title;}
 function audioPath(lessonId,idx){return (voicePref==='female'?'audio_female/':'audio/')+lessonId+'_'+idx+'.mp3';}
+function locationAudioPath(locationKey){return (voicePref==='female'?'audio_female/locations/':'audio/locations/')+locationKey+'.mp3';}
 
 function renderBaseLangToggles(){
   document.querySelectorAll('[data-base-lang]').forEach(btn=>{
@@ -1860,9 +1894,34 @@ function isLessonUnlocked(uIdx,lIdx){
 }
 
 const SCENARIO_ICONS={u0:"💬",u1:"🤝",u2:"❤️",u3:"🎉",u4:"🚕",u5:"🍲"};
+const UNIT_LOCATIONS={u1:"doorstep",u2:"balcony",u3:"eid",u5:"koshary"};
+const LOCATION_NARRATIONS={
+  doorstep:"إحنا قدام باب العيلة... يلا بينا ندخل!",
+  balcony:"تعالى نقعد على البلكونة، والنيل قدامنا.",
+  eid:"كل سنة وانتوا طيبين! يلا نعيّد مع بعض.",
+  koshary:"وصلنا لعربية الكشري... تحب تجرّب؟"
+};
+let locationNarrationObserver=null;
+
+function observeLocationNarration(head,locationKey){
+  if(localStorage.getItem('locationNarrationPlayed_'+locationKey))return;
+  locationNarrationObserver.observe(head);
+}
 
 function renderPath(){
   const el=document.getElementById("learn");
+  if(locationNarrationObserver)locationNarrationObserver.disconnect();
+  locationNarrationObserver=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      const locationKey=entry.target.dataset.location;
+      const playedKey='locationNarrationPlayed_'+locationKey;
+      locationNarrationObserver.unobserve(entry.target);
+      if(localStorage.getItem(playedKey))return;
+      localStorage.setItem(playedKey,'1');
+      playAudio(LOCATION_NARRATIONS[locationKey],locationAudioPath(locationKey));
+    });
+  },{threshold:0.5});
   el.innerHTML="";
   COURSE.units.forEach((u,ui)=>{
     const card=document.createElement("div");
@@ -1874,6 +1933,20 @@ function renderPath(){
     head.innerHTML=`<span class="scenario-icon">${SCENARIO_ICONS[u.id]||"📍"}</span>
       <span class="scenario-title">${titleText(u).replace(/^Scenario:\s*/,"")}</span>
       <span class="scenario-progress">${doneCount}/${u.lessons.length}</span>`;
+    const locationKey=UNIT_LOCATIONS[u.id];
+    if(locationKey){
+      head.classList.add("location-backdrop");
+      head.dataset.location=locationKey;
+      head.style.backgroundImage=`linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55)), url("mascot/locations/${locationKey}.webp")`;
+      const audioBtn=document.createElement("button");
+      audioBtn.type="button";
+      audioBtn.className="location-audio-btn";
+      audioBtn.setAttribute("aria-label","Play location narration");
+      audioBtn.textContent="🔊";
+      audioBtn.onclick=()=>playAudio(LOCATION_NARRATIONS[locationKey],locationAudioPath(locationKey));
+      head.appendChild(audioBtn);
+      observeLocationNarration(head,locationKey);
+    }
     card.appendChild(head);
 
     u.lessons.forEach((l,li)=>{
