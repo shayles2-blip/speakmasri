@@ -833,9 +833,15 @@ input:focus, select:focus {
       <span class="auth-blob auth-blob-2"></span>
       <span class="auth-blob auth-blob-3"></span>
     </div>
-    <div class="lang-toggle landing-in landing-in-1" role="group" aria-label="Base language" data-i18n-aria-label="settings.base_language" style="margin-bottom:12px">
-      <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
-      <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
+    <div class="landing-in landing-in-1" style="display:flex;gap:8px;margin-bottom:12px">
+      <div class="lang-toggle" role="group" aria-label="Base language" data-i18n-aria-label="settings.base_language">
+        <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
+        <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
+      </div>
+      <div class="lang-toggle" role="group" aria-label="Voice preference">
+        <button type="button" data-voice-pref="male" onclick="setVoicePref('male')">Male</button>
+        <button type="button" data-voice-pref="female" onclick="setVoicePref('female')">Female</button>
+      </div>
     </div>
     <div class="logo landing-in landing-in-1">
       <svg viewBox="0 0 100 100" role="img" aria-label="SpeakMasri">
@@ -975,10 +981,21 @@ input:focus, select:focus {
         </div>
         <button type="button" onclick="changePasswordFromProfile()" data-i18n="ui.change_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">🔒 Change Password</button>
         <div id="pwMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
-        <div style="font-weight:800;margin:12px 0 8px" data-i18n="settings.base_language">Base language</div>
-        <div class="lang-toggle" role="group" aria-label="Base language" data-i18n-aria-label="settings.base_language">
-          <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
-          <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
+        <div style="display:flex;gap:12px;align-items:flex-end;margin-top:12px">
+          <div>
+            <div style="font-weight:800;margin-bottom:8px" data-i18n="settings.base_language">Base language</div>
+            <div class="lang-toggle" role="group" aria-label="Base language" data-i18n-aria-label="settings.base_language">
+              <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
+              <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:800;margin-bottom:8px">Voice</div>
+            <div class="lang-toggle" role="group" aria-label="Voice preference">
+              <button type="button" data-voice-pref="male" onclick="setVoicePref('male')">Male</button>
+              <button type="button" data-voice-pref="female" onclick="setVoicePref('female')">Female</button>
+            </div>
+          </div>
         </div>
       </div>
       <div style="height:16px"></div>
@@ -1067,6 +1084,7 @@ const COURSE={units:[
 /* ===== AGENT 6: APP STATE & LOGIC ===== */
 let user=null;          // logged-in user object
 let baseLang='en';      // language the learner starts from
+let voicePref='male';
 let emailVerificationBannerDismissed=false;
 let curLesson=null;     // lesson currently in progress
 let exList=[];          // built exercises for current lesson
@@ -1199,6 +1217,7 @@ function applyStaticStrings(){
 
 function vocabText(item){return (baseLang!=='en'&&item[baseLang])?item[baseLang]:item.en;}
 function titleText(obj){return (baseLang!=='en'&&obj['title_'+baseLang])?obj['title_'+baseLang]:obj.title;}
+function audioPath(lessonId,idx){return (voicePref==='female'?'audio_female/':'audio/')+lessonId+'_'+idx+'.mp3';}
 
 function renderBaseLangToggles(){
   document.querySelectorAll('[data-base-lang]').forEach(btn=>{
@@ -1225,6 +1244,27 @@ async function setBaseLang(lang){
     try{
       await firebase.firestore().collection('users').doc(uid).update({baseLang:lang});
     }catch(e){console.error('setBaseLang error',e);}
+  }
+}
+
+function renderVoicePrefToggles(){
+  document.querySelectorAll('[data-voice-pref]').forEach(btn=>{
+    const active=btn.dataset.voicePref===voicePref;
+    btn.classList.toggle('active',active);
+    btn.setAttribute('aria-pressed',active?'true':'false');
+  });
+}
+
+async function setVoicePref(pref){
+  voicePref=pref;
+  localStorage.setItem('voicePref',pref);
+  if(user)user.voicePref=pref;
+  renderVoicePrefToggles();
+  if(user&&!user.isGuest&&firebase.auth().currentUser){
+    const uid=firebase.auth().currentUser.uid;
+    try{
+      await firebase.firestore().collection('users').doc(uid).update({voicePref:pref});
+    }catch(e){console.error('setVoicePref error',e);}
   }
 }
 
@@ -1264,12 +1304,15 @@ async function loadUserData(){
     motivation:userData.motivation||'',
     xp:userData.xp||0,
     baseLang:userData.baseLang||'',
+    voicePref:userData.voicePref||'',
     progress,
     milestones,
     customPhrases
   };
   if(user.baseLang)baseLang=user.baseLang;
+  if(user.voicePref)voicePref=user.voicePref;
   renderBaseLangToggles();
+  renderVoicePrefToggles();
   applyStaticStrings();
 }
 
@@ -1779,7 +1822,7 @@ function renderPhrasebook(){
   const list=document.getElementById("pbList");
   const learned=[];
   COURSE.units.forEach((u,ui)=>u.lessons.forEach((l,li)=>{
-    if(isLessonUnlocked(ui,li))l.vocab.forEach((v,vi)=>learned.push({...v,_audio:`audio/${l.id}_${vi}.mp3`}));
+    if(isLessonUnlocked(ui,li))l.vocab.forEach((v,vi)=>learned.push({...v,_audio:audioPath(l.id,vi)}));
   }));
   learned.push(...(user.customPhrases||[]));
   list.innerHTML="";
@@ -1834,7 +1877,7 @@ function buildExercises(lesson){
     // listen & choose: hear AR -> pick EN
     const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
     list.push({type:"listen",q:item.ar,answer:item.en,franco:item.franco,register:item.register,
-      audio:`audio/${lesson.id}_${idx}.mp3`,
+      audio:audioPath(lesson.id,idx),
       opts:shuffle([item,...distractors]).map(v=>({value:v.en,label:vocabText(v)}))});
   });
 
@@ -2137,7 +2180,7 @@ function renderRehearsalItem(){
       : `<p style="color:var(--ink-soft);margin-top:16px">${t('ui.mic_access_not_available_just_practice_saying_it_out')}</p>`}
     <div style="padding:16px"><button id="nextBtn" class="btn btn-ghost">${rehearsalIdx===rehearsalPack.length-1?t('ui.finish'):t('ui.next')}</button></div>
   `;
-  document.getElementById("hearBtn").onclick=()=>playAudio(item.ar,`audio/${curLesson.id}_${rehearsalIdx}.mp3`);
+  document.getElementById("hearBtn").onclick=()=>playAudio(item.ar,audioPath(curLesson.id,rehearsalIdx));
   if(micAvailable)setupRecordButton(document.getElementById("recordBtn"));
   document.getElementById("nextBtn").onclick=()=>{
     cleanupRecording();
@@ -2424,7 +2467,10 @@ function initLandingAnimations(){
 /* ---------- BOOTSTRAP ---------- */
 const storedBaseLang=localStorage.getItem('baseLang');
 if(storedBaseLang)baseLang=storedBaseLang;
+const storedVoicePref=localStorage.getItem('voicePref');
+if(storedVoicePref)voicePref=storedVoicePref;
 renderBaseLangToggles();
+renderVoicePrefToggles();
 applyStaticStrings();
 if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
 initLandingAnimations();
