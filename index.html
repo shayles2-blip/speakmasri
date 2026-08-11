@@ -2250,6 +2250,41 @@ function matchPick(side,val,btn){
 
 function normalize(s){return s.toLowerCase().replace(/['’]/g,"").trim();}
 
+function canonicalizeFranco(s){
+  return normalize(s)
+    .replace(/[^a-z0-9]/g,"")
+    .replace(/ee/g,"i")
+    .replace(/oo/g,"u")
+    .replace(/([a-z])\1+/g,"$1");
+}
+
+function levenshteinDistance(a,b){
+  const previous=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    let diagonal=previous[0];
+    previous[0]=i;
+    for(let j=1;j<=b.length;j++){
+      const above=previous[j];
+      previous[j]=a[i-1]===b[j-1]
+        ? diagonal
+        : 1+Math.min(diagonal,previous[j-1],above);
+      diagonal=above;
+    }
+  }
+  return previous[b.length];
+}
+
+function similarity(a,b){
+  const maxLength=Math.max(a.length,b.length);
+  return maxLength===0 ? 1 : 1-levenshteinDistance(a,b)/maxLength;
+}
+
+function francoAnswerMatches(userInput,candidateAnswer){
+  const canonicalUserInput=canonicalizeFranco(userInput||"");
+  const canonicalCandidate=canonicalizeFranco(candidateAnswer);
+  return canonicalUserInput===canonicalCandidate || similarity(canonicalUserInput,canonicalCandidate)>=0.82;
+}
+
 /**
  * playAnswerFeedback(ok, targetEl)
  * ok       : boolean — whether the submitted answer was correct
@@ -2328,8 +2363,7 @@ function check(){
       if(!ok && ((o.dataset.value!==undefined ? o.dataset.value : o.textContent.trim())===ex.answer)){o.classList.add("correct");o.insertAdjacentHTML("beforeend"," ✓");}
     });
   } else if(ex.type==="fill"){
-    const normalizedSelection=normalize(selection||"");
-    ok = ex.answer.split("/").some(answer=>normalizedSelection===normalize(answer.trim()));
+    ok = ex.answer.split("/").some(candidateAnswer=>francoAnswerMatches(selection,candidateAnswer));
     const fillInput=document.getElementById("fillInput");
     if(fillInput){fillInput.classList.add(ok?"correct":"wrong");targetEl=fillInput;}
   }
