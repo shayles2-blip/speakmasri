@@ -228,6 +228,59 @@ input:focus, select:focus {
   color: var(--text-muted);
   font-weight: 600;
 }
+.home-mira-greeting {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 16px 4px;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+}
+.home-mira-greeting img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+.email-verification-reminder {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 16px 6px 70px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.email-verification-reminder > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.email-verification-reminder button {
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+.email-verification-reminder .resend-verification {
+  padding: 1px 2px;
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.email-verification-reminder .dismiss-verification {
+  padding: 0 2px;
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1;
+}
 
 /* ===== AUTH SCREEN ===== */
 .center { text-align: center; padding: 24px; }
@@ -962,10 +1015,14 @@ input:focus, select:focus {
       <div class="stat">💬 <span id="milestoneCount">0</span> <span data-i18n="ui.said">said</span></div>
       <div class="stat" style="color:var(--gold)">⭐ <span id="xp">0</span></div>
     </div>
-    <div id="emailVerificationBanner" class="hidden" role="status" style="display:flex;align-items:center;gap:10px;margin:0 16px 12px;padding:12px 14px;background:var(--gold-soft);border:1px solid var(--gold);border-radius:var(--r-md);color:var(--text-main);font-size:13px">
-      <span style="flex:1" data-i18n="ui.verify_your_email_to_secure_your_account">Verify your email to secure your account</span>
-      <button id="resendVerificationBtn" type="button" data-i18n="ui.resendverificationbtn" onclick="resendEmailVerification()" style="background:none;border:none;color:var(--teal);font-weight:700;text-decoration:underline;cursor:pointer;padding:2px">Resend</button>
-      <button type="button" onclick="dismissEmailVerificationBanner()" aria-label="Dismiss email verification reminder" data-i18n-aria-label="aria.dismiss_email_verification_reminder" style="background:none;border:none;color:var(--ink-soft);font-size:18px;line-height:1;cursor:pointer;padding:2px">&times;</button>
+    <div id="homeMiraGreeting" class="home-mira-greeting hidden">
+      <img src="mascot/mira_reference.webp" alt="">
+      <span id="homeMiraGreetingText"></span>
+    </div>
+    <div id="emailVerificationBanner" class="email-verification-reminder hidden" role="status">
+      <span data-i18n="ui.verify_your_email_to_secure_your_account">Verify your email to secure your account</span>
+      <button id="resendVerificationBtn" class="resend-verification" type="button" data-i18n="ui.resendverificationbtn" onclick="resendEmailVerification()">Resend</button>
+      <button class="dismiss-verification" type="button" onclick="dismissEmailVerificationBanner()" aria-label="Dismiss email verification reminder" data-i18n-aria-label="aria.dismiss_email_verification_reminder">&times;</button>
     </div>
     <!-- LEARN -->
     <div id="learn"></div>
@@ -1167,6 +1224,8 @@ const STRINGS={
   "ui.privacy_policy":{en:"Privacy Policy",ru:"Политика конфиденциальности"},
   "ui.terms_of_service":{en:"Terms of Service",ru:"Условия использования"},
   "ui.said":{en:"said",ru:"произнёс"},
+  "ui.mira_home_greeting":{en:"Hey, {name}! Ready to practice?",ru:"Привет, {name}! Готовы позаниматься?"},
+  "ui.mira_home_greeting_no_name":{en:"Hey! Ready to practice?",ru:"Привет! Готовы позаниматься?"},
   "ui.verify_your_email_to_secure_your_account":{en:"Verify your email to secure your account",ru:"Подтвердите почту, чтобы защитить аккаунт"},
   "ui.resendverificationbtn":{en:"Resend",ru:"Отправить снова"},
   "aria.dismiss_email_verification_reminder":{en:"Dismiss email verification reminder",ru:"Скрыть напоминание о подтверждении почты"},
@@ -1283,6 +1342,7 @@ async function setBaseLang(lang){
   if(user)user.baseLang=lang;
   renderBaseLangToggles();
   applyStaticStrings();
+  updateHomeMiraGreeting();
   if(refreshLandingPhrase)refreshLandingPhrase();
   if(user&&!user.isGuest){
     if(!document.getElementById('learn').classList.contains('hidden'))renderPath();
@@ -1413,6 +1473,7 @@ async function saveDisplayName(newName){
     await firebase.firestore().collection('users').doc(uid).update({name});
     user.name=name;
     document.getElementById('pName').textContent=name;
+    updateHomeMiraGreeting();
     msg.textContent='';
     const orig=btn.textContent;
     btn.textContent=t('ui.saved');
@@ -1661,10 +1722,23 @@ async function logout(){
 function enterApp(){
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("main").classList.remove("hidden");
+  updateHomeMiraGreeting();
   checkEmailVerificationBanner();
   refreshTopBar();
   renderPath();
   tab("learn");
+}
+
+function updateHomeMiraGreeting(){
+  const greeting=document.getElementById("homeMiraGreeting");
+  const greetingText=document.getElementById("homeMiraGreetingText");
+  if(!user||user.isGuest){
+    greeting.classList.add("hidden");
+    greetingText.textContent="";
+    return;
+  }
+  const name=(user.name||"").trim();
+  greetingText.textContent=name?t('ui.mira_home_greeting').replace('{name}',name):t('ui.mira_home_greeting_no_name');
 }
 
 async function checkEmailVerificationBanner(){
@@ -1705,6 +1779,7 @@ function tab(name){
     document.getElementById(t).classList.toggle("hidden",t!==name);
     document.getElementById("n"+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle("active",t===name);
   });
+  document.getElementById("homeMiraGreeting").classList.toggle("hidden",!!(name!=="learn"||!user||user.isGuest));
   if(name==="profile")renderProfile();
   if(name==="learn")renderPath();
   if(name==="phrasebook")renderPhrasebook();
