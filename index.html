@@ -892,7 +892,7 @@ input:focus, select:focus {
         <button type="button" data-voice-pref="female" onclick="setVoicePref('female')">Female</button>
       </div>
     </div>
-    <div class="logo landing-in landing-in-1">
+    <div class="logo landing-in landing-in-1" style="position:relative;width:56px;margin-left:auto;margin-right:auto">
       <svg viewBox="0 0 100 100" role="img" aria-label="SpeakMasri">
         <circle cx="41" cy="9"  r="3.2" style="fill:var(--gold)"/>
         <circle cx="53" cy="5"  r="2.4" style="fill:var(--gold)"/>
@@ -903,6 +903,7 @@ input:focus, select:focus {
         <line x1="30" y1="34" x2="70" y2="34" style="stroke:var(--gold)" stroke-width="4" stroke-linecap="round"/>
         <path d="M31 37 L69 37 L61 66 Q60 68 58 68 L42 68 Q40 68 39 66 Z" style="fill:var(--teal)" opacity="0.15"/>
       </svg>
+      <img src="mascot/nour_reference.webp" alt="Nour, the SpeakMasri guide" style="position:absolute;width:64px;height:64px;object-fit:contain;left:64px;top:-4px">
     </div>
     <h1 class="brand landing-in landing-in-2" style="margin:0">SpeakMasri</h1>
     <div class="ar landing-in landing-in-2" lang="ar" style="font-size:20px;color:var(--primary-hover);margin-top:2px">اتكلم مصري</div>
@@ -1070,7 +1071,7 @@ input:focus, select:focus {
 
   <!-- COMPLETE -->
   <div id="done" class="hidden center">
-    <div class="confetti">🎉</div>
+    <div class="confetti"><img src="mascot/nour_happy.webp" alt="Nour celebrating the completed lesson" style="display:block;width:112px;height:112px;object-fit:contain;margin:0 auto"></div>
     <h1 id="doneTitle" data-i18n="ui.donetitle">Lesson Complete!</h1>
     <div style="display:flex;justify-content:space-around;margin:24px 0">
       <div class="stat-pop" style="background:var(--gold-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--gold)">
@@ -1764,7 +1765,10 @@ function renderProfile(){
   countUp(document.getElementById("pMilestones"),milestones.length);
   const log=document.getElementById("milestoneLog");
   if(!milestones.length){
-    log.innerHTML=`<p style="color:var(--ink-soft)">${t('msg.no_moments_yet_finish_a_lesson_and_try_the_mission_t')}</p>`;
+    log.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;gap:10px;color:var(--ink-soft)">
+      <img src="mascot/nour_encouraging.webp" alt="Nour inviting you to create your first moment" style="width:48px;height:48px;object-fit:contain;flex:0 0 auto">
+      <p style="margin:0;text-align:left">${t('msg.no_moments_yet_finish_a_lesson_and_try_the_mission_t')}</p>
+    </div>`;
   } else {
     log.innerHTML=milestones.slice().reverse().slice(0,20).map(m=>
       `<div style="padding:8px 0;border-bottom:1px solid var(--line)">
@@ -2199,8 +2203,13 @@ function showFeedback(ok,ex){
                       ex.type==="mc" ? `${ex.answer}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="listen" ? ex.answer : "";
   fb.innerHTML=`<div class="feedback ${ok?"fb-ok":"fb-no"}">
-    <div class="fb-title">${ok?t('ui.correct')+' ✅':t('ui.not_quite')+' ❌'}</div>
-    ${!ok?`<div>${t('ui.answer')} <b>${answerText}</b></div>`:""}
+    <div style="display:flex;align-items:center;gap:12px">
+      <img src="mascot/${ok?"nour_happy":"nour_encouraging"}.webp" alt="${ok?"Nour celebrating a correct answer":"Nour offering encouragement"}" style="width:52px;height:52px;object-fit:contain;flex:0 0 auto">
+      <div style="min-width:0">
+        <div class="fb-title">${ok?t('ui.correct')+' ✅':t('ui.not_quite')+' ❌'}</div>
+        ${!ok?`<div>${t('ui.answer')} <b>${answerText}</b></div>`:""}
+      </div>
+    </div>
   </div>`;
   const checkBtn=document.getElementById("checkBtn");
   checkBtn.textContent=t('btn.continue');
@@ -2446,8 +2455,11 @@ function renderMission(){
   const box=document.getElementById("missionBox");
   curMission=curLesson.vocab[Math.floor(Math.random()*curLesson.vocab.length)];
   box.innerHTML=`<div style="font-weight:800;margin-bottom:8px">🎯 ${t('ui.tonight_s_mission')}</div>
-    <div>${t('ui.say_this_to_them')} <span class="ar" lang="ar" style="font-size:20px">${curMission.ar}</span>${registerBadge(curMission)}
-    <span class="franco">(${curMission.franco})</span> — "${vocabText(curMission)}"</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <img id="missionNour" src="mascot/nour_speaking.webp" alt="Nour speaking the mission phrase" style="width:48px;height:48px;object-fit:contain;flex:0 0 auto">
+      <div>${t('ui.say_this_to_them')} <span class="ar" lang="ar" style="font-size:20px">${curMission.ar}</span>${registerBadge(curMission)}
+      <span class="franco">(${curMission.franco})</span> — "${vocabText(curMission)}"</div>
+    </div>
     <button class="btn btn-blue" style="margin-top:12px" id="missionBtn" onclick="markMissionDone()">${t('ui.i_said_it')} ✅</button>`;
 }
 
@@ -2460,6 +2472,11 @@ async function markMissionDone(){
   }
   const btn=document.getElementById("missionBtn");
   if(!btn) return;
+  const missionNour=document.getElementById("missionNour");
+  if(missionNour){
+    missionNour.src="mascot/nour_proud.webp";
+    missionNour.alt="Nour proudly celebrating the completed mission";
+  }
   btn.disabled=true;
   btn.classList.add("sealing");
   setTimeout(()=>{
