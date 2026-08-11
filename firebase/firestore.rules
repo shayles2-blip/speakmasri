@@ -15,6 +15,20 @@ service cloud.firestore {
       }
     }
 
+    match /audioReports/{reportId} {
+      allow create: if request.resource.data.keys().hasOnly(['lessonId','idx','ar','franco','voicePref','reason','note','createdAt'])
+        && request.resource.data.lessonId is string && request.resource.data.lessonId.size() > 0 && request.resource.data.lessonId.size() <= 50
+        && request.resource.data.idx is int && request.resource.data.idx >= 0
+        && request.resource.data.ar is string && request.resource.data.ar.size() > 0 && request.resource.data.ar.size() <= 300
+        && request.resource.data.franco is string && request.resource.data.franco.size() <= 300
+        && request.resource.data.voicePref in ['male','female']
+        && request.resource.data.reason in ['not_egyptian','mispronounced','robotic_glitch','wrong_word','other']
+        && request.resource.data.note is string && request.resource.data.note.size() <= 500
+        && request.resource.data.createdAt is timestamp && request.resource.data.createdAt == request.time;
+      allow read: if request.auth != null && request.auth.token.email == 'mira@speakmasri.com';
+      allow update, delete: if false;
+    }
+
     // Write-only inbox a partner can drop phrase suggestions into via a shareable
     // link. A submission and its pending-counter increment must be in one batch.
     match /partnerSubmissions/{targetUid}/items/{itemId} {

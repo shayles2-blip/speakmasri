@@ -666,6 +666,55 @@ input:focus, select:focus {
   box-shadow: none;
   cursor: not-allowed;
 }
+.audio-report-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.report-control { position: relative; }
+.report-btn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.report-btn:hover { background: var(--border-light); }
+.report-picker {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 230px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  text-align: left;
+}
+.report-picker.hidden { display: none; }
+.report-reasons { display: flex; flex-wrap: wrap; gap: 6px; }
+.report-reason {
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text-main);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.report-other { margin-top: 8px; }
+.report-other input { font-size: 13px; padding: 8px; }
+.report-other button { margin-top: 6px; padding: 7px 10px; font-size: 12px; }
+.report-status { color: var(--ink-soft); font-size: 12px; line-height: 30px; white-space: nowrap; }
 
 /* ===== FILL‑IN INPUT ===== */
 .fillwrap {
@@ -1822,7 +1871,7 @@ function renderPhrasebook(){
   const list=document.getElementById("pbList");
   const learned=[];
   COURSE.units.forEach((u,ui)=>u.lessons.forEach((l,li)=>{
-    if(isLessonUnlocked(ui,li))l.vocab.forEach((v,vi)=>learned.push({...v,_audio:audioPath(l.id,vi)}));
+    if(isLessonUnlocked(ui,li))l.vocab.forEach((v,vi)=>learned.push({...v,_audio:audioPath(l.id,vi),_lessonId:l.id,_idx:vi}));
   }));
   learned.push(...(user.customPhrases||[]));
   list.innerHTML="";
@@ -1855,7 +1904,14 @@ function renderPhrasebook(){
     btn.setAttribute("aria-label","Play audio");
     btn.textContent="🔊";
     btn.onclick=()=>playAudio(v.ar,v._audio);
-    row.appendChild(btn);
+    if(v._lessonId!=null){
+      const actions=document.createElement("div");
+      actions.className="audio-report-actions";
+      actions.append(btn,createAudioReportControl({lessonId:v._lessonId,idx:v._idx,ar:v.ar,franco:v.franco}));
+      row.appendChild(actions);
+    } else {
+      row.appendChild(btn);
+    }
     list.appendChild(row);
   });
 }
@@ -1877,6 +1933,7 @@ function buildExercises(lesson){
     // listen & choose: hear AR -> pick EN
     const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
     list.push({type:"listen",q:item.ar,answer:item.en,franco:item.franco,register:item.register,
+      lessonId:lesson.id,idx,
       audio:audioPath(lesson.id,idx),
       opts:shuffle([item,...distractors]).map(v=>({value:v.en,label:vocabText(v)}))});
   });
@@ -1954,7 +2011,11 @@ function renderExercise(){
     audioBtn.className="audio-btn";audioBtn.textContent="🔊";
     audioBtn.setAttribute("aria-label","Play audio");
     audioBtn.onclick=()=>playAudio(ex.q,ex.audio);
-    area.appendChild(audioBtn);
+    const audioActions=document.createElement("div");
+    audioActions.className="audio-report-actions";
+    audioBtn.style.margin="16px 0";
+    audioActions.append(audioBtn,createAudioReportControl({lessonId:ex.lessonId,idx:ex.idx,ar:ex.q,franco:ex.franco}));
+    area.appendChild(audioActions);
     ex.opts.forEach(o=>{
       const b=document.createElement("button");
       b.className="opt";b.textContent=o.label;
@@ -2174,13 +2235,17 @@ function renderRehearsalItem(){
     <div class="ar" lang="ar" style="font-size:32px;margin-bottom:8px">${item.ar}</div>${registerBadge(item)}
     <div class="franco">${item.franco}</div>
     <div style="color:var(--ink-soft);margin-bottom:16px">${vocabText(item)}</div>
-    <button id="hearBtn" class="audio-btn" aria-label="${t('aria.hear_native_pronunciation')}">🔊</button>
+    <div class="audio-report-actions">
+      <button id="hearBtn" class="audio-btn" style="margin:16px 0" aria-label="${t('aria.hear_native_pronunciation')}">🔊</button>
+      <span id="rehearsalReport"></span>
+    </div>
     ${micAvailable
       ? `<button id="recordBtn" class="btn btn-blue" style="margin-top:16px" aria-label="${t('aria.hold_to_record_yourself')}">${t('ui.hold_to_record')}</button>`
       : `<p style="color:var(--ink-soft);margin-top:16px">${t('ui.mic_access_not_available_just_practice_saying_it_out')}</p>`}
     <div style="padding:16px"><button id="nextBtn" class="btn btn-ghost">${rehearsalIdx===rehearsalPack.length-1?t('ui.finish'):t('ui.next')}</button></div>
   `;
   document.getElementById("hearBtn").onclick=()=>playAudio(item.ar,audioPath(curLesson.id,rehearsalIdx));
+  document.getElementById("rehearsalReport").replaceWith(createAudioReportControl({lessonId:curLesson.id,idx:rehearsalIdx,ar:item.ar,franco:item.franco}));
   if(micAvailable)setupRecordButton(document.getElementById("recordBtn"));
   document.getElementById("nextBtn").onclick=()=>{
     cleanupRecording();
@@ -2281,6 +2346,98 @@ function playAudio(text,audioPath){
   const audio=new Audio(audioPath);
   audio.onerror=()=>speak(text);
   audio.play().catch(()=>speak(text));
+}
+
+function createAudioReportControl(item){
+  const control=document.createElement("span");
+  control.className="report-control";
+  const trigger=document.createElement("button");
+  trigger.type="button";
+  trigger.className="report-btn";
+  trigger.setAttribute("aria-label","Report this sound");
+  trigger.setAttribute("aria-expanded","false");
+  trigger.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h11l-1 5 1 5H5"/></svg>';
+  const picker=document.createElement("div");
+  picker.className="report-picker hidden";
+  const reasons=document.createElement("div");
+  reasons.className="report-reasons";
+  const options=[
+    ["Doesn't sound Egyptian","not_egyptian"],
+    ["Mispronounced","mispronounced"],
+    ["Glitchy / robotic","robotic_glitch"],
+    ["Wrong word","wrong_word"],
+    ["Other","other"]
+  ];
+  options.forEach(([label,reason])=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="report-reason";
+    button.textContent=label;
+    button.onclick=()=>{
+      if(reason==="other")showOtherReportInput();
+      else submitAudioReport(reason,"");
+    };
+    reasons.appendChild(button);
+  });
+  picker.appendChild(reasons);
+  control.append(trigger,picker);
+  trigger.onclick=()=>{
+    const opening=picker.classList.contains("hidden");
+    picker.classList.toggle("hidden",!opening);
+    trigger.setAttribute("aria-expanded",opening?"true":"false");
+  };
+
+  function showOtherReportInput(){
+    reasons.classList.add("hidden");
+    const other=document.createElement("div");
+    other.className="report-other";
+    const input=document.createElement("input");
+    input.type="text";
+    input.maxLength=500;
+    input.placeholder="Optional note";
+    const submit=document.createElement("button");
+    submit.type="button";
+    submit.className="btn";
+    submit.textContent="Send report";
+    submit.onclick=()=>submitAudioReport("other",input.value);
+    other.append(input,submit);
+    picker.appendChild(other);
+    input.focus();
+  }
+
+  async function submitAudioReport(reason,note){
+    picker.querySelectorAll("button,input").forEach(el=>{el.disabled=true;});
+    try{
+      await firebase.firestore().collection("audioReports").add({
+        lessonId:item.lessonId,
+        idx:item.idx,
+        ar:item.ar,
+        franco:item.franco,
+        voicePref,
+        reason,
+        note:note.slice(0,500),
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+      showStatus("Thanks, reported ✓");
+    }catch(err){
+      console.error("audio report error",err);
+      showStatus("Couldn't send, try again");
+    }
+  }
+
+  function showStatus(message){
+    const status=document.createElement("span");
+    status.className="report-status";
+    status.textContent=message;
+    control.replaceChildren(status);
+    setTimeout(()=>{
+      picker.classList.add("hidden");
+      trigger.setAttribute("aria-expanded","false");
+      picker.querySelectorAll("button,input").forEach(el=>{el.disabled=false;});
+      control.replaceChildren(trigger,picker);
+    },2000);
+  }
+  return control;
 }
 
 let curMission=null;
