@@ -7,7 +7,7 @@ const DEFAULT_VOICE_ID = 'R1vEEI2FG1sW3IvcbDTI';
 const MODEL_ID = 'eleven_multilingual_v2';
 const ROOT = path.join(__dirname, '..');
 const IPA_FILE = path.join(__dirname, 'egyptian_ipa.json');
-const AUDIO_DIR = path.join(ROOT, 'audio');
+let AUDIO_DIR = path.join(ROOT, 'audio');
 const TTS_API_BASE_URL = 'https://api.elevenlabs.io/v1/text-to-speech';
 // ElevenLabs' default MP3 response format is mp3_44100_128.
 // RecognitionConfig documents MP3 support on the v1p1beta1 endpoint.
@@ -29,7 +29,7 @@ function sleep(ms) {
 }
 
 function parseArgs(argv) {
-  const options = { limit: Infinity, only: null, voice: DEFAULT_VOICE_ID };
+  const options = { limit: Infinity, only: null, voice: DEFAULT_VOICE_ID, outDir: null };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--limit') {
       const limit = Number(argv[++i]);
@@ -41,6 +41,9 @@ function parseArgs(argv) {
     } else if (argv[i] === '--voice') {
       options.voice = argv[++i];
       if (!options.voice) throw new Error('--voice requires a voice ID');
+    } else if (argv[i] === '--out-dir') {
+      options.outDir = argv[++i];
+      if (!options.outDir) throw new Error('--out-dir requires a path');
     } else {
       throw new Error(`Unknown argument: ${argv[i]}`);
     }
@@ -176,6 +179,7 @@ async function main() {
   const options = parseArgs(process.argv.slice(2));
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) throw new Error('ELEVENLABS_API_KEY not set');
+  if (options.outDir) AUDIO_DIR = path.isAbsolute(options.outDir) ? options.outDir : path.join(ROOT, options.outDir);
   const jobs = loadJobs(options);
   fs.mkdirSync(AUDIO_DIR, { recursive: true });
 
