@@ -70,6 +70,8 @@ body { max-width: none; margin: 0; }
   --sage: #4F7A5A;
   --clay: #C1652E;
   --clay-soft: #FBEEE3;
+  --rose: #A23E78;
+  --rose-surface: #F8EAF2;
   --r-sm: 12px;
   --r-md: 16px;
   --r-pill: 999px;
@@ -632,9 +634,22 @@ input:focus, select:focus {
   background: var(--border-light);
   border-radius: 8px;
   flex: 1;
-  margin: 0 14px;
   overflow: hidden;
 }
+.lesson-progress {
+  flex: 1;
+  margin: 0 14px;
+}
+.lesson-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
+.lesson-streak { color: var(--clay); }
 .progfill {
   height: 100%;
   background: var(--primary);
@@ -654,6 +669,41 @@ input:focus, select:focus {
   background: var(--surface);
   border-top: 1px solid var(--border-light);
   z-index: 6;
+}
+.skip-btn {
+  display: block;
+  width: auto;
+  margin: 10px auto 0;
+  padding: 2px 8px;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.halfway-celebration {
+  position: fixed;
+  top: 76px;
+  left: 50%;
+  z-index: 20;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  transform: translateX(-50%);
+}
+.halfway-celebration-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 10px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 800;
 }
 
 /* ===== FEEDBACK SLIDE ===== */
@@ -1119,11 +1169,14 @@ input:focus, select:focus {
   <div id="lesson" class="hidden">
     <div class="top">
       <button onclick="quitLesson()" aria-label="Quit lesson" data-i18n-aria-label="aria.quit_lesson" style="background:none;border:none;font-size:24px;cursor:pointer;padding:10px;min-width:44px;min-height:44px">✕</button>
-      <div class="progbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progbarEl"><div class="progfill" id="prog"></div></div>
+      <div class="lesson-progress">
+        <div class="lesson-progress-meta"><span id="progCount">1 / 1</span><span class="lesson-streak"><span data-i18n="ui.streak">Streak</span> 🔥 <span id="streakCount">0</span></span></div>
+        <div class="progbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progbarEl"><div class="progfill" id="prog"></div></div>
+      </div>
     </div>
     <div id="exArea"></div>
     <div id="fbArea" aria-live="polite"></div>
-    <div id="checkWrap"><button class="btn" id="checkBtn" onclick="check()" disabled data-i18n="btn.check">Check</button></div>
+    <div id="checkWrap"><button class="btn" id="checkBtn" onclick="check()" disabled data-i18n="btn.check">Check</button><button class="skip-btn" id="skipBtn" onclick="skipExercise()" data-i18n="ui.skip">Skip this one</button></div>
   </div>
 
   <!-- COMPLETE -->
@@ -1197,6 +1250,9 @@ let curLesson=null;     // lesson currently in progress
 let exList=[];          // built exercises for current lesson
 let exIdx=0;
 let correctCount=0;
+let currentStreak=0;
+let halfwayCelebrated=false;
+let currentAudio=null;
 let selection=null;     // current selection for check()
 let matchState=null;    // state for match exercise
 let refreshLandingPhrase=null;
@@ -1252,6 +1308,9 @@ const STRINGS={
   "nav.profile":{en:"Profile",ru:"Профиль"},
   "aria.quit_lesson":{en:"Quit lesson",ru:"Выйти из урока"},
   "btn.check":{en:"Check",ru:"Проверить"},
+  "ui.skip":{en:"Skip this one",ru:"Пропустить это задание"},
+  "ui.streak":{en:"Streak",ru:"Серия"},
+  "ui.halfway_tonight":{en:"Halfway there — keep going for tonight!",ru:"Половина позади — продолжайте, пригодится уже сегодня вечером!"},
   "ui.donetitle":{en:"Lesson Complete!",ru:"Урок пройден!"},
   "ui.xp_earned":{en:"XP Earned",ru:"Получено XP"},
   "ui.accuracy":{en:"Accuracy",ru:"Точность"},
@@ -2035,6 +2094,9 @@ function startLesson(lesson){
   exList=buildExercises(lesson);
   exIdx=0;
   correctCount=0;
+  currentStreak=0;
+  halfwayCelebrated=false;
+  setLessonStreak(0);
   document.getElementById("main").classList.add("hidden");
   document.getElementById("lesson").classList.remove("hidden");
   renderExercise();
@@ -2057,6 +2119,7 @@ function updateProg(){
   const pct=Math.round((exIdx/exList.length)*100);
   document.getElementById("prog").style.width=pct+"%";
   document.getElementById("progbarEl").setAttribute("aria-valuenow",pct);
+  document.getElementById("progCount").textContent=(exIdx+1)+" / "+exList.length;
 }
 
 function renderExercise(){
@@ -2069,6 +2132,8 @@ function renderExercise(){
   checkBtn.disabled=true;
   checkBtn.onclick=check;
   const ex=exList[exIdx];
+  document.getElementById("skipBtn").classList.toggle("hidden",ex.type==="match");
+  if(!halfwayCelebrated&&exIdx===Math.floor(exList.length/2))showHalfwayCelebration();
   const area=document.getElementById("exArea");
   area.innerHTML="";
 
@@ -2169,9 +2234,11 @@ function matchPick(side,val,btn){
       matchState.selEn=null;matchState.selAr=null;
       if(matchState.matched.size===matchState.pairs.length){
         correctCount++;
+        setLessonStreak(currentStreak+1,true);
         setTimeout(nextExercise,500);
       }
     } else {
+      setLessonStreak(0);
       enBtn.classList.add("wrong");arBtn.classList.add("wrong");
       setTimeout(()=>{
         enBtn.classList.remove("sel","wrong");arBtn.classList.remove("sel","wrong");
@@ -2266,7 +2333,12 @@ function check(){
     const fillInput=document.getElementById("fillInput");
     if(fillInput){fillInput.classList.add(ok?"correct":"wrong");targetEl=fillInput;}
   }
-  if(ok)correctCount++;
+  if(ok){
+    correctCount++;
+    setLessonStreak(currentStreak+1,true);
+  } else {
+    setLessonStreak(0);
+  }
   const arabicWord = ex.type==="mc" ? ex.answer : ex.type==="listen" ? ex.q : ex.type==="fill" ? ex.ar : null;
   playAnswerFeedback(ok,targetEl,arabicWord);
   showFeedback(ok,ex);
@@ -2274,6 +2346,7 @@ function check(){
 
 function showFeedback(ok,ex){
   const fb=document.getElementById("fbArea");
+  document.getElementById("skipBtn").classList.add("hidden");
   const answerText = ex.type==="fill" ? `${ex.answer} (${ex.ar})` :
                       ex.type==="mc" ? `${ex.answer}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="listen" ? ex.answer : "";
@@ -2297,6 +2370,28 @@ function nextExercise(){
   document.getElementById("checkWrap").classList.remove("hidden");
   if(exIdx>=exList.length){finishAsSuccess();}
   else renderExercise();
+}
+
+function skipExercise(){
+  setLessonStreak(0);
+  nextExercise();
+}
+
+function setLessonStreak(value,animate=false){
+  currentStreak=value;
+  const el=document.getElementById("streakCount");
+  if(animate)countUp(el,value,{duration:350});
+  else if(el)el.textContent=value;
+}
+
+function showHalfwayCelebration(){
+  halfwayCelebrated=true;
+  const el=document.createElement("div");
+  el.className="halfway-celebration";
+  el.setAttribute("role","status");
+  el.innerHTML=`<div class="halfway-celebration-inner stat-pop"><img src="mascot/mira_happy.webp" alt="" style="width:44px;height:44px;object-fit:contain"><span>${t('ui.halfway_tonight')}</span></div>`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2000);
 }
 
 /* ---------- REHEARSAL (hold-to-speak) ---------- */
@@ -2407,11 +2502,11 @@ function registerBadge(v){
   const styles={
     formal:{label:t('register.formal'),color:'var(--clay)',bg:'var(--clay-soft)'},
     casual:{label:t('register.casual'),color:'var(--teal)',bg:'var(--teal-soft)'},
-    intimate:{label:t('register.intimate'),color:'var(--error)',bg:'var(--error-surface)'}
+    intimate:{label:t('register.intimate'),color:'var(--rose)',bg:'var(--rose-surface)'}
   };
   const s=styles[r];
   if(!s)return '';
-  return `<span style="display:inline-block;padding:2px 8px;margin-left:6px;border-radius:var(--r-pill);font-size:11px;font-weight:700;color:${s.color};background:${s.bg};vertical-align:middle">${s.label}</span>`;
+  return `<span style="display:inline-block;padding:2px 8px;margin-left:6px;border-radius:var(--r-pill);font-size:12px;font-weight:700;color:${s.color};background:${s.bg};vertical-align:middle">${s.label}</span>`;
 }
 
 function speak(text){
@@ -2426,8 +2521,13 @@ function speak(text){
 }
 
 function playAudio(text,audioPath){
+  if(currentAudio){
+    currentAudio.pause();
+    currentAudio.currentTime=0;
+  }
   if(!audioPath){speak(text);return;}
   const audio=new Audio(audioPath);
+  currentAudio=audio;
   audio.onerror=()=>speak(text);
   audio.play().catch(()=>speak(text));
 }
