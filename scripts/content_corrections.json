@@ -1,0 +1,365 @@
+{
+  "l2-1_0": {
+    "ar": "متشكر",
+    "franco": "motshakker",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l2-1_3": {
+    "ar": "معلش",
+    "franco": "ma3lesh",
+    "categories": [
+      "MSA/formal phrasing",
+      "register mismatch"
+    ]
+  },
+  "l1-3_1": {
+    "ar": "ممكن أدخل؟",
+    "franco": "momken adkhol?",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-3_2": {
+    "ar": "ما شاء الله، البيت حلو أوي",
+    "franco": "ma sha2 Allah, el beet 7elw awi",
+    "categories": [
+      "MSA/formal phrasing",
+      "Gulf/Khaleeji influence"
+    ]
+  },
+  "l1-3_4": {
+    "ar": "أهلاً وسهلاً",
+    "franco": "ahlan w sahlan",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-3_8": {
+    "ar": "شرفتونا",
+    "franco": "sharraftoona",
+    "categories": [
+      "franco transliteration",
+      "orthography"
+    ]
+  },
+  "l1-3_9": {
+    "ar": "أنا فرحان/فرحانة أوي إني جيت",
+    "franco": "ana far7an/far7ana awi eni geet",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-4_2": {
+    "ar": "دي ماما.",
+    "franco": "Di mama.",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-4_3": {
+    "ar": "ده بابا.",
+    "franco": "Da baba.",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-4_5": {
+    "ar": "قولّها ماما",
+    "franco": "2ollaha mama",
+    "categories": [
+      "MSA/formal phrasing",
+      "gendered verb form"
+    ]
+  },
+  "l1-5_0": {
+    "ar": "لا، متشكر.",
+    "franco": "La2, motshakker.",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-5_3": {
+    "ar": "حلو أوي، تسلم إيديك.",
+    "franco": "7elw awy, teslam eedeek.",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-5_9": {
+    "ar": "رشفة بس، أنا مليان أوي.",
+    "franco": "Rashfa bas, ana melyan awy.",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-6_1": {
+    "ar": "بشتغل في [مجال]، بس لسه بتعلّم عربي.",
+    "franco": "Bashtaghal fi [magal], bas lissa bat3allam 3arabi.",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-6_4": {
+    "ar": "هفضل لحد [وقت]، إن شاء الله.",
+    "franco": "Hafdal le7ad [wa2t], in sha2 Allah.",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-6_5": {
+    "ar": "عربي ضعيف شوية، بس بحاول!",
+    "franco": "3arabi da3if shwayya, bas ba7awel!",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-6_6": {
+    "ar": "عندي أخ/أخت واحد بس، إحنا الاتنين.",
+    "franco": "3andi akh/okht wa7ed bass, e7na el-etnein.",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-6_7": {
+    "ar": "أنا جاي أتعلم وأبقى واحد من العيلة.",
+    "franco": "Ana gay at3allam w ab2a wa7ed men el-3eela.",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-6_9": {
+    "ar": "أنا فرحان أوي إني قابلتكم!",
+    "franco": "Ana far7an awi eni 2abaltkom!",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-6_10": {
+    "ar": "لسه بتعود على القاهرة… بس حلوة قوي!",
+    "franco": "Lissa bat3awwad 3ala el-2ahera... bas 7elwa awy!",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-7_3": {
+    "ar": "البيت ده جميل أوي، الله يحميه.",
+    "franco": "El-beet da gameel awy, Allah ye7meeh.",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-7_4": {
+    "ar": "العيال متربيين أوي، ربنا يبارك فيهم.",
+    "franco": "El-3eyal metrabbeyeen awy, rabena ybarek feehom.",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-7_8": {
+    "ar": "إنتو طيبين أوي، ربنا يبارك في العيلة دي.",
+    "franco": "Ento taybeen awy, rabena ybarek fel-3eela di.",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-8_2": {
+    "ar": "حضرتك بتتعلم عربي بقالك قد إيه؟",
+    "franco": "7adretak betet3allam 3arabi ba2alak add eh?",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-8_4": {
+    "ar": "بتاكل فول؟",
+    "franco": "betaakol fool?",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-8_5": {
+    "ar": "اتعودت على الحر؟",
+    "franco": "et3awadt 3ala el 7ar?",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-8_8": {
+    "ar": "هتزورينا كتير، مش كده؟",
+    "franco": "Hatzurina kteer, msh keda?",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-8_10": {
+    "ar": "هتتعود علينا قريب إن شاء الله.",
+    "franco": "Hatet3awad 3alina 2areeb, in sha2 Allah.",
+    "categories": [
+      "register mismatch",
+      "franco transliteration"
+    ]
+  },
+  "l1-9_1": {
+    "ar": "آسف، عربيتي لسه ضعيفة… ممكن تتكلم على مهلك شوية؟",
+    "franco": "Asif, 3arabiti lissa da3eefa... momken tetkallem 3ala mahlak shwayya?",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-9_2": {
+    "ar": "ما سمعتش كويس… إيه اللي قلته؟",
+    "franco": "Ma seme3tesh kwayyes... eh elli 2olto?",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-9_3": {
+    "ar": "ممكن تعيدها تاني مرة؟",
+    "franco": "Momken te3edha tani mara?",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-9_4": {
+    "ar": "ما فهمتش، ممكن تشرح بكلمات أسهل؟",
+    "franco": "Ma fhmtish, momken teshra7 b kalemat as-hal?",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-10_7": {
+    "ar": "ما قصدتش أقول كده، لساني سبقني!",
+    "franco": "Ma 2asadtish a2ool keda, lesani saba2ni!",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-10_10": {
+    "ar": "أنا كسوفان أوي، خلينا نضحك عليها!",
+    "franco": "Ana kasofan awi, khalina ned7ak 3aleiha!",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-11_1": {
+    "ar": "تسلم إيديكي",
+    "franco": "teslam eediki",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-11_3": {
+    "ar": "اتبسطنا أوي، هنرجع تاني قريب",
+    "franco": "Etbasatna awy, hanraga3 tany 2areeb",
+    "categories": [
+      "MSA/formal phrasing",
+      "franco transliteration"
+    ]
+  },
+  "l1-11_4": {
+    "ar": "ربنا يخلي بيتكم عامر",
+    "franco": "Rabbena ye5ally beetkom 3amer",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-11_5": {
+    "ar": "ما تتعبيش نفسك",
+    "franco": "Ma tet3abeesh nafsik",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-2_1": {
+    "ar": "كويس الحمد لله",
+    "franco": "Kwayyes el-7amdulillah",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-2_3": {
+    "ar": "مش كويس",
+    "franco": "Mesh kwayyes",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-5_8": {
+    "ar": "بطني هتنفجر لو كلت أكتر!",
+    "franco": "Batni hatenfeger law kelt aktar!",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-3_6": {
+    "ar": "الله يسلمك",
+    "franco": "Allah yesallimak",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l3-2_1": {
+    "ar": "الله يخليك لينا",
+    "franco": "Allah ye5alleek leena",
+    "categories": [
+      "MSA/formal phrasing"
+    ]
+  },
+  "l1-9_8": {
+    "ar": "استنى، لازم اسأل [اسم الشريك] ده معناه ايه.",
+    "franco": "Estanna, lazem as2al [esm el shareek] da ma3nah eih.",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-10_9": {
+    "ar": "والله ما قصدت أرفض، الأكل عندك تحفة!",
+    "franco": "Wallah ma 2asadt arfod, el-akl 3andak to7fa!",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-11_0": {
+    "ar": "ألف شكر على اليوم الجميل ده",
+    "franco": "Alf shokr 3ala el youm el gamil da",
+    "categories": [
+      "orthography"
+    ]
+  },
+  "l5-1_1": {
+    "ar": "قهوة مظبوط",
+    "franco": "2ahwa mazboot",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-10_2": {
+    "ar": "والله ما أنا كده عادة… النهارده مش يومي!",
+    "franco": "Wallah ma ana keda 3ada... ennaharda msh yomi!",
+    "categories": [
+      "franco transliteration"
+    ]
+  },
+  "l1-1_0": {
+    "ar": "إزيك",
+    "franco": "ezzayyak / ezzayyik",
+    "categories": [
+      "gendered verb form"
+    ]
+  },
+  "l1-5_5": {
+    "ar": "بتدلعني أوي!",
+    "franco": "betdal3ni awi!",
+    "categories": [
+      "register mismatch"
+    ]
+  },
+  "l1-5_10": {
+    "ar": "كتر خيرك.",
+    "franco": "Kotr 5eirak.",
+    "categories": [
+      "franco transliteration"
+    ]
+  }
+}
