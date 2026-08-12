@@ -1167,6 +1167,11 @@ input:focus, select:focus {
       </div>
       <div style="height:24px"></div>
       <div style="text-align:left;padding:0 16px">
+        <div style="font-weight:800;margin-bottom:8px">Your Passport</div>
+        <div id="passportStamps" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      </div>
+      <div style="height:24px"></div>
+      <div style="text-align:left;padding:0 16px">
         <div style="font-weight:800;margin-bottom:4px" data-i18n="ui.partner_phrases">Partner Phrases</div>
         <p style="color:var(--ink-soft);font-size:13px;margin-bottom:10px" data-i18n="ui.send_your_partner_this_link_they_add_family_names_in">Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.</p>
         <button class="btn" id="shareLinkBtn" data-i18n="ui.sharelinkbtn" style="margin-bottom:10px" onclick="sharePartnerLink()">🔗 Share Link With Partner</button>
@@ -1572,6 +1577,10 @@ async function loadUserData(){
   const milestones=[];
   milestonesSnap.forEach(doc=>{milestones.push(doc.data());});
 
+  const visitedPlacesSnap=await db.collection(`users/${uid}/visitedPlaces`).get();
+  const visitedPlaces=[];
+  visitedPlacesSnap.forEach(doc=>{visitedPlaces.push(doc.id);});
+
   const phrasesSnap=await db.collection(`users/${uid}/customPhrases`).get();
   const customPhrases=[];
   phrasesSnap.forEach(doc=>{const p=doc.data();p._id=doc.id;customPhrases.push(p);});
@@ -1585,6 +1594,7 @@ async function loadUserData(){
     voicePref:userData.voicePref||'',
     progress,
     milestones,
+    visitedPlaces,
     customPhrases
   };
   if(user.baseLang)baseLang=user.baseLang;
@@ -1607,6 +1617,20 @@ async function saveMilestone(ar,franco){
   try{
     await firebase.firestore().collection(`users/${uid}/milestones`).add({ar,franco,date:today});
   }catch(e){console.error('saveMilestone error',e);}
+}
+
+async function saveVisitedPlace(placeId){
+  if(!user||user.isGuest||!firebase.auth().currentUser)return;
+  user.visitedPlaces=user.visitedPlaces||[];
+  if(user.visitedPlaces.includes(placeId))return;
+  user.visitedPlaces.push(placeId);
+  const uid=firebase.auth().currentUser.uid;
+  try{
+    await firebase.firestore().collection(`users/${uid}/visitedPlaces`).doc(placeId).set({visitedAt:new Date().toISOString().slice(0,10)});
+  }catch(e){
+    user.visitedPlaces=user.visitedPlaces.filter(id=>id!==placeId);
+    console.error('saveVisitedPlace error',e);
+  }
 }
 
 async function saveXp(newXpTotal){
@@ -1872,7 +1896,7 @@ function sharePartnerLink(){
 }
 
 function startGuestLesson(){
-  user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[]};
+  user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[],visitedPlaces:[]};
   document.getElementById("auth").classList.add("hidden");
   startLesson(COURSE.units[0].lessons[0]);
 }
@@ -1968,12 +1992,13 @@ function isLessonUnlocked(uIdx,lIdx){
 }
 
 const SCENARIO_ICONS={u0:"💬",u1:"🤝",u2:"❤️",u3:"🎉",u4:"🚕",u5:"🍲",pyramids:"🏛️",corniche:"🌊"};
-const UNIT_LOCATIONS={u1:"doorstep",u2:"balcony",u3:"eid",u5:"koshary"};
+const UNIT_LOCATIONS={u1:"doorstep",u2:"balcony",u3:"eid",u4:"khan",u5:"koshary"};
 const LOCATION_NARRATIONS={
   doorstep:"إحنا قدام باب العيلة... يلا بينا ندخل!",
   balcony:"تعالى نقعد على البلكونة، والنيل قدامنا.",
   eid:"كل سنة وانتوا طيبين! يلا نعيّد مع بعض.",
-  koshary:"وصلنا لعربية الكشري... تحب تجرّب؟"
+  koshary:"وصلنا لعربية الكشري... تحب تجرّب؟",
+  khan:"إحنا في خان الخليلي... يلا نفاصل شوية!"
 };
 let locationNarrationObserver=null;
 let arrivalUnit=null;
@@ -1983,6 +2008,7 @@ const EXPLORE_PLACES=[
   {unitId:"u2",location:"balcony",glyph:"🌇",label:"Nile Balcony"},
   {unitId:"u3",location:"eid",glyph:"🏮",label:"Eid Street"},
   {unitId:"u5",location:"koshary",glyph:"🍲",label:"The Koshary Stand"},
+  {unitId:"u4",location:"khan",glyph:"🛍️",label:"Khan el-Khalili"},
   {unitId:"pyramids",location:"pyramids",glyph:"🏛️",label:"The Pyramids",arrival:true},
   {unitId:"corniche",location:"corniche",glyph:"🌊",label:"Corniche",arrival:true}
 ];
@@ -1996,7 +2022,7 @@ function findUnit(unitId){return COURSE.units.find(unit=>unit.id===unitId);}
 function renderExploreRail(el){
   const head=document.createElement("div");
   head.className="explore-rail-head";
-  head.innerHTML='<span class="explore-rail-title">📍 Explore Egypt</span><span class="explore-rail-count">6 places</span>';
+  head.innerHTML='<span class="explore-rail-title">📍 Explore Egypt</span><span class="explore-rail-count">7 places</span>';
   el.appendChild(head);
 
   const rail=document.createElement("div");
@@ -2047,6 +2073,7 @@ function openArrival(unitId){
   arrival.classList.remove("hidden");
   arrival.setAttribute("aria-hidden","false");
   localStorage.setItem('arrivalSeen_'+unitId,'1');
+  saveVisitedPlace(unitId);
   const narrationKey='arrivalNarrationPlayed_'+unitId;
   if(!localStorage.getItem(narrationKey)){
     localStorage.setItem(narrationKey,'1');
@@ -2084,6 +2111,11 @@ function renderPath(){
     });
   },{threshold:0.5});
   el.innerHTML="";
+  EXPLORE_PLACES.forEach(place=>{
+    if(place.arrival)return;
+    const unit=findUnit(place.unitId);
+    if(unit&&unit.lessons.every(lesson=>isLessonDone(lesson.id)))saveVisitedPlace(place.unitId);
+  });
   renderExploreRail(el);
   COURSE.units.forEach((u,ui)=>{
     const card=document.createElement("div");
@@ -2148,6 +2180,15 @@ function renderProfile(){
       </div>`
     ).join("");
   }
+  const visitedPlaces=user.visitedPlaces||[];
+  document.getElementById("passportStamps").innerHTML=EXPLORE_PLACES.map(place=>{
+    const visited=visitedPlaces.includes(place.unitId);
+    const label=place.label.replace(/^The /,"");
+    return `<div aria-label="${label}: ${visited?'visited':'not yet visited'}" style="display:flex;align-items:center;gap:5px;padding:6px 8px;border:1px solid ${visited?'var(--sage)':'var(--border-light)'};border-radius:999px;background:${visited?'var(--primary-surface)':'var(--surface)'};font-size:11px;font-weight:700;color:${visited?'var(--text-main)':'var(--ink-soft)'}">
+      <span aria-hidden="true" style="display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:${visited?'var(--sage)':'var(--border-light)'};${visited?'':'opacity:0.35;filter:grayscale(1)'}">${place.glyph}</span>
+      <span>${label}</span>${visited?'<span aria-hidden="true" style="color:var(--sage);font-weight:900">✓</span>':''}
+    </div>`;
+  }).join("");
   renderPartnerPhrases();
 }
 
