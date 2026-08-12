@@ -356,6 +356,31 @@ input:focus, select:focus {
 }
 .location-audio-btn:active { transform: scale(0.94); }
 
+.explore-rail-head { display:flex; justify-content:space-between; align-items:baseline; padding:6px 4px 8px; }
+.explore-rail-title { font-size:14px; font-weight:800; display:flex; align-items:center; gap:5px; }
+.explore-rail-count { font-size:11px; color:var(--ink-soft); font-weight:600; }
+.explore-rail { display:flex; gap:8px; padding:0 0 16px; overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.explore-rail::-webkit-scrollbar { display:none; }
+.rail-card { flex:0 0 auto; width:92px; height:112px; border-radius:14px; position:relative; display:flex; align-items:flex-end; padding:8px; overflow:hidden; cursor:pointer; scroll-snap-align:start; background-size:cover; background-position:center; border:0; text-align:left; -webkit-tap-highlight-color:transparent; }
+.rail-card::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.55)); }
+.rail-card:active { transform:scale(0.96); }
+.rail-card span.glyph { position:absolute; top:8px; left:8px; font-size:17px; z-index:1; }
+.rail-card span.label { position:relative; z-index:1; font-size:10.5px; font-weight:800; color:#fff; line-height:1.25; text-shadow:0 1px 3px rgba(0,0,0,0.5); }
+.rail-card .badge { position:absolute; top:7px; right:7px; z-index:1; font-size:8px; font-weight:800; color:#fff; background:rgba(0,0,0,0.35); border-radius:999px; padding:3px 6px; letter-spacing:0.03em; }
+
+.arrival-screen { position:fixed; inset:0; background:var(--bg-canvas); z-index:200; display:flex; flex-direction:column; }
+.arrival-hero { height:48%; position:relative; display:flex; align-items:flex-end; justify-content:center; background-size:cover; background-position:center; }
+.arrival-hero::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, var(--bg-canvas) 100%); }
+.arrival-mira { position:relative; z-index:2; width:110px; margin-bottom:-22px; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.18)); }
+.arrival-close { position:absolute; top:calc(env(safe-area-inset-top, 0px) + 12px); left:12px; z-index:3; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.9); color:var(--text-main); border:0; display:grid; place-items:center; font-size:20px; line-height:1; cursor:pointer; }
+.arrival-body { flex:1; padding:30px 20px 20px; display:flex; flex-direction:column; overflow-y:auto; }
+.arrival-bubble { background:var(--surface); border:1px solid var(--border-light); border-radius:16px; padding:14px 16px; box-shadow:var(--shadow-card); margin-bottom:16px; }
+.arrival-ar { font-size:19px; font-weight:700; direction:rtl; margin-bottom:4px; color:var(--text-main); }
+.arrival-en { font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; align-items:center; }
+.arrival-play-btn { background:none; border:0; font-size:18px; cursor:pointer; padding:4px; }
+.arrival-culture { font-size:13px; color:var(--ink-soft); line-height:1.6; padding:0 2px; margin-bottom:auto; }
+.arrival-cta { margin-top:16px; background:var(--primary); color:#fff; text-align:center; font-size:15px; font-weight:800; padding:14px; border-radius:999px; border:0; width:100%; cursor:pointer; }
+
 /* ===== LESSON LIST (TIMELINE PATH) ===== */
 .lesson-row {
   display: flex;
@@ -1198,6 +1223,22 @@ input:focus, select:focus {
     </div>
   </div>
 
+  <!-- ARRIVAL -->
+  <div id="arrival" class="arrival-screen hidden" aria-hidden="true">
+    <div id="arrivalHero" class="arrival-hero">
+      <button type="button" class="arrival-close" onclick="closeArrival()" aria-label="Close arrival screen">&times;</button>
+      <img class="arrival-mira" src="mascot/mira_speaking_transparent.webp" alt="Mira speaking">
+    </div>
+    <div class="arrival-body">
+      <div class="arrival-bubble">
+        <div id="arrivalAr" class="arrival-ar" lang="ar"></div>
+        <div class="arrival-en"><span id="arrivalEn"></span><button id="arrivalPlayBtn" type="button" class="arrival-play-btn" aria-label="Play phrase audio">🔊</button></div>
+      </div>
+      <p id="arrivalCulture" class="arrival-culture"></p>
+      <button id="arrivalCta" type="button" class="arrival-cta">Start Exploring →</button>
+    </div>
+  </div>
+
   <!-- LESSON -->
   <div id="lesson" class="hidden">
     <div class="top">
@@ -1271,6 +1312,38 @@ const COURSE={units:[
   {id:"l5-1",title:"At the Café على القهوة",title_ru:"В кафе على القهوة",xp:10,vocab:[{en:"A tea, please",ar:"شاي لو سمحت",franco:"shay law sama7t",register:"neutral",ru:"Чай, пожалуйста"},{en:"Coffee, medium sugar",ar:"قهوة مظبوط",franco:"2ahwa mazboot",register:"neutral",ru:"Кофе, средней сладости"},{en:"Without sugar",ar:"سادة",franco:"sada",register:"neutral",ru:"Без сахара"},{en:"A fresh mango juice",ar:"عصير مانجا فريش",franco:"3aseer manga fresh",register:"neutral",ru:"Свежий манговый сок"},{en:"Waiter! (getting attention)",ar:"يا أسطى!",franco:"ya osta!",register:"casual",ru:"Официант! (привлечь внимание)"}]},
   {id:"l5-2",title:"The Koshary Stand عند الكشري",title_ru:"У ларька с кошари عند الكشري",xp:10,vocab:[{en:"One medium koshary",ar:"واحد كشري وسط",franco:"wa7ed koshari wasat",register:"neutral",ru:"Один кошари, средний"},{en:"Extra fried onions",ar:"تقلية زيادة",franco:"ta2leya zeyada",register:"neutral",ru:"Побольше жареного лука"},{en:"Easy on the hot sauce",ar:"شطة خفيف",franco:"shatta khafeef",register:"neutral",ru:"Поменьше острого соуса"},{en:"Take away",ar:"تيك أواي",franco:"take away",register:"neutral",ru:"С собой"},{en:"Eating in",ar:"هنا جوه",franco:"hena gowa",register:"neutral",ru:"Здесь"}]},
   {id:"l5-3",title:"Ordering & Paying الطلب والحساب",title_ru:"Заказ и оплата الطلب والحساب",xp:10,vocab:[{en:"What do you recommend?",ar:"ترشحلي إيه؟",franco:"torasha7li eh?",register:"neutral",ru:"Что посоветуете?"},{en:"I'd like this one",ar:"عايز ده",franco:"3ayez da",register:"neutral",ru:"Мне вот это"},{en:"No meat, I'm vegetarian",ar:"من غير لحمة، أنا مباكلش لحمة",franco:"men gheir la7ma, ana mabakolsh la7ma",register:"neutral",ru:"Без мяса, я вегетарианец"},{en:"The bill, please",ar:"الحساب لو سمحت",franco:"el 7esab law sama7t",register:"neutral",ru:"Счёт, пожалуйста"},{en:"It was really delicious",ar:"كان تحفة والله",franco:"kan to7fa wallahi",register:"neutral",ru:"Было очень вкусно, честное слово"}]}
+ ]},
+ {id:"pyramids",title:"Pyramids of Giza",title_ru:"Пирамиды Гизы",lessons:[
+  {id:"pyramids",title:"Pyramids of Giza",title_ru:"Пирамиды Гизы",xp:10,vocab:[
+   {en:"Wow, the pyramids are enormous!",ar:"واو، الأهرامات ضخمة أوي!",franco:"Wow, el-ahramat da5ma awi!",register:"casual",ru:"Ух ты, пирамиды огромные!"},
+   {en:"This pyramid is an ancient monument",ar:"الهرم ده أثر قديم أوي",franco:"El-haram da asar 2adeem awi",register:"neutral",ru:"Эта пирамида — очень древний памятник"},
+   {en:"A pharaoh was buried here",ar:"كان فيه فرعون مدفون هنا",franco:"Kan feeh far3oon madfoon hena",register:"neutral",ru:"Здесь был похоронен фараон"},
+   {en:"The desert goes on forever!",ar:"الصحرا ملهاش آخر!",franco:"El-sa7ra malhash a5er!",register:"casual",ru:"Пустыне конца и края нет!"},
+   {en:"Have you ever ridden a camel?",ar:"ركبت جمل قبل كده؟",franco:"Rekebt gamal 2abl keda?",register:"casual",ru:"Ты когда-нибудь катался на верблюде?"},
+   {en:"Could you tell us when this pyramid was built?",ar:"ممكن تقول لنا الهرم ده اتبنى إمتى؟",franco:"Momken te2ool lena el-haram da etbana emta?",register:"neutral",ru:"Можете сказать, когда построили эту пирамиду?"},
+   {en:"How tall is this pyramid?",ar:"الهرم ده طوله قد إيه؟",franco:"El-haram da toolo 2ad eh?",register:"neutral",ru:"Какой высоты эта пирамида?"},
+   {en:"Is that the Sphinx?",ar:"هو ده أبو الهول؟",franco:"Howwa da Abu el-Hol?",register:"casual",ru:"Это Сфинкс?"},
+   {en:"I look tiny next to the pyramid",ar:"شكلي صغير أوي جنب الهرم",franco:"Shekli soghayyar awi gamb el-haram",register:"casual",ru:"Рядом с пирамидой я кажусь совсем крошечным"},
+   {en:"The sun is really strong here",ar:"الشمس حامية أوي هنا",franco:"El-shams 7amya awi hena",register:"casual",ru:"Здесь солнце очень жаркое"},
+   {en:"Let's stand in the shade for a bit",ar:"تعالى نقف في الضل شوية",franco:"Ta3ala ne2af fel-dell shwayya",register:"casual",ru:"Давай немного постоим в тени"},
+   {en:"Take a photo of me with the pyramids",ar:"خدلي صورة مع الأهرامات",franco:"5odli soora ma3 el-ahramat",register:"casual",ru:"Сфотографируй меня с пирамидами"}
+  ]}
+ ]},
+ {id:"corniche",title:"Alexandria's Corniche",title_ru:"Набережная Александрии",lessons:[
+  {id:"corniche",title:"Alexandria's Corniche",title_ru:"Набережная Александрии",xp:10,vocab:[
+   {en:"The sea is so calm tonight",ar:"البحر هادي أوي النهارده بالليل",franco:"El-ba7r hadi awi ennaharda belleel",register:"casual",ru:"Сегодня вечером море такое спокойное"},
+   {en:"Listen to the sound of the waves",ar:"اسمع صوت الموج",franco:"Esma3 soot el-moog",register:"casual",ru:"Послушай шум волн"},
+   {en:"The breeze feels amazing",ar:"الهوا حلو أوي",franco:"El-hawa 7elw awi",register:"casual",ru:"Какой чудесный ветерок"},
+   {en:"Let's walk along the Corniche together",ar:"يلا نتمشى سوا عالكورنيش",franco:"Yalla netmasha sawa 3al-korneesh",register:"intimate",ru:"Давай вместе прогуляемся по набережной"},
+   {en:"Look, the sun is setting",ar:"بص، الشمس بتغيب",franco:"Boss, el-shams betgheeb",register:"casual",ru:"Смотри, солнце садится"},
+   {en:"Let's get something cold to drink",ar:"يلا نجيب حاجة ساقعة نشربها",franco:"Yalla negeeb 7aga sa23a neshrabha",register:"casual",ru:"Давай возьмём что-нибудь холодное попить"},
+   {en:"Boss, two teas, please",ar:"يا ريس، اتنين شاي لو سمحت",franco:"Ya rayyes, etneen shay law sama7t",register:"neutral",ru:"Босс, два чая, пожалуйста"},
+   {en:"Let's get some grilled corn",ar:"تعالى نجيب درة مشوية",franco:"Ta3ala negeeb dorra mashweyya",register:"casual",ru:"Давай возьмём жареной кукурузы"},
+   {en:"Let's sit here and talk for a bit",ar:"تعالى نقعد هنا ونتكلم شوية",franco:"Ta3ala no23od hena w netkallem shwayya",register:"intimate",ru:"Давай посидим здесь и немного поговорим"},
+   {en:"Look at the boats and the fishermen out on the water",ar:"بص عالمراكب والصيادين في البحر",franco:"Boss 3al-marakib wel-sayyadeen fel-ba7r",register:"casual",ru:"Посмотри на лодки и рыбаков в море"},
+   {en:"It's beautiful and peaceful here",ar:"الدنيا هنا حلوة ورايقة",franco:"El-donya hena 7elwa w ray2a",register:"intimate",ru:"Здесь так красиво и спокойно"},
+   {en:"After today's heat, this breeze is perfect",ar:"بعد حر النهارده، الهوا ده يجنن",franco:"Ba3d 7arr ennaharda, el-hawa da ygannen",register:"casual",ru:"После сегодняшней жары этот ветерок — просто чудо"}
+  ]}
  ]}
 ]};
 
@@ -1894,7 +1967,7 @@ function isLessonUnlocked(uIdx,lIdx){
   return prev?isLessonDone(prev.id):true;
 }
 
-const SCENARIO_ICONS={u0:"💬",u1:"🤝",u2:"❤️",u3:"🎉",u4:"🚕",u5:"🍲"};
+const SCENARIO_ICONS={u0:"💬",u1:"🤝",u2:"❤️",u3:"🎉",u4:"🚕",u5:"🍲",pyramids:"🏛️",corniche:"🌊"};
 const UNIT_LOCATIONS={u1:"doorstep",u2:"balcony",u3:"eid",u5:"koshary"};
 const LOCATION_NARRATIONS={
   doorstep:"إحنا قدام باب العيلة... يلا بينا ندخل!",
@@ -1903,6 +1976,93 @@ const LOCATION_NARRATIONS={
   koshary:"وصلنا لعربية الكشري... تحب تجرّب؟"
 };
 let locationNarrationObserver=null;
+let arrivalUnit=null;
+
+const EXPLORE_PLACES=[
+  {unitId:"u1",location:"doorstep",glyph:"🚪",label:"Her Doorstep"},
+  {unitId:"u2",location:"balcony",glyph:"🌇",label:"Nile Balcony"},
+  {unitId:"u3",location:"eid",glyph:"🏮",label:"Eid Street"},
+  {unitId:"u5",location:"koshary",glyph:"🍲",label:"The Koshary Stand"},
+  {unitId:"pyramids",location:"pyramids",glyph:"🏛️",label:"The Pyramids",arrival:true},
+  {unitId:"corniche",location:"corniche",glyph:"🌊",label:"Corniche",arrival:true}
+];
+const ARRIVAL_CULTURE={
+  pyramids:"Fun fact: plenty of Cairenes live ten minutes from here and have never gone inside one — locals just say مَعَدِّي عَ الهَرَم, swung by the Pyramid, like it's the corner shop.",
+  corniche:"Fun fact: Alexandrians don't really say 'let's go to the beach' — they say يلا نمشي على الكورنيش, let's walk the Corniche, since half the city shows up in the evening just to walk, not swim."
+};
+
+function findUnit(unitId){return COURSE.units.find(unit=>unit.id===unitId);}
+
+function renderExploreRail(el){
+  const head=document.createElement("div");
+  head.className="explore-rail-head";
+  head.innerHTML='<span class="explore-rail-title">📍 Explore Egypt</span><span class="explore-rail-count">6 places</span>';
+  el.appendChild(head);
+
+  const rail=document.createElement("div");
+  rail.className="explore-rail";
+  EXPLORE_PLACES.forEach(place=>{
+    const unit=findUnit(place.unitId);
+    const card=document.createElement("button");
+    card.type="button";
+    card.className="rail-card";
+    card.style.backgroundImage=`url("mascot/locations/${place.location}.webp")`;
+    card.setAttribute("aria-label",place.label);
+    const complete=!place.arrival&&unit.lessons.every(lesson=>isLessonDone(lesson.id));
+    const isNew=place.arrival&&!localStorage.getItem('arrivalSeen_'+place.unitId);
+    card.innerHTML=`<span class="glyph" aria-hidden="true">${place.glyph}</span><span class="label">${place.label}</span>${complete?'<span class="badge">✓</span>':(isNew?'<span class="badge">NEW</span>':'')}`;
+    card.onclick=()=>{
+      if(place.arrival){
+        openArrival(place.unitId);
+        const badge=card.querySelector('.badge');
+        if(badge)badge.remove();
+        return;
+      }
+      const target=document.getElementById('scenario-'+place.unitId);
+      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    };
+    rail.appendChild(card);
+  });
+  el.appendChild(rail);
+}
+
+function openArrival(unitId){
+  const unit=findUnit(unitId);
+  if(!unit)return;
+  arrivalUnit=unit;
+  const lesson=unit.lessons[0];
+  const item=lesson.vocab[0];
+  const phraseAudio=audioPath(lesson.id,0);
+  document.getElementById("arrivalHero").style.backgroundImage=`url("mascot/locations/${unitId}.webp")`;
+  document.getElementById("arrivalAr").textContent=item.ar;
+  document.getElementById("arrivalEn").textContent=item.en;
+  document.getElementById("arrivalCulture").textContent=ARRIVAL_CULTURE[unitId];
+  document.getElementById("arrivalPlayBtn").onclick=()=>playAudio(item.ar,phraseAudio);
+  document.getElementById("arrivalCta").onclick=()=>{
+    closeArrival();
+    startLesson(lesson);
+  };
+  const arrival=document.getElementById("arrival");
+  document.getElementById("main").classList.add("hidden");
+  arrival.classList.remove("hidden");
+  arrival.setAttribute("aria-hidden","false");
+  localStorage.setItem('arrivalSeen_'+unitId,'1');
+  const narrationKey='arrivalNarrationPlayed_'+unitId;
+  if(!localStorage.getItem(narrationKey)){
+    localStorage.setItem(narrationKey,'1');
+    playAudio(item.ar,phraseAudio);
+  }
+}
+
+function closeArrival(){
+  if(document.activeElement&&document.getElementById("arrival").contains(document.activeElement)){
+    document.activeElement.blur();
+  }
+  document.getElementById("arrival").classList.add("hidden");
+  document.getElementById("arrival").setAttribute("aria-hidden","true");
+  document.getElementById("main").classList.remove("hidden");
+  arrivalUnit=null;
+}
 
 function observeLocationNarration(head,locationKey){
   if(localStorage.getItem('locationNarrationPlayed_'+locationKey))return;
@@ -1924,9 +2084,11 @@ function renderPath(){
     });
   },{threshold:0.5});
   el.innerHTML="";
+  renderExploreRail(el);
   COURSE.units.forEach((u,ui)=>{
     const card=document.createElement("div");
     card.className="scenario-card";
+    card.id='scenario-'+u.id;
 
     const doneCount=u.lessons.filter(l=>isLessonDone(l.id)).length;
     const head=document.createElement("div");
