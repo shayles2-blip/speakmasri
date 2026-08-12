@@ -1024,7 +1024,7 @@ input:focus, select:focus {
         <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
       </div>
       <div class="lang-toggle" role="group" aria-label="Voice preference">
-        <button type="button" data-voice-pref="male" onclick="setVoicePref('male')">Male</button>
+        <button type="button" class="hidden" data-voice-pref="male" onclick="setVoicePref('male')">Male</button>
         <button type="button" data-voice-pref="female" onclick="setVoicePref('female')">Female</button>
       </div>
     </div>
@@ -1182,7 +1182,7 @@ input:focus, select:focus {
           <div>
             <div style="font-weight:800;margin-bottom:8px">Voice</div>
             <div class="lang-toggle" role="group" aria-label="Voice preference">
-              <button type="button" data-voice-pref="male" onclick="setVoicePref('male')">Male</button>
+              <button type="button" class="hidden" data-voice-pref="male" onclick="setVoicePref('male')">Male</button>
               <button type="button" data-voice-pref="female" onclick="setVoicePref('female')">Female</button>
             </div>
           </div>
@@ -1277,7 +1277,7 @@ const COURSE={units:[
 /* ===== AGENT 6: APP STATE & LOGIC ===== */
 let user=null;          // logged-in user object
 let baseLang='en';      // language the learner starts from
-let voicePref='male';
+let voicePref='female';
 let emailVerificationBannerDismissed=false;
 let curLesson=null;     // lesson currently in progress
 let exList=[];          // built exercises for current lesson
@@ -1460,6 +1460,7 @@ function renderVoicePrefToggles(){
 }
 
 async function setVoicePref(pref){
+  pref=pref==='male'?'female':pref;
   voicePref=pref;
   localStorage.setItem('voicePref',pref);
   if(user)user.voicePref=pref;
@@ -1514,7 +1515,7 @@ async function loadUserData(){
     customPhrases
   };
   if(user.baseLang)baseLang=user.baseLang;
-  if(user.voicePref)voicePref=user.voicePref;
+  if(user.voicePref)voicePref=user.voicePref==='male'?'female':user.voicePref;
   renderBaseLangToggles();
   renderVoicePrefToggles();
   applyStaticStrings();
@@ -2962,7 +2963,7 @@ function initLandingAnimations(){
 const storedBaseLang=localStorage.getItem('baseLang');
 if(storedBaseLang)baseLang=storedBaseLang;
 const storedVoicePref=localStorage.getItem('voicePref');
-if(storedVoicePref)voicePref=storedVoicePref;
+if(storedVoicePref)voicePref=storedVoicePref==='male'?'female':storedVoicePref;
 renderBaseLangToggles();
 renderVoicePrefToggles();
 applyStaticStrings();
