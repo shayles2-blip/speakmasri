@@ -4,7 +4,7 @@ const { execFileSync } = require('child_process');
 
 const PROJECT = 'project-7a4984f2-f553-4982-bb6';
 const DEFAULT_VOICE_ID = 'R1vEEI2FG1sW3IvcbDTI';
-const MODEL_ID = 'eleven_multilingual_v2';
+const MODEL_ID = 'eleven_turbo_v2_5';
 const ROOT = path.join(__dirname, '..');
 const IPA_FILE = path.join(__dirname, 'egyptian_ipa.json');
 let AUDIO_DIR = path.join(ROOT, 'audio');
@@ -83,6 +83,13 @@ async function synthesize(entry, apiKey, voiceId) {
     body: JSON.stringify({
       text: entry.ar,
       model_id: MODEL_ID,
+      language_code: 'ar',
+      voice_settings: {
+        stability: 0.30,
+        similarity_boost: 0.85,
+        style: 0.0,
+        use_speaker_boost: true,
+      },
     }),
   });
 
