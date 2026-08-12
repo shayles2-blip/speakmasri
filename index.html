@@ -1244,6 +1244,29 @@ input:focus, select:focus {
     </div>
   </div>
 
+  <!-- GUEST WELCOME ARRIVAL -->
+  <div id="guestArrival" class="arrival-screen hidden" aria-hidden="true">
+    <div id="guestArrivalHero" class="arrival-hero" style="background-image: url('mascot/locations/doorstep.webp');">
+      <button type="button" class="arrival-close" onclick="closeGuestArrival()" aria-label="Close welcome screen">&times;</button>
+      <img class="arrival-mira" src="mascot/mira_encouraging_transparent.webp" alt="Mira welcoming you">
+    </div>
+    <div class="arrival-body">
+      <div class="arrival-bubble">
+        <div id="guestArrivalAr" class="arrival-ar" lang="ar">أهلاً بيك! يلا نبدأ</div>
+        <div class="arrival-en">
+          <span id="guestArrivalEn" data-i18n="ui.guest_welcome_bubble_en">Ahlan! Ready to try your first lesson?</span>
+          <button id="guestArrivalPlayBtn" type="button" class="arrival-play-btn" aria-label="Play phrase audio" onclick="playGuestArrivalAudio()">🔊</button>
+        </div>
+      </div>
+      <div class="guest-arrival-card" style="background:var(--surface);border:1px solid var(--border-light);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow-card);margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.05em;color:var(--teal);text-transform:uppercase;margin-bottom:4px;" data-i18n="ui.guest_welcome_badge">First Lesson • ~2 Min</div>
+        <div id="guestArrivalTitle" style="font-size:17px;font-weight:800;color:var(--text-main);margin-bottom:6px;"></div>
+        <div id="guestArrivalDesc" style="font-size:13px;color:var(--ink-soft);line-height:1.5;" data-i18n="ui.guest_welcome_desc">Learn essential words you'll use every day in Egypt. No account needed — jump right in!</div>
+      </div>
+      <button id="guestArrivalCta" type="button" class="arrival-cta" onclick="startGuestLessonNow()" style="margin-top:auto;" data-i18n="btn.start_guest_lesson_cta">Start Lesson →</button>
+    </div>
+  </div>
+
   <!-- LESSON -->
   <div id="lesson" class="hidden">
     <div class="top">
@@ -1376,6 +1399,10 @@ const STRINGS={
   "ui.through_short_practical_lessons_built_around_real_li":{en:"through short, practical lessons built around real-life situations.",ru:"через короткие практические уроки по реальным жизненным ситуациям."},
   "ui.try_a_lesson_free_no_account_needed":{en:"Try a lesson free — no account needed.",ru:"Попробуйте урок бесплатно — регистрация не нужна."},
   "btn.try_lesson_free":{en:"Try a Lesson Free",ru:"Попробовать бесплатно"},
+  "ui.guest_welcome_badge":{en:"First Lesson • ~2 Min",ru:"Первый урок • ~2 мин"},
+  "ui.guest_welcome_bubble_en":{en:"Ahlan! Ready to try your first lesson?",ru:"Ахлан! Готовы к первому уроку?"},
+  "ui.guest_welcome_desc":{en:"Learn essential words you'll use every day in Egypt. No account needed — jump right in!",ru:"Выучите основные слова, которые пригодятся в Египте каждый день. Без регистрации — начните прямо сейчас!"},
+  "btn.start_guest_lesson_cta":{en:"Start Lesson →",ru:"Начать урок →"},
   "btn.login":{en:"Log In",ru:"Войти"},
   "btn.signup":{en:"Sign Up",ru:"Регистрация"},
   "placeholder.name":{en:"Name (for signup)",ru:"Имя (для регистрации)"},
@@ -1897,8 +1924,54 @@ function sharePartnerLink(){
 
 function startGuestLesson(){
   user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[],visitedPlaces:[]};
+  openGuestArrival();
+}
+
+function openGuestArrival(){
+  const unit=COURSE.units[0];
+  const lesson=unit.lessons[0];
+  const titleEl=document.getElementById("guestArrivalTitle");
+  if(titleEl){
+    titleEl.textContent=titleText(unit)+" • "+titleText(lesson);
+  }
   document.getElementById("auth").classList.add("hidden");
+  const guestArrival=document.getElementById("guestArrival");
+  if(guestArrival){
+    guestArrival.classList.remove("hidden");
+    guestArrival.setAttribute("aria-hidden","false");
+  }
+}
+
+function closeGuestArrival(){
+  if(document.activeElement&&document.getElementById("guestArrival").contains(document.activeElement)){
+    document.activeElement.blur();
+  }
+  const guestArrival=document.getElementById("guestArrival");
+  if(guestArrival){
+    guestArrival.classList.add("hidden");
+    guestArrival.setAttribute("aria-hidden","true");
+  }
+  user=null;
+  document.getElementById("auth").classList.remove("hidden");
+  backToChoice();
+}
+
+function startGuestLessonNow(){
+  const guestArrival=document.getElementById("guestArrival");
+  if(guestArrival){
+    if(document.activeElement&&guestArrival.contains(document.activeElement)){
+      document.activeElement.blur();
+    }
+    guestArrival.classList.add("hidden");
+    guestArrival.setAttribute("aria-hidden","true");
+  }
   startLesson(COURSE.units[0].lessons[0]);
+}
+
+function playGuestArrivalAudio(){
+  const lesson=COURSE.units[0].lessons[0];
+  const item=lesson.vocab[0];
+  playAudio(item.ar,audioPath(lesson.id,0));
 }
 
 async function logout(){
