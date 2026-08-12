@@ -373,6 +373,9 @@ input:focus, select:focus {
 .arrival-hero::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, var(--bg-canvas) 100%); }
 .arrival-mira { position:relative; z-index:2; width:110px; margin-bottom:-22px; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.18)); }
 .arrival-close { position:absolute; top:calc(env(safe-area-inset-top, 0px) + 12px); left:12px; z-index:3; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.9); color:var(--text-main); border:0; display:grid; place-items:center; font-size:20px; line-height:1; cursor:pointer; }
+.katya-arrival-characters { position:relative; z-index:2; display:flex; align-items:flex-end; justify-content:center; gap:4px; width:100%; margin-bottom:-22px; }
+.katya-arrival-character { width:108px; max-height:210px; object-fit:contain; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.18)); }
+.katya-arrival-character.katya { width:114px; }
 .arrival-body { flex:1; padding:30px 20px 20px; display:flex; flex-direction:column; overflow-y:auto; }
 .arrival-bubble { background:var(--surface); border:1px solid var(--border-light); border-radius:16px; padding:14px 16px; box-shadow:var(--shadow-card); margin-bottom:16px; }
 .arrival-ar { font-size:19px; font-weight:700; direction:rtl; margin-bottom:4px; color:var(--text-main); }
@@ -1267,6 +1270,28 @@ input:focus, select:focus {
     </div>
   </div>
 
+  <!-- KATYA WELCOME ARRIVAL -->
+  <div id="katyaArrival" class="arrival-screen hidden" aria-hidden="true">
+    <div class="arrival-hero" style="background-image: url('mascot/locations/doorstep.webp');">
+      <button type="button" class="arrival-close" onclick="closeKatyaArrival()" aria-label="Close Katya welcome screen">&times;</button>
+      <div class="katya-arrival-characters">
+        <img class="katya-arrival-character" src="mascot/mira_encouraging_transparent.webp" alt="Mira welcoming Katya">
+        <img class="katya-arrival-character katya" src="mascot/katya_curious_transparent.webp" alt="Katya arriving at Mira's home">
+      </div>
+    </div>
+    <div class="arrival-body">
+      <div class="arrival-bubble">
+        <div class="arrival-ar" lang="ar">نورتي مصر ونورتي بيتنا!</div>
+        <div class="arrival-en">
+          <span data-i18n="ui.katya_welcome_bubble_en">Welcome to Egypt—and welcome to our home!</span>
+          <button type="button" class="arrival-play-btn" aria-label="Play phrase audio" onclick="playKatyaArrivalAudio()">🔊</button>
+        </div>
+      </div>
+      <p class="arrival-culture" data-i18n="ui.katya_welcome_context">Katya's here! Help Mira welcome her and show her around.</p>
+      <button type="button" class="arrival-cta" onclick="startKatyaLessonNow()" data-i18n="btn.start_katya_lesson_cta">Let's Welcome Her →</button>
+    </div>
+  </div>
+
   <!-- LESSON -->
   <div id="lesson" class="hidden">
     <div class="top">
@@ -1372,6 +1397,22 @@ const COURSE={units:[
    {en:"It's beautiful and peaceful here",ar:"الدنيا هنا حلوة ورايقة",franco:"El-donya hena 7elwa w ray2a",register:"intimate",ru:"Здесь так красиво и спокойно"},
    {en:"After today's heat, this breeze is perfect",ar:"بعد حر النهارده، الهوا ده يجنن",franco:"Ba3d 7arr ennaharda, el-hawa da ygannen",register:"casual",ru:"После сегодняшней жары этот ветерок — просто чудо"}
   ]}
+ ]},
+ {id:"katya_visit",title:"Welcoming Katya",title_ru:"Встречаем Катю",lessons:[
+  {id:"katya_visit",title:"Welcoming Katya",title_ru:"Встречаем Катю",xp:10,vocab:[
+   {en:"Welcome to Egypt—and welcome to our home!",ar:"نورتي مصر ونورتي بيتنا!",franco:"Nawwarti Masr w nawwarti beetna!",register:"neutral",ru:"Добро пожаловать в Египет — и в наш дом!"},
+   {en:"Come in—make yourself at home",ar:"اتفضلي، اعتبري البيت بيتك",franco:"Etfaddali, e3tabri el-beet beetek",register:"casual",ru:"Проходи, чувствуй себя как дома"},
+   {en:"Would you like tea or coffee?",ar:"تحبي تشربي إيه، شاي ولا قهوة؟",franco:"Te7ebbi teshrabi eh, shay walla 2ahwa?",register:"neutral",ru:"Хочешь чай или кофе?"},
+   {en:"Try this—it's really delicious",ar:"دوقي دي، حلوة أوي",franco:"Do2i di, 7elwa awi",register:"casual",ru:"Попробуй вот это — очень вкусно"},
+   {en:"Don't be shy",ar:"ما تتكسفيش",franco:"Ma tetkesfeesh",register:"casual",ru:"Не стесняйся"},
+   {en:"Your Arabic is good—it's okay to make mistakes",ar:"عربيكي حلو، وعادي لو غلطتي",franco:"3arabiki 7elw, w 3adi law ghalatti",register:"casual",ru:"У тебя хороший арабский — ошибаться нормально"},
+   {en:"Try saying it, and I'll help you",ar:"جربي تقوليها وأنا هساعدك",franco:"Garrabi te2ooliha w ana hasa3dek",register:"casual",ru:"Попробуй сказать, а я тебе помогу"},
+   {en:"Are you comfortable?",ar:"مرتاحة؟",franco:"Mertaha?",register:"neutral",ru:"Тебе удобно?"},
+   {en:"If you need anything, tell me",ar:"لو محتاجة أي حاجة قوليلي",franco:"Law me7taga ay 7aga 2oolili",register:"neutral",ru:"Если тебе что-нибудь понадобится, скажи мне"},
+   {en:"This is my mum, and this is my dad",ar:"دي ماما وده بابا",franco:"Di mama w da baba",register:"neutral",ru:"Это моя мама, а это мой папа"},
+   {en:"Come, I'll show you around the house",ar:"تعالي أفرجك على البيت",franco:"Ta3ali afarregek 3ala el-beet",register:"casual",ru:"Пойдём, я покажу тебе дом"},
+   {en:"You're one of us now",ar:"إنتي واحدة مننا خلاص",franco:"Enti wa7da mennena 5alas",register:"casual",ru:"Теперь ты одна из нас"}
+  ]}
  ]}
 ]};
 
@@ -1403,6 +1444,9 @@ const STRINGS={
   "ui.guest_welcome_bubble_en":{en:"Ahlan! Ready to try your first lesson?",ru:"Ахлан! Готовы к первому уроку?"},
   "ui.guest_welcome_desc":{en:"Learn essential words you'll use every day in Egypt. No account needed — jump right in!",ru:"Выучите основные слова, которые пригодятся в Египте каждый день. Без регистрации — начните прямо сейчас!"},
   "btn.start_guest_lesson_cta":{en:"Start Lesson →",ru:"Начать урок →"},
+  "ui.katya_welcome_bubble_en":{en:"Welcome to Egypt—and welcome to our home!",ru:"Добро пожаловать в Египет — и в наш дом!"},
+  "ui.katya_welcome_context":{en:"Katya's here! Help Mira welcome her and show her around.",ru:"Катя приехала! Помогите Мире тепло встретить её и показать ей дом."},
+  "btn.start_katya_lesson_cta":{en:"Let's Welcome Her →",ru:"Встретим её →"},
   "btn.login":{en:"Log In",ru:"Войти"},
   "btn.signup":{en:"Sign Up",ru:"Регистрация"},
   "placeholder.name":{en:"Name (for signup)",ru:"Имя (для регистрации)"},
@@ -1974,6 +2018,45 @@ function playGuestArrivalAudio(){
   playAudio(item.ar,audioPath(lesson.id,0));
 }
 
+function openKatyaArrival(){
+  const katyaArrival=document.getElementById("katyaArrival");
+  if(!katyaArrival)return;
+  document.getElementById("main").classList.add("hidden");
+  katyaArrival.classList.remove("hidden");
+  katyaArrival.setAttribute("aria-hidden","false");
+  localStorage.setItem("katyaArrivalSeen","1");
+}
+
+function closeKatyaArrival(){
+  const katyaArrival=document.getElementById("katyaArrival");
+  if(!katyaArrival)return;
+  if(document.activeElement&&katyaArrival.contains(document.activeElement)){
+    document.activeElement.blur();
+  }
+  katyaArrival.classList.add("hidden");
+  katyaArrival.setAttribute("aria-hidden","true");
+  document.getElementById("main").classList.remove("hidden");
+}
+
+function startKatyaLessonNow(){
+  const unit=findUnit("katya_visit");
+  const katyaArrival=document.getElementById("katyaArrival");
+  if(!unit||!katyaArrival)return;
+  if(document.activeElement&&katyaArrival.contains(document.activeElement)){
+    document.activeElement.blur();
+  }
+  katyaArrival.classList.add("hidden");
+  katyaArrival.setAttribute("aria-hidden","true");
+  startLesson(unit.lessons[0]);
+}
+
+function playKatyaArrivalAudio(){
+  const unit=findUnit("katya_visit");
+  if(!unit)return;
+  const lesson=unit.lessons[0];
+  playAudio(lesson.vocab[0].ar,audioPath("katya_visit",0));
+}
+
 async function logout(){
   try{await firebase.auth().signOut();}catch(e){console.error('Logout error',e);}
   user=null;
@@ -2064,7 +2147,7 @@ function isLessonUnlocked(uIdx,lIdx){
   return prev?isLessonDone(prev.id):true;
 }
 
-const SCENARIO_ICONS={u0:"💬",u1:"🤝",u2:"❤️",u3:"🎉",u4:"🚕",u5:"🍲",pyramids:"🏛️",corniche:"🌊"};
+const SCENARIO_ICONS={u0:"💬",u1:"🤝",u2:"❤️",u3:"🎉",u4:"🚕",u5:"🍲",pyramids:"🏛️",corniche:"🌊",katya_visit:"💛"};
 const UNIT_LOCATIONS={u1:"doorstep",u2:"balcony",u3:"eid",u4:"khan",u5:"koshary"};
 const LOCATION_NARRATIONS={
   doorstep:"إحنا قدام باب العيلة... يلا بينا ندخل!",
@@ -2225,7 +2308,14 @@ function renderPath(){
       row.disabled=!unlocked;
       row.innerHTML=`<span class="lesson-badge">${done?"✓":(unlocked?(li+1):"🔒")}</span>
         <span class="lesson-name">${titleText(l)}</span>`;
-      row.onclick=()=>{if(unlocked)startLesson(l);};
+      row.onclick=()=>{
+        if(!unlocked)return;
+        if(l.id==="katya_visit"&&!localStorage.getItem("katyaArrivalSeen")){
+          openKatyaArrival();
+          return;
+        }
+        startLesson(l);
+      };
       card.appendChild(row);
     });
     el.appendChild(card);
