@@ -356,9 +356,13 @@ input:focus, select:focus {
 }
 .location-audio-btn:active { transform: scale(0.94); }
 
-.explore-rail-head { display:flex; justify-content:space-between; align-items:baseline; padding:6px 4px 8px; }
+.explore-rail-head { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:6px 4px 8px; }
+.explore-rail-heading { flex:1 1 auto; display:flex; align-items:baseline; gap:8px; min-width:0; }
 .explore-rail-title { font-size:14px; font-weight:800; display:flex; align-items:center; gap:5px; }
 .explore-rail-count { font-size:11px; color:var(--ink-soft); font-weight:600; }
+.explore-view-toggle { flex:0 0 auto; width:fit-content; display:flex; padding:2px; border:1px solid var(--border-light); border-radius:9px; background:var(--surface); }
+.explore-view-btn { width:auto; flex:0 0 auto; min-height:28px; margin:0; padding:4px 8px; border:0; border-radius:7px; background:transparent; color:var(--ink-soft); font:inherit; font-size:10px; font-weight:800; cursor:pointer; }
+.explore-view-btn[aria-pressed="true"] { background:var(--primary); color:#fff; }
 .explore-rail { display:flex; gap:8px; padding:0 0 16px; overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .explore-rail::-webkit-scrollbar { display:none; }
 .rail-card { flex:0 0 auto; width:92px; height:112px; border-radius:14px; position:relative; display:flex; align-items:flex-end; padding:8px; overflow:hidden; cursor:pointer; scroll-snap-align:start; background-size:cover; background-position:center; border:0; text-align:left; -webkit-tap-highlight-color:transparent; }
@@ -367,6 +371,14 @@ input:focus, select:focus {
 .rail-card span.glyph { position:absolute; top:8px; left:8px; font-size:17px; z-index:1; }
 .rail-card span.label { position:relative; z-index:1; font-size:10.5px; font-weight:800; color:#fff; line-height:1.25; text-shadow:0 1px 3px rgba(0,0,0,0.5); }
 .rail-card .badge { position:absolute; top:7px; right:7px; z-index:1; font-size:8px; font-weight:800; color:#fff; background:rgba(0,0,0,0.35); border-radius:999px; padding:3px 6px; letter-spacing:0.03em; }
+.explore-map { position:relative; width:100%; aspect-ratio:800/1071; margin-bottom:16px; overflow:hidden; border-radius:14px; background:var(--surface); }
+.explore-map-image { display:block; width:100%; height:100%; object-fit:cover; }
+.explore-map-pin { position:absolute; left:var(--pin-left); top:var(--pin-top); width:44px; height:44px; padding:0; transform:translate(-50%,-50%); border:0; border-radius:50%; background:transparent; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.explore-map-pin::before { content:""; position:absolute; inset:7px; border:2px solid #fff; border-radius:50% 50% 50% 0; background:var(--primary); box-shadow:0 2px 7px rgba(0,0,0,0.3); transform:rotate(-45deg); }
+.explore-map-pin:active { transform:translate(-50%,-50%) scale(0.94); }
+.explore-map-pin .glyph { position:absolute; inset:7px; z-index:1; display:grid; place-items:center; font-size:15px; line-height:1; }
+.explore-map-pin .badge { position:absolute; z-index:2; top:0; right:-5px; min-width:18px; padding:2px 4px; border:1px solid #fff; border-radius:999px; background:var(--text-main); color:#fff; font-size:7px; font-weight:900; line-height:1.2; letter-spacing:0.02em; }
+.explore-map-pin:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
 
 .arrival-screen { position:fixed; inset:0; background:var(--bg-canvas); z-index:200; display:flex; flex-direction:column; }
 .arrival-hero { height:48%; position:relative; display:flex; align-items:flex-end; justify-content:center; background-size:cover; background-position:center; }
@@ -2175,37 +2187,89 @@ const ARRIVAL_CULTURE={
 
 function findUnit(unitId){return COURSE.units.find(unit=>unit.id===unitId);}
 
-function renderExploreRail(el){
-  const head=document.createElement("div");
-  head.className="explore-rail-head";
-  head.innerHTML='<span class="explore-rail-title">📍 Explore Egypt</span><span class="explore-rail-count">7 places</span>';
-  el.appendChild(head);
+function explorePlaceBadge(place){
+  const unit=findUnit(place.unitId);
+  const complete=!place.arrival&&unit.lessons.every(lesson=>isLessonDone(lesson.id));
+  const isNew=place.arrival&&!localStorage.getItem('arrivalSeen_'+place.unitId);
+  return complete?'✓':(isNew?'NEW':'');
+}
 
+function activateExplorePlace(place,badgeOwner){
+  if(place.arrival){
+    openArrival(place.unitId);
+    const badge=badgeOwner.querySelector('.badge');
+    if(badge)badge.remove();
+    return;
+  }
+  const target=document.getElementById('scenario-'+place.unitId);
+  if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderExploreRail(el){
   const rail=document.createElement("div");
   rail.className="explore-rail";
   EXPLORE_PLACES.forEach(place=>{
-    const unit=findUnit(place.unitId);
     const card=document.createElement("button");
     card.type="button";
     card.className="rail-card";
     card.style.backgroundImage=`url("mascot/locations/${place.location}.webp")`;
     card.setAttribute("aria-label",place.label);
-    const complete=!place.arrival&&unit.lessons.every(lesson=>isLessonDone(lesson.id));
-    const isNew=place.arrival&&!localStorage.getItem('arrivalSeen_'+place.unitId);
-    card.innerHTML=`<span class="glyph" aria-hidden="true">${place.glyph}</span><span class="label">${place.label}</span>${complete?'<span class="badge">✓</span>':(isNew?'<span class="badge">NEW</span>':'')}`;
-    card.onclick=()=>{
-      if(place.arrival){
-        openArrival(place.unitId);
-        const badge=card.querySelector('.badge');
-        if(badge)badge.remove();
-        return;
-      }
-      const target=document.getElementById('scenario-'+place.unitId);
-      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
-    };
+    const badge=explorePlaceBadge(place);
+    card.innerHTML=`<span class="glyph" aria-hidden="true">${place.glyph}</span><span class="label">${place.label}</span>${badge?`<span class="badge">${badge}</span>`:''}`;
+    card.onclick=()=>activateExplorePlace(place,card);
     rail.appendChild(card);
   });
   el.appendChild(rail);
+}
+
+function renderExploreMap(el){
+  const pinPositions={
+    corniche:[35,23],
+    pyramids:[37,47],
+    u1:[46,35],
+    u2:[58,35],
+    u3:[28,43],
+    u5:[50,43],
+    u4:[72,43]
+  };
+  const map=document.createElement("div");
+  map.className="explore-map";
+  map.innerHTML='<img class="explore-map-image" src="mascot/egypt_map.webp" alt="Illustrated map of Egypt">';
+  EXPLORE_PLACES.forEach(place=>{
+    const pin=document.createElement("button");
+    const position=pinPositions[place.unitId];
+    const badge=explorePlaceBadge(place);
+    pin.type="button";
+    pin.className="explore-map-pin";
+    pin.setAttribute("aria-label",place.label);
+    pin.style.setProperty('--pin-left',position[0]+'%');
+    pin.style.setProperty('--pin-top',position[1]+'%');
+    pin.innerHTML=`<span class="glyph" aria-hidden="true">${place.glyph}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}`;
+    pin.onclick=()=>activateExplorePlace(place,pin);
+    map.appendChild(pin);
+  });
+  el.appendChild(map);
+}
+
+function renderExplore(el){
+  let viewMode=localStorage.getItem('exploreViewMode')==='map'?'map':'rail';
+  const head=document.createElement("div");
+  head.className="explore-rail-head";
+  head.innerHTML='<span class="explore-rail-heading"><span class="explore-rail-title">📍 Explore Egypt</span><span class="explore-rail-count">7 places</span></span><span class="explore-view-toggle" role="group" aria-label="Explore Egypt view"><button type="button" class="explore-view-btn" data-view="rail">Rail</button><button type="button" class="explore-view-btn" data-view="map">Map</button></span>';
+  el.appendChild(head);
+
+  const view=document.createElement("div");
+  el.appendChild(view);
+  function showExploreView(mode,persist){
+    viewMode=mode;
+    if(persist)localStorage.setItem('exploreViewMode',viewMode);
+    head.querySelectorAll('.explore-view-btn').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.view===viewMode)));
+    view.innerHTML='';
+    if(viewMode==='map')renderExploreMap(view);
+    else renderExploreRail(view);
+  }
+  head.querySelectorAll('.explore-view-btn').forEach(button=>button.onclick=()=>showExploreView(button.dataset.view,true));
+  showExploreView(viewMode);
 }
 
 function openArrival(unitId){
@@ -2272,7 +2336,7 @@ function renderPath(){
     const unit=findUnit(place.unitId);
     if(unit&&unit.lessons.every(lesson=>isLessonDone(lesson.id)))saveVisitedPlace(place.unitId);
   });
-  renderExploreRail(el);
+  renderExplore(el);
   COURSE.units.forEach((u,ui)=>{
     const card=document.createElement("div");
     card.className="scenario-card";
