@@ -967,8 +967,9 @@ input:focus, select:focus {
 }
 
 /* ===== LANDING SCREEN WOW ===== */
-#auth{position:relative;overflow:hidden;isolation:isolate}
+#auth{position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at top,#fff8e8 0%,var(--bg-canvas) 68%)}
 #auth>*{position:relative;z-index:1}
+#authLanding{position:relative;z-index:1}
 
 .auth-bg{position:absolute;inset:-25% -25%;z-index:0;pointer-events:none;overflow:hidden}
 .auth-blob{position:absolute;border-radius:50%;filter:blur(70px);will-change:transform,opacity}
@@ -1016,10 +1017,28 @@ input:focus, select:focus {
   .landing-in,.logo.landing-in{animation:none !important;opacity:1;transform:none}
   .auth-blob{animation:none !important}
   .btn-sheen::after{animation:none !important;display:none}
+  .landing-mira{animation:none !important;opacity:1;transform:none}
 }
 
-.phrase-fade{transition:opacity .3s ease, filter .3s ease}
-.phrase-fade.fading{opacity:0;filter:blur(4px)}
+.landing-headline{font-size:clamp(28px,7vw,36px);line-height:1.12;margin:18px 0 10px}
+.landing-support{color:var(--ink-soft);margin:0 0 20px;font-size:15px;line-height:1.55}
+.landing-mira{animation:miraEnter .4s ease both,miraIdle 4s ease-in-out .5s infinite alternate}
+@keyframes miraEnter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes miraIdle{from{transform:translateY(0)}to{transform:translateY(-3px)}}
+.phrase-card{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border-light);border-radius:var(--r-md);padding:14px 16px;margin-bottom:20px;box-shadow:var(--shadow-card);cursor:pointer;text-align:left;transition:transform .15s ease,border-color .15s ease}
+.phrase-card:hover,.phrase-card:focus-visible{border-color:var(--accent-gold);transform:translateY(-1px)}
+.phrase-copy{display:flex;flex:1;min-width:0;flex-direction:column}.phrase-card .phrase-ar{font-size:32px;line-height:1.2;color:var(--gold-text)}
+.phrase-card .phrase-translation{font-size:14px;color:var(--ink-soft);text-align:right}
+.phrase-audio-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:50%;background:var(--teal-soft);color:var(--teal)}
+.phrase-fade{transition:opacity .4s ease,transform .4s ease}.phrase-fade.fading{opacity:0;transform:translateY(8px)}
+.landing-trust{margin-top:9px;color:var(--ink-soft);font-size:12.5px}#authChoice>.btn{min-height:50px}#authChoice>.btn:active{transform:scale(.98)}
+#authForm.auth-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center;background:rgba(20,16,12,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:0}
+.auth-sheet{position:relative;width:100%;max-height:min(92dvh,640px);overflow-y:auto;background:var(--surface);border-radius:22px 22px 0 0;padding:12px 22px 24px;text-align:left;box-shadow:0 -12px 40px rgba(20,16,12,.22);animation:sheetUp .28s ease-out}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.auth-grab{width:42px;height:4px;border-radius:var(--r-pill);background:var(--border-light);margin:0 auto 10px}.auth-close{position:absolute;right:12px;top:12px;width:44px;height:44px;padding:0;border:0;background:transparent;color:var(--text-main);font-size:24px;cursor:pointer}.auth-sheet h2{margin:10px 44px 16px 0}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:16px;border-radius:var(--r-pill);background:var(--bg-canvas)}.auth-tabs button{min-height:42px;margin:0;padding:8px;border:0;border-radius:var(--r-pill);background:transparent;color:var(--ink-soft);font-weight:700;cursor:pointer}.auth-tabs button.active{background:var(--surface);color:var(--primary-hover);box-shadow:var(--shadow-card)}
+.auth-dismiss-link{display:block;width:100%;margin-top:14px;padding:8px;border:0;background:transparent;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer}.landing-toast{position:fixed;z-index:1100;left:50%;bottom:24px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:10px 16px;border-radius:var(--r-pill);background:var(--text-main);color:var(--surface);font-size:13px;box-shadow:var(--shadow-float)}
+@media (min-width:768px){.auth-overlay{align-items:center;padding:24px}.auth-sheet{max-width:400px;border-radius:var(--r-lg);padding:20px 24px 24px;animation:modalIn .22s ease-out}.auth-grab{display:none}@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}}
 
 .btn-sheen{
   position:relative;
@@ -1071,6 +1090,7 @@ input:focus, select:focus {
       <span class="auth-blob auth-blob-2"></span>
       <span class="auth-blob auth-blob-3"></span>
     </div>
+    <div id="authLanding">
     <div class="landing-in landing-in-1" style="display:flex;gap:8px;margin-bottom:12px">
       <div class="lang-toggle" role="group" aria-label="Base language" data-i18n-aria-label="settings.base_language">
         <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
@@ -1092,20 +1112,20 @@ input:focus, select:focus {
         <line x1="30" y1="34" x2="70" y2="34" style="stroke:var(--gold)" stroke-width="4" stroke-linecap="round"/>
         <path d="M31 37 L69 37 L61 66 Q60 68 58 68 L42 68 Q40 68 39 66 Z" style="fill:var(--teal)" opacity="0.15"/>
       </svg>
-      <img src="mascot/mira_reference.webp" alt="Mira, the SpeakMasri guide" style="position:absolute;width:64px;height:64px;object-fit:contain;left:64px;top:-4px">
+      <img class="landing-mira" src="mascot/mira_reference.webp" alt="Mira, the SpeakMasri guide" style="position:absolute;width:64px;height:64px;object-fit:contain;left:64px;top:-4px">
     </div>
     <h1 class="brand landing-in landing-in-2" style="margin:0">SpeakMasri</h1>
     <div class="ar landing-in landing-in-2" lang="ar" style="font-size:20px;color:var(--primary-hover);margin-top:2px">اتكلم مصري</div>
-    <p class="landing-in landing-in-3" style="color:var(--ink-soft);margin:8px 0 20px;font-size:15px"><span data-i18n="nav.learn">Learn</span> <b data-i18n="ui.egyptian_arabic_masri">Egyptian Arabic (Masri)</b> <span data-i18n="ui.through_short_practical_lessons_built_around_real_li">through short, practical lessons built around real-life situations.</span> <strong data-i18n="ui.try_a_lesson_free_no_account_needed">Try a lesson free — no account needed.</strong></p>
-    <div id="phraseCard" class="landing-in landing-in-4" style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border-light);border-radius:var(--r-md);padding:12px 16px;margin-bottom:20px;box-shadow:var(--shadow-card)">
-      <div style="text-align:left">
-        <div id="phraseAr" class="ar phrase-fade" lang="ar" style="font-size:20px">شكراً</div>
-        <div id="phraseFranco" class="franco phrase-fade">Shukran</div>
-      </div>
-      <div id="phraseEn" class="phrase-fade" style="color:var(--ink-soft)">Thank you</div>
-    </div>
+    <h1 class="landing-headline landing-in landing-in-3" data-i18n="landing.headline">Speak the Arabic they actually use at home.</h1>
+    <p class="landing-support landing-in landing-in-3" data-i18n="landing.support">Egyptian Arabic (Masri) for partners, in-laws, and family — not textbooks, not tourists.</p>
+    <button id="phraseCard" type="button" class="phrase-card landing-in landing-in-4" aria-label="Play phrase audio" data-i18n-aria-label="aria.play_phrase_audio">
+      <span class="phrase-copy"><span id="phraseAr" class="ar phrase-ar phrase-fade" lang="ar">خلاص</span><span id="phraseFranco" class="franco phrase-fade">Khalas</span></span>
+      <span id="phraseEn" class="phrase-translation phrase-fade">Finished / Enough / OK</span>
+      <span class="phrase-audio-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18 6a9 9 0 0 1 0 12"/></svg></span>
+    </button>
     <div id="authChoice">
-      <button class="btn btn-sheen landing-in landing-in-5" onclick="startGuestLesson()" data-i18n="btn.try_lesson_free">Try a Lesson Free</button>
+      <button id="guestLessonCta" class="btn btn-sheen landing-in landing-in-5" onclick="startGuestLesson()" data-i18n="btn.try_lesson_free">Try a Lesson Free</button>
+      <div class="landing-trust landing-in landing-in-5" data-i18n="landing.trust">No account · ~3 min · Egyptian Arabic</div>
       <div class="landing-in landing-in-5" style="margin-top:14px">
         <button type="button" onclick="showLogin()" data-i18n="btn.login" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Log In</button>
         <span style="color:var(--ink-soft);margin:0 2px">&middot;</span>
@@ -1113,7 +1133,20 @@ input:focus, select:focus {
       </div>
     </div>
 
-    <div id="authForm" class="hidden">
+    <div style="margin-top:20px;font-size:12px;color:var(--ink-soft)">
+      <a href="privacy.html" style="color:var(--ink-soft)" data-i18n="ui.privacy_policy">Privacy Policy</a> &middot; <a href="terms.html" style="color:var(--ink-soft)" data-i18n="ui.terms_of_service">Terms of Service</a>
+    </div>
+    </div>
+
+    <div id="authForm" class="auth-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="authSheetTitle" aria-hidden="true">
+      <div class="auth-sheet">
+      <div class="auth-grab" aria-hidden="true"></div>
+      <button type="button" class="auth-close" onclick="backToChoice()" aria-label="Close" data-i18n-aria-label="aria.close_auth">&times;</button>
+      <h2 id="authSheetTitle" data-i18n="btn.login">Log In</h2>
+      <div class="auth-tabs" role="tablist" aria-label="Account access" data-i18n-aria-label="aria.account_access">
+        <button id="loginTab" type="button" role="tab" onclick="showLogin()" data-i18n="btn.login">Log In</button>
+        <button id="signupTab" type="button" role="tab" onclick="showSignup()" data-i18n="btn.signup">Sign Up</button>
+      </div>
       <div id="nameField" class="hidden">
         <input id="name" placeholder="Name (for signup)" data-i18n-placeholder="placeholder.name" autocomplete="name">
       </div>
@@ -1132,17 +1165,15 @@ input:focus, select:focus {
       <div id="authMsg" role="status" style="color:var(--teal);font-weight:600;margin:8px 0"></div>
       <button id="signupSubmit" class="btn hidden" onclick="signup()" data-i18n="btn.signup">Sign Up</button>
       <button id="loginSubmit" class="btn btn-ghost hidden" onclick="login()" data-i18n="btn.login">Log In</button>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-        <button type="button" onclick="backToChoice()" data-i18n="ui.back" style="background:none;border:none;color:var(--ink-soft);font-size:13px;text-decoration:underline;cursor:pointer">&larr; Back</button>
+      <div style="display:flex;justify-content:flex-end;align-items:center;margin-top:8px">
         <div id="forgotLink" class="hidden">
           <button type="button" onclick="resetPassword()" data-i18n="ui.forgot_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>
         </div>
       </div>
+      <button type="button" class="auth-dismiss-link" onclick="backToChoice()" data-i18n="landing.not_now">Not now — try a lesson free</button>
+      </div>
     </div>
-
-    <div style="margin-top:20px;font-size:12px;color:var(--ink-soft)">
-      <a href="privacy.html" style="color:var(--ink-soft)" data-i18n="ui.privacy_policy">Privacy Policy</a> &middot; <a href="terms.html" style="color:var(--ink-soft)" data-i18n="ui.terms_of_service">Terms of Service</a>
-    </div>
+    <div id="landingToast" class="landing-toast hidden" role="status" aria-live="polite"></div>
   </div>
 
   <!-- MAIN -->
@@ -1458,12 +1489,20 @@ let refreshLandingPhrase=null;
 
 const STRINGS={
   "ui.speakmasri_learn_egyptian_arabic_masri":{en:"SpeakMasri – Learn Egyptian Arabic (Masri)",ru:"SpeakMasri – Учи египетский арабский (Масри)"},
+  "landing.headline":{en:"Speak the Arabic they actually use at home.",ru:"Говорите на том арабском, на котором говорят дома."},
+  "landing.support":{en:"Egyptian Arabic (Masri) for partners, in-laws, and family — not textbooks, not tourists.",ru:"Египетский арабский (масри) для партнёра, родни и семьи — не учебник и не туризм."},
+  "landing.trust":{en:"No account · ~3 min · Egyptian Arabic",ru:"Без аккаунта · ~3 мин · египетский арабский"},
+  "landing.not_now":{en:"Not now — try a lesson free",ru:"Не сейчас — попробовать бесплатный урок"},
+  "landing.progress_saves":{en:"You're signed in — your progress will save.",ru:"Вы вошли — ваш прогресс будет сохраняться."},
+  "aria.play_phrase_audio":{en:"Play phrase audio",ru:"Воспроизвести фразу"},
+  "aria.close_auth":{en:"Close",ru:"Закрыть"},
+  "aria.account_access":{en:"Account access",ru:"Вход в аккаунт"},
   "settings.base_language":{en:"Base language",ru:"Основной язык"},
   "nav.learn":{en:"Learn",ru:"Обучение"},
   "ui.egyptian_arabic_masri":{en:"Egyptian Arabic (Masri)",ru:"Египетский арабский (Масри)"},
   "ui.through_short_practical_lessons_built_around_real_li":{en:"through short, practical lessons built around real-life situations.",ru:"через короткие практические уроки по реальным жизненным ситуациям."},
   "ui.try_a_lesson_free_no_account_needed":{en:"Try a lesson free — no account needed.",ru:"Попробуйте урок бесплатно — регистрация не нужна."},
-  "btn.try_lesson_free":{en:"Try a Lesson Free",ru:"Попробовать бесплатно"},
+  "btn.try_lesson_free":{en:"Try a Lesson Free",ru:"Попробовать урок бесплатно"},
   "ui.guest_welcome_badge":{en:"First Lesson • ~2 Min",ru:"Первый урок • ~2 мин"},
   "ui.guest_welcome_bubble_en":{en:"Ahlan! Ready to try your first lesson?",ru:"Ахлан! Готовы к первому уроку?"},
   "ui.guest_welcome_desc":{en:"Learn essential words you'll use every day in Egypt. No account needed — jump right in!",ru:"Выучите основные слова, которые пригодятся в Египте каждый день. Без регистрации — начните прямо сейчас!"},
@@ -1836,10 +1875,7 @@ async function signup(){
       name,motivation,xp:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
     analytics.logEvent('sign_up');
-    await loadUserData();
-    await checkReturnVisit();
-    await pullPartnerSubmissions();
-    enterApp();
+    closeAuthSheet(true);
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
     console.error('Signup error',e);
@@ -1854,46 +1890,92 @@ async function login(){
   document.getElementById("authMsg").textContent="";
   try{
     await firebase.auth().signInWithEmailAndPassword(email,pass);
-    await loadUserData();
-    await checkReturnVisit();
-    await pullPartnerSubmissions();
-    enterApp();
+    closeAuthSheet(true);
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
     console.error('Login error',e);
   }
 }
 
-function showSignup(){
-  document.getElementById('authChoice').classList.add('hidden');
-  document.getElementById('authForm').classList.remove('hidden');
+let authSheetOpener=null;
+let bodyOverflowBeforeAuth='';
+
+function openAuthSheet(mode){
+  const form=document.getElementById('authForm');
+  if(form.classList.contains('hidden')){
+    authSheetOpener=document.activeElement;
+    bodyOverflowBeforeAuth=document.body.style.overflow;
+    document.body.style.overflow='hidden';
+    form.classList.remove('hidden');
+    form.setAttribute('aria-hidden','false');
+    document.getElementById('authLanding').setAttribute('aria-hidden','true');
+  }
+  setAuthMode(mode);
+  requestAnimationFrame(()=>document.getElementById(mode==='signup'?'name':'email').focus());
+}
+
+function setAuthMode(mode){
+  const signupMode=mode==='signup';
+  document.getElementById('authSheetTitle').dataset.i18n=signupMode?'btn.signup':'btn.login';
+  document.getElementById('authSheetTitle').textContent=t(signupMode?'btn.signup':'btn.login');
   document.getElementById('nameField').classList.remove('hidden');
   document.getElementById('motivationField').classList.remove('hidden');
   document.getElementById('signupSubmit').classList.remove('hidden');
   document.getElementById('loginSubmit').classList.add('hidden');
   document.getElementById('forgotLink').classList.add('hidden');
+  if(!signupMode){
+    document.getElementById('nameField').classList.add('hidden');
+    document.getElementById('motivationField').classList.add('hidden');
+    document.getElementById('signupSubmit').classList.add('hidden');
+    document.getElementById('loginSubmit').classList.remove('hidden');
+    document.getElementById('forgotLink').classList.remove('hidden');
+  }
+  document.getElementById('pass').autocomplete=signupMode?'new-password':'current-password';
+  ['login','signup'].forEach(tab=>{
+    const active=tab===mode,el=document.getElementById(tab+'Tab');
+    el.classList.toggle('active',active);el.setAttribute('aria-selected',active?'true':'false');el.tabIndex=active?0:-1;
+  });
   document.getElementById('authErr').textContent='';
   document.getElementById('authMsg').textContent='';
 }
 
-function showLogin(){
-  document.getElementById('authChoice').classList.add('hidden');
-  document.getElementById('authForm').classList.remove('hidden');
-  document.getElementById('nameField').classList.add('hidden');
-  document.getElementById('motivationField').classList.add('hidden');
-  document.getElementById('signupSubmit').classList.add('hidden');
-  document.getElementById('loginSubmit').classList.remove('hidden');
-  document.getElementById('forgotLink').classList.remove('hidden');
-  document.getElementById('authErr').textContent='';
-  document.getElementById('authMsg').textContent='';
-}
+function showSignup(){openAuthSheet('signup');}
+function showLogin(){openAuthSheet('login');}
 
 function backToChoice(){
-  document.getElementById('authForm').classList.add('hidden');
-  document.getElementById('authChoice').classList.remove('hidden');
+  closeAuthSheet(false);
+}
+
+function closeAuthSheet(showSuccess){
+  const form=document.getElementById('authForm');
+  const wasOpen=!form.classList.contains('hidden');
+  form.classList.add('hidden');form.setAttribute('aria-hidden','true');
+  document.getElementById('authLanding').removeAttribute('aria-hidden');
+  document.body.style.overflow=bodyOverflowBeforeAuth;
   document.getElementById('authErr').textContent='';
   document.getElementById('authMsg').textContent='';
+  if(showSuccess)showLandingToast();
+  if(wasOpen&&authSheetOpener&&document.contains(authSheetOpener))authSheetOpener.focus();
+  authSheetOpener=null;
 }
+
+function showLandingToast(){
+  const toast=document.getElementById('landingToast');
+  toast.textContent=t('landing.progress_saves');toast.classList.remove('hidden');
+  clearTimeout(showLandingToast.timer);showLandingToast.timer=setTimeout(()=>toast.classList.add('hidden'),2000);
+}
+
+document.getElementById('authForm').addEventListener('click',e=>{if(e.target===e.currentTarget)backToChoice();});
+document.addEventListener('keydown',e=>{
+  const form=document.getElementById('authForm');if(form.classList.contains('hidden'))return;
+  if(e.key==='Escape'){e.preventDefault();backToChoice();return;}
+  if(e.key!=='Tab')return;
+  const focusable=[...form.querySelectorAll('button:not([disabled]):not(.hidden),input:not([disabled]),select:not([disabled]),a[href]')].filter(el=>el.offsetParent!==null);
+  if(!focusable.length)return;
+  const first=focusable[0],last=focusable[focusable.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+});
 
 function showAuthScreen(){
   document.getElementById('main').classList.add('hidden');
@@ -3466,18 +3548,22 @@ function finishLesson(){
 
 function initLandingAnimations(){
   var phrases = [
-    { ar: "شكراً", franco: "Shukran", en: "Thank you", ru: "Спасибо" },
-    { ar: "حبيبي", franco: "Habibi", en: "My love", ru:STRINGS['demo.phrase.my_love'].ru },
-    { ar: "إزيك", franco: "Ezzayak", en: "How are you", ru:STRINGS['demo.phrase.how_are_you'].ru }
+    { ar:"خلاص",franco:"Khalas",en:"Finished / Enough / OK",ru:"Всё / Хватит / Ладно",audio:"audio_female/l3-1_3.mp3" },
+    { ar:"إن شاء الله",franco:"Inshallah",en:"God willing",ru:"Если Бог даст (дай Бог)",audio:"audio_female/l3-1_4.mp3" },
+    { ar:"تمام",franco:"Tamam",en:"Fine / OK",ru:"Нормально / Окей",audio:"audio_female/l1-2_2.mp3" },
+    { ar:"معلش",franco:"Ma3lesh",en:"Never mind / It's OK",ru:"Ничего страшного / Всё нормально",audio:"audio_female/l2-1_4.mp3" },
+    { ar:"حبيبي / حبيبتي",franco:"7abibi / 7abibti",en:"Darling / Sweetheart",ru:"Любимый / Любимая",audio:"audio_female/l2-2_0.mp3" }
   ];
 
   var arEl = document.getElementById('phraseAr');
   var francoEl = document.getElementById('phraseFranco');
   var enEl = document.getElementById('phraseEn');
-  if(!arEl || !francoEl || !enEl) return null;
+  var card = document.getElementById('phraseCard');
+  if(!arEl || !francoEl || !enEl || !card) return null;
 
   var i = 0;
   var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var paused = false;
 
   function applyPhrase(p){
     arEl.textContent = p.ar;
@@ -3487,7 +3573,16 @@ function initLandingAnimations(){
   refreshLandingPhrase=function(){applyPhrase(phrases[i]);};
   refreshLandingPhrase();
 
+  card.addEventListener('click',function(){var p=phrases[i];playAudio(p.ar,p.audio);});
+  card.addEventListener('mouseenter',function(){paused=true;});
+  card.addEventListener('mouseleave',function(){paused=false;});
+  card.addEventListener('focus',function(){paused=true;});
+  card.addEventListener('blur',function(){paused=false;});
+  card.addEventListener('touchstart',function(){paused=true;},{passive:true});
+  card.addEventListener('touchend',function(){setTimeout(function(){paused=false;},800);},{passive:true});
+
   return setInterval(function(){
+    if(paused) return;
     i = (i + 1) % phrases.length;
     var next = phrases[i];
 
@@ -3500,8 +3595,8 @@ function initLandingAnimations(){
     setTimeout(function(){
       applyPhrase(next);
       [arEl, francoEl, enEl].forEach(function(el){ el.classList.remove('fading'); });
-    }, 300);
-  }, 4000);
+    }, 400);
+  }, 5500);
 }
 
 /* ---------- BOOTSTRAP ---------- */
