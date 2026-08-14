@@ -70,6 +70,7 @@ body { max-width: none; margin: 0; }
   --teal-soft: #E3F4F6;
   --sage: #4F7A5A;
   --clay: #C1652E;
+  --clay-text: #9A471F;
   --clay-soft: #FBEEE3;
   --rose: #A23E78;
   --rose-surface: #F8EAF2;
@@ -116,6 +117,7 @@ body {
   font-size: 12px;
   font-weight: 800;
   cursor: pointer;
+  min-height: 44px;
 }
 .lang-toggle button.active {
   background: var(--primary);
@@ -175,7 +177,7 @@ h2 { font-size: 22px; margin: 20px 20px 8px; }
 
 .btn:disabled {
   background: var(--border-light);
-  color: #A0AAB2;
+  color: #727D85;
   box-shadow: none;
   cursor: not-allowed;
   transform: none;
@@ -218,7 +220,7 @@ input:focus, select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
+  padding: 10px 20px;
   border-bottom: 1px solid var(--border-light);
   background: var(--surface);
   font-weight: 600;
@@ -235,14 +237,14 @@ input:focus, select:focus {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 10px 16px 4px;
+  margin: 6px 16px 2px;
   color: var(--text-main);
   font-size: 14px;
   font-weight: 600;
 }
 .home-mira-greeting img {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   flex: 0 0 auto;
 }
@@ -250,7 +252,7 @@ input:focus, select:focus {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin: 0 16px 6px 70px;
+  margin: 0 10px 2px 56px;
   color: var(--ink-soft);
   font-size: 11px;
   line-height: 1.3;
@@ -324,6 +326,8 @@ input:focus, select:focus {
   color: var(--text-muted);
   font-weight: 500;
 }
+.scenario-progress-bar { height:4px; background:rgba(104,112,118,.25); }
+.scenario-progress-fill { height:100%; background:var(--primary); }
 .scenario-head.location-backdrop {
   position: relative;
   min-height: 120px;
@@ -361,9 +365,9 @@ input:focus, select:focus {
 .explore-rail-head { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:6px 4px 8px; }
 .explore-rail-heading { flex:1 1 auto; display:flex; align-items:baseline; gap:8px; min-width:0; }
 .explore-rail-title { font-size:14px; font-weight:800; display:flex; align-items:center; gap:5px; }
-.explore-rail-count { font-size:11px; color:var(--ink-soft); font-weight:600; }
+.explore-rail-count { font-size:12px; color:var(--ink-soft); font-weight:600; }
 .explore-view-toggle { flex:0 0 auto; width:fit-content; display:flex; padding:2px; border:1px solid var(--border-light); border-radius:9px; background:var(--surface); }
-.explore-view-btn { width:auto; flex:0 0 auto; min-height:38px; margin:0; padding:4px 8px; border:0; border-radius:7px; background:transparent; color:var(--ink-soft); font:inherit; font-size:10px; font-weight:800; cursor:pointer; }
+.explore-view-btn { width:auto; flex:0 0 auto; min-height:38px; margin:0; padding:4px 8px; border:0; border-radius:7px; background:transparent; color:var(--ink-soft); font:inherit; font-size:12px; font-weight:800; cursor:pointer; }
 .explore-view-btn[aria-pressed="true"] { background:var(--primary); color:#fff; }
 .explore-rail { display:flex; gap:8px; padding:0 0 16px; overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .explore-rail::-webkit-scrollbar { display:none; }
@@ -371,15 +375,15 @@ input:focus, select:focus {
 .rail-card::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.55)); }
 .rail-card:active { transform:scale(0.96); }
 .rail-card span.glyph { position:absolute; top:8px; left:8px; font-size:17px; z-index:1; }
-.rail-card span.label { position:relative; z-index:1; font-size:10.5px; font-weight:800; color:#fff; line-height:1.25; text-shadow:0 1px 3px rgba(0,0,0,0.5); }
-.rail-card .badge { position:absolute; top:7px; right:7px; z-index:1; font-size:8px; font-weight:800; color:#fff; background:rgba(0,0,0,0.35); border-radius:999px; padding:3px 6px; letter-spacing:0.03em; }
+.rail-card span.label { position:relative; z-index:1; font-size:12px; font-weight:800; color:#fff; line-height:1.25; text-shadow:0 1px 3px rgba(0,0,0,0.5); }
+.rail-card .badge { position:absolute; top:7px; right:7px; z-index:1; font-size:12px; font-weight:800; color:#fff; background:rgba(0,0,0,0.45); border-radius:999px; padding:2px 5px; }
 .explore-map { position:relative; width:100%; aspect-ratio:800/1071; margin-bottom:16px; overflow:hidden; border-radius:14px; background:var(--surface); }
 .explore-map-image { display:block; width:100%; height:100%; object-fit:cover; }
 .explore-map-pin { position:absolute; left:var(--pin-left); top:var(--pin-top); width:44px; height:44px; padding:0; transform:translate(-50%,-50%); border:0; border-radius:50%; background:transparent; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .explore-map-pin::before { content:""; position:absolute; inset:7px; border:2px solid #fff; border-radius:50% 50% 50% 0; background:var(--primary); box-shadow:0 2px 7px rgba(0,0,0,0.3); transform:rotate(-45deg); }
 .explore-map-pin:active { transform:translate(-50%,-50%) scale(0.94); }
 .explore-map-pin .glyph { position:absolute; inset:7px; z-index:1; display:grid; place-items:center; font-size:15px; line-height:1; }
-.explore-map-pin .badge { position:absolute; z-index:2; top:0; right:-5px; min-width:18px; padding:2px 4px; border:1px solid #fff; border-radius:999px; background:var(--text-main); color:#fff; font-size:7px; font-weight:900; line-height:1.2; letter-spacing:0.02em; }
+.explore-map-pin .badge { position:absolute; z-index:2; top:-2px; right:-5px; min-width:20px; padding:2px 4px; border:1px solid #fff; border-radius:999px; background:var(--text-main); color:#fff; font-size:12px; font-weight:900; line-height:1.2; }
 .explore-map-pin:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
 
 .arrival-screen { position:fixed; inset:0; background:var(--bg-canvas); z-index:200; display:flex; flex-direction:column; }
@@ -724,7 +728,7 @@ input:focus, select:focus {
   font-size: 12px;
   font-weight: 700;
 }
-.lesson-streak { color: var(--clay); }
+.lesson-streak { color: var(--clay-text); font-size:14px; }
 .progfill {
   height: 100%;
   background: var(--primary);
@@ -749,7 +753,8 @@ input:focus, select:focus {
   display: block;
   width: auto;
   margin: 10px auto 0;
-  padding: 2px 8px;
+  min-height: 44px;
+  padding: 10px 12px;
   border: 0;
   background: none;
   color: var(--ink-soft);
@@ -760,7 +765,7 @@ input:focus, select:focus {
 }
 .halfway-celebration {
   position: fixed;
-  top: 76px;
+  bottom: calc(116px + env(safe-area-inset-bottom));
   left: 50%;
   z-index: 20;
   width: max-content;
@@ -812,6 +817,8 @@ input:focus, select:focus {
   flex-direction: column;
   gap: 10px;
 }
+.match-cols .opt { width:100%; min-height:44px; margin:0; padding:10px 8px; }
+.match-cols .register-badge { padding:1px 4px; margin-left:3px; font-size:10px; }
 
 /* ===== AUDIO BUTTON ===== */
 .audio-btn {
@@ -847,8 +854,8 @@ input:focus, select:focus {
 .report-btn {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -924,18 +931,28 @@ input:focus, select:focus {
   flex: 1;
   background: none;
   border: none;
-  padding: 14px;
-  font-size: 22px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  padding:8px 6px 6px;
+  font-size:11px;
   cursor: pointer;
   border-top: 2px solid transparent;
-  opacity: 0.6;
-  transition: opacity 0.12s ease, border-color 0.12s ease;
-  color: var(--text-main);
+  transition: color 0.12s ease, border-color 0.12s ease;
+  color: var(--text-muted);
 }
+.nav button svg { width:24px; height:24px; }
 .nav button.active {
   border-top-color: var(--primary);
-  opacity: 1;
+  color: var(--primary);
 }
+
+#editNameBtn { min-height:44px; padding:10px 4px !important; }
+.milestone-entry { display:grid; grid-template-columns:1fr 44px; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--line); }
+.milestone-audio { width:44px; height:44px; padding:0; border:0; border-radius:50%; background:var(--primary-surface); color:var(--primary-hover); cursor:pointer; }
+.passport-stamp { display:flex; align-items:center; gap:5px; padding:6px 8px; border-radius:10px; background:var(--bg-canvas); font-size:12px; font-weight:700; color:var(--ink-soft); }
+.passport-stamp.visited { background:var(--primary-surface); color:var(--text-main); }
 
 /* ===== ANIMATIONS ===== */
 #auth, #main, #lesson, #done {
@@ -1178,7 +1195,7 @@ input:focus, select:focus {
       </div>
       <div style="height:24px"></div>
       <div style="text-align:left;padding:0 16px">
-        <div style="font-weight:800;margin-bottom:8px">Your Passport</div>
+        <div style="font-weight:800;margin-bottom:8px" data-i18n="ui.your_passport">Your Passport</div>
         <div id="passportStamps" style="display:flex;flex-wrap:wrap;gap:8px"></div>
       </div>
       <div style="height:24px"></div>
@@ -1187,7 +1204,7 @@ input:focus, select:focus {
         <p style="color:var(--ink-soft);font-size:13px;margin-bottom:10px" data-i18n="ui.send_your_partner_this_link_they_add_family_names_in">Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.</p>
         <button class="btn" id="shareLinkBtn" data-i18n="ui.sharelinkbtn" style="margin-bottom:10px" onclick="sharePartnerLink()">🔗 Share Link With Partner</button>
         <details style="margin-bottom:10px">
-          <summary style="color:var(--ink-soft);font-size:13px;cursor:pointer" data-i18n="ui.prefer_the_json_file_instead">Prefer the JSON file instead?</summary>
+          <summary style="color:var(--ink-soft);font-size:13px;cursor:pointer" data-i18n="ui.advanced_options">Advanced options</summary>
           <div style="display:flex;gap:8px;margin-top:8px">
             <button class="btn btn-ghost" style="font-size:13px;padding:10px" onclick="downloadPhraseTemplate()" data-i18n="ui.template">⬇️ Template</button>
             <label class="btn btn-ghost" style="font-size:13px;padding:10px;text-align:center;cursor:pointer">
@@ -1233,9 +1250,9 @@ input:focus, select:focus {
       <button class="btn btn-ghost" onclick="logout()" data-i18n="btn.logout">Log Out</button>
     </div>
     <div class="nav">
-      <button class="active" id="nLearn" onclick="tab('learn')" aria-label="Learn" data-i18n-aria-label="nav.learn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></button>
-      <button id="nPhrasebook" onclick="tab('phrasebook')" aria-label="Phrasebook" data-i18n-aria-label="nav.phrasebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11a1 1 0 0 1 1 1v17a2 2 0 0 0-2-2H3z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13a1 1 0 0 0-1 1v17a2 2 0 0 1 2-2h7z"/></svg></button>
-      <button id="nProfile" onclick="tab('profile')" aria-label="Profile" data-i18n-aria-label="nav.profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
+      <button class="active" id="nLearn" onclick="tab('learn')" aria-label="Learn" aria-current="page" data-i18n-aria-label="nav.learn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg><span data-i18n="nav.learn">Learn</span></button>
+      <button id="nPhrasebook" onclick="tab('phrasebook')" aria-label="Phrasebook" data-i18n-aria-label="nav.phrasebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11a1 1 0 0 1 1 1v17a2 2 0 0 0-2-2H3z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13a1 1 0 0 0-1 1v17a2 2 0 0 1 2-2h7z"/></svg><span data-i18n="nav.phrasebook">Phrasebook</span></button>
+      <button id="nProfile" onclick="tab('profile')" aria-label="Profile" data-i18n-aria-label="nav.profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span data-i18n="nav.profile">Profile</span></button>
     </div>
   </div>
 
@@ -1480,10 +1497,12 @@ const STRINGS={
   "ui.total_xp":{en:"Total XP",ru:"Всего XP"},
   "ui.phrases_said":{en:"Phrases Said",ru:"Фраз произнесено"},
   "ui.your_moments":{en:"Your moments",ru:"Ваши моменты"},
+  "ui.your_passport":{en:"Your Passport",ru:"Ваш паспорт"},
   "ui.partner_phrases":{en:"Partner Phrases",ru:"Фразы от партнёра"},
   "ui.send_your_partner_this_link_they_add_family_names_in":{en:"Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.",ru:"Отправьте эту ссылку партнёру — он добавит имена родных, семейные шутки и всё, что они реально говорят, прямо с телефона. Ему не нужен аккаунт."},
   "ui.sharelinkbtn":{en:"🔗 Share Link With Partner",ru:"🔗 Поделиться ссылкой с партнёром"},
   "ui.prefer_the_json_file_instead":{en:"Prefer the JSON file instead?",ru:"Предпочитаете JSON-файл?"},
+  "ui.advanced_options":{en:"Advanced options",ru:"Дополнительные параметры"},
   "ui.template":{en:"⬇️ Template",ru:"⬇️ Шаблон"},
   "ui.import":{en:"⬆️ Import",ru:"⬆️ Импорт"},
   "ui.account":{en:"Account",ru:"Аккаунт"},
@@ -1493,6 +1512,7 @@ const STRINGS={
   "ui.cancel":{en:"Cancel",ru:"Отмена"},
   "ui.change_password":{en:"🔒 Change Password",ru:"🔒 Сменить пароль"},
   "btn.logout":{en:"Log Out",ru:"Выйти"},
+  "msg.confirm_logout":{en:"Log out?",ru:"Выйти из аккаунта?"},
   "nav.phrasebook":{en:"Phrasebook",ru:"Разговорник"},
   "nav.profile":{en:"Profile",ru:"Профиль"},
   "aria.quit_lesson":{en:"Quit lesson",ru:"Выйти из урока"},
@@ -1689,11 +1709,11 @@ async function saveProgress(lessonId,done,score){
   }catch(e){console.error('saveProgress error',e);}
 }
 
-async function saveMilestone(ar,franco){
+async function saveMilestone(milestone){
   const uid=firebase.auth().currentUser.uid;
   const today=new Date().toISOString().slice(0,10);
   try{
-    await firebase.firestore().collection(`users/${uid}/milestones`).add({ar,franco,date:today});
+    await firebase.firestore().collection(`users/${uid}/milestones`).add({...milestone,date:today});
   }catch(e){console.error('saveMilestone error',e);}
 }
 
@@ -2073,6 +2093,7 @@ function playKatyaArrivalAudio(){
 }
 
 async function logout(){
+  if(!confirm(t('msg.confirm_logout')))return;
   try{await firebase.auth().signOut();}catch(e){console.error('Logout error',e);}
   user=null;
   showAuthScreen();
@@ -2140,7 +2161,10 @@ function refreshTopBar(){
 function tab(name){
   ["learn","phrasebook","profile"].forEach(t=>{
     document.getElementById(t).classList.toggle("hidden",t!==name);
-    document.getElementById("n"+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle("active",t===name);
+    const navButton=document.getElementById("n"+t.charAt(0).toUpperCase()+t.slice(1));
+    navButton.classList.toggle("active",t===name);
+    if(t===name)navButton.setAttribute("aria-current","page");
+    else navButton.removeAttribute("aria-current");
   });
   document.getElementById("homeMiraGreeting").classList.toggle("hidden",!!(name!=="learn"||!user||user.isGuest));
   if(name==="profile")renderProfile();
@@ -2347,6 +2371,14 @@ function renderPath(){
       head.appendChild(audioBtn);
     }
     card.appendChild(head);
+    const progressBar=document.createElement("div");
+    progressBar.className="scenario-progress-bar";
+    progressBar.setAttribute("role","progressbar");
+    progressBar.setAttribute("aria-valuemin","0");
+    progressBar.setAttribute("aria-valuemax",String(u.lessons.length));
+    progressBar.setAttribute("aria-valuenow",String(doneCount));
+    progressBar.innerHTML=`<div class="scenario-progress-fill" style="width:${u.lessons.length?doneCount/u.lessons.length*100:0}%"></div>`;
+    card.appendChild(progressBar);
 
     u.lessons.forEach((l,li)=>{
       const unlocked=isLessonUnlocked(ui,li);
@@ -2354,6 +2386,10 @@ function renderPath(){
       const row=document.createElement("button");
       row.className="lesson-row "+(done?"done":(unlocked?"unlocked":""));
       row.disabled=!unlocked;
+      if(!unlocked){
+        const previousLesson=li>0?u.lessons[li-1]:COURSE.units[ui-1]?.lessons.at(-1);
+        row.setAttribute("aria-label",`Locked — complete ${previousLesson?titleText(previousLesson):"the previous lesson"} to unlock`);
+      }
       row.innerHTML=`<span class="lesson-badge">${done?"✓":(unlocked?(li+1):"🔒")}</span>
         <span class="lesson-name">${titleText(l)}</span>`;
       row.onclick=()=>{
@@ -2384,23 +2420,50 @@ function renderProfile(){
       <p style="margin:0;text-align:left">${t('msg.no_moments_yet_finish_a_lesson_and_try_the_mission_t')}</p>
     </div>`;
   } else {
-    log.innerHTML=milestones.slice().reverse().slice(0,20).map(m=>
-      `<div style="padding:8px 0;border-bottom:1px solid var(--line)">
-        <span class="ar" lang="ar">${m.ar}</span> <span class="franco">(${m.franco})</span>
-        <div style="color:var(--ink-soft);font-size:12px">${m.date}</div>
-      </div>`
-    ).join("");
+    log.innerHTML="";
+    milestones.slice().reverse().slice(0,20).forEach(m=>{
+      const source=resolveMilestoneSource(m);
+      const item=source?.item||m;
+      const entry=document.createElement("div");
+      entry.className="milestone-entry";
+      entry.innerHTML=`<div><span class="ar" lang="ar">${m.ar}</span> <span class="franco">(${m.franco})</span>
+        <div>${vocabText(item)||m.en||""}</div><div style="color:var(--ink-soft);font-size:12px">${m.date}</div></div>`;
+      if(source){
+        const audio=document.createElement("button");
+        audio.type="button";
+        audio.className="milestone-audio";
+        audio.setAttribute("aria-label","Play phrase audio");
+        audio.textContent="🔊";
+        audio.onclick=()=>playAudio(m.ar,audioPath(source.lessonId,source.idx));
+        entry.appendChild(audio);
+      }
+      log.appendChild(entry);
+    });
   }
   const visitedPlaces=user.visitedPlaces||[];
   document.getElementById("passportStamps").innerHTML=EXPLORE_PLACES.map(place=>{
     const visited=visitedPlaces.includes(place.unitId);
     const label=place.label.replace(/^The /,"");
-    return `<div aria-label="${label}: ${visited?'visited':'not yet visited'}" style="display:flex;align-items:center;gap:5px;padding:6px 8px;border:1px solid ${visited?'var(--sage)':'var(--border-light)'};border-radius:999px;background:${visited?'var(--primary-surface)':'var(--surface)'};font-size:11px;font-weight:700;color:${visited?'var(--text-main)':'var(--ink-soft)'}">
+    return `<div class="passport-stamp${visited?' visited':''}" aria-label="${label}: ${visited?'visited':'not yet visited'}">
       <span aria-hidden="true" style="display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:${visited?'var(--sage)':'var(--border-light)'};${visited?'':'opacity:0.35;filter:grayscale(1)'}">${place.glyph}</span>
       <span>${label}</span>${visited?'<span aria-hidden="true" style="color:var(--sage);font-weight:900">✓</span>':''}
     </div>`;
   }).join("");
   renderPartnerPhrases();
+}
+
+function resolveMilestoneSource(milestone){
+  if(milestone.lessonId&&Number.isInteger(milestone.idx)){
+    const lesson=COURSE.units.flatMap(unit=>unit.lessons).find(item=>item.id===milestone.lessonId);
+    if(lesson?.vocab[milestone.idx])return {item:lesson.vocab[milestone.idx],lessonId:lesson.id,idx:milestone.idx};
+  }
+  for(const unit of COURSE.units){
+    for(const lesson of unit.lessons){
+      const idx=lesson.vocab.findIndex(item=>item.ar===milestone.ar);
+      if(idx!==-1)return {item:lesson.vocab[idx],lessonId:lesson.id,idx};
+    }
+  }
+  return null;
 }
 
 /* ---------- PARTNER PHRASES (personalization) ---------- */
@@ -2556,14 +2619,14 @@ function buildExercises(lesson){
   vocab.forEach(item=>{
     // multiple choice: EN -> AR
     const distractors=shuffle(pool.filter(v=>v.ar!==item.ar)).slice(0,3);
-    list.push({type:"mc",q:vocabText(item),answer:item.ar,franco:item.franco,register:item.register,
+    list.push({type:"mc",item,q:vocabText(item),answer:item.ar,franco:item.franco,register:item.register,
       opts:shuffle([item.ar,...distractors.map(d=>d.ar)])});
   });
 
   vocab.forEach((item,idx)=>{
     // listen & choose: hear AR -> pick EN
     const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
-    list.push({type:"listen",q:item.ar,answer:item.en,franco:item.franco,register:item.register,
+    list.push({type:"listen",item,q:item.ar,answer:item.en,franco:item.franco,register:item.register,
       lessonId:lesson.id,idx,
       audio:audioPath(lesson.id,idx),
       opts:shuffle([item,...distractors]).map(v=>({value:v.en,label:vocabText(v)}))});
@@ -2571,14 +2634,30 @@ function buildExercises(lesson){
 
   vocab.forEach(item=>{
     // fill in the blank: type the Franco transliteration
-    list.push({type:"fill",q:vocabText(item),ar:item.ar,answer:item.franco,register:item.register});
+    list.push({type:"fill",item,q:vocabText(item),ar:item.ar,answer:item.franco,register:item.register});
   });
 
   if(vocab.length>=2){
-    list.push({type:"match",pairs:shuffle(vocab).slice(0,Math.min(4,vocab.length))});
+    const pairs=shuffle(vocab).slice(0,Math.min(4,vocab.length));
+    list.push({type:"match",pairs,items:pairs});
   }
 
-  return introList.concat(shuffle(list));
+  const shuffled=shuffle(list);
+  const introduced=new Set();
+  const interleaved=[];
+  shuffled.forEach(exercise=>{
+    const sourceItems=exercise.items||[exercise.item];
+    sourceItems.filter(Boolean).forEach(item=>{
+      const idx=vocab.indexOf(item);
+      if(!introduced.has(idx)){
+        interleaved.push(introList[idx]);
+        introduced.add(idx);
+      }
+    });
+    interleaved.push(exercise);
+  });
+  introList.forEach((intro,idx)=>{if(!introduced.has(idx))interleaved.push(intro);});
+  return interleaved;
 }
 
 /* ---------- LESSON RUNTIME ---------- */
@@ -2626,7 +2705,9 @@ function renderExercise(){
   checkBtn.onclick=check;
   const ex=exList[exIdx];
   document.getElementById("skipBtn").classList.toggle("hidden",ex.type==="match");
-  if(!halfwayCelebrated&&exIdx===Math.floor(exList.length/2))showHalfwayCelebration();
+  const interactiveTotal=exList.filter(item=>item.type!=="intro").length;
+  const interactiveCompleted=exList.slice(0,exIdx).filter(item=>item.type!=="intro").length;
+  if(!halfwayCelebrated&&ex.type!=="intro"&&interactiveCompleted>=Math.ceil(interactiveTotal/2))showHalfwayCelebration();
   const area=document.getElementById("exArea");
   area.innerHTML="";
 
@@ -2722,10 +2803,11 @@ function renderExercise(){
     const right=document.createElement("div");right.className="match-col";
     const ens=ex.pairs.map(p=>({value:p.en,label:vocabText(p)}));
     const ars=shuffle(ex.pairs.map(p=>({ar:p.ar,register:p.register})));
-    matchState={matched:new Set(),selEn:null,selAr:null,pairs:ex.pairs};
+    matchState={matched:new Set(),selEn:null,selAr:null,pairs:ex.pairs,mistakes:0};
     ens.forEach(en=>{
       const b=document.createElement("button");b.className="opt";b.style.fontSize="15px";b.textContent=en.label;
       b.dataset.en=en.value;
+      b.setAttribute("aria-pressed","false");
       b.onclick=()=>matchPick("en",en.value,b);
       left.appendChild(b);
     });
@@ -2733,6 +2815,7 @@ function renderExercise(){
       const b=document.createElement("button");b.className="opt";b.style.fontSize="18px";
       b.innerHTML=`<span class="ar" lang="ar">${pair.ar}</span>${registerBadge(pair)}`;
       b.dataset.ar=pair.ar;
+      b.setAttribute("aria-pressed","false");
       b.onclick=()=>matchPick("ar",pair.ar,b);
       right.appendChild(b);
     });
@@ -2752,11 +2835,13 @@ function selectOpt(btn,val){
 function matchPick(side,val,btn){
   if(btn.classList.contains("correct"))return;
   if(side==="en"){
-    document.querySelectorAll('[data-en]').forEach(b=>b.classList.remove("sel"));
+    document.querySelectorAll('[data-en]').forEach(b=>{b.classList.remove("sel");b.setAttribute("aria-pressed","false");});
     matchState.selEn=val;btn.classList.add("sel");
+    btn.setAttribute("aria-pressed","true");
   } else {
-    document.querySelectorAll('[data-ar]').forEach(b=>b.classList.remove("sel"));
+    document.querySelectorAll('[data-ar]').forEach(b=>{b.classList.remove("sel");b.setAttribute("aria-pressed","false");});
     matchState.selAr=val;btn.classList.add("sel");
+    btn.setAttribute("aria-pressed","true");
   }
   if(matchState.selEn&&matchState.selAr){
     const pair=matchState.pairs.find(p=>p.en===matchState.selEn);
@@ -2764,19 +2849,22 @@ function matchPick(side,val,btn){
     const arBtn=document.querySelector(`[data-ar="${CSS.escape(matchState.selAr)}"]`);
     if(pair&&pair.ar===matchState.selAr){
       enBtn.classList.remove("sel");arBtn.classList.remove("sel");
+      enBtn.setAttribute("aria-pressed","false");arBtn.setAttribute("aria-pressed","false");
       enBtn.classList.add("correct");arBtn.classList.add("correct");
       matchState.matched.add(matchState.selEn);
       matchState.selEn=null;matchState.selAr=null;
       if(matchState.matched.size===matchState.pairs.length){
         correctCount++;
-        setLessonStreak(currentStreak+1,true);
+        if(matchState.mistakes>1)setLessonStreak(0);
+        else setLessonStreak(currentStreak+1,true);
         setTimeout(nextExercise,500);
       }
     } else {
-      setLessonStreak(0);
+      matchState.mistakes++;
       enBtn.classList.add("wrong");arBtn.classList.add("wrong");
       setTimeout(()=>{
         enBtn.classList.remove("sel","wrong");arBtn.classList.remove("sel","wrong");
+        enBtn.setAttribute("aria-pressed","false");arBtn.setAttribute("aria-pressed","false");
         matchState.selEn=null;matchState.selAr=null;
       },500);
     }
@@ -2972,6 +3060,8 @@ function showHalfwayCelebration(){
   el.className="halfway-celebration";
   el.setAttribute("role","status");
   el.innerHTML=`<div class="halfway-celebration-inner stat-pop"><img src="mascot/mira_happy.webp" alt="" style="width:44px;height:44px;object-fit:contain"><span>${t('ui.halfway_tonight')}</span></div>`;
+  const checkWrap=document.getElementById("checkWrap");
+  if(checkWrap)el.style.bottom=`calc(${checkWrap.offsetHeight + 12}px + env(safe-area-inset-bottom))`;
   document.body.appendChild(el);
   setTimeout(()=>el.remove(),2000);
 }
@@ -3082,13 +3172,13 @@ function registerBadge(v){
   const r=v.register;
   if(r==='neutral')return '';
   const styles={
-    formal:{label:t('register.formal'),color:'var(--clay)',bg:'var(--clay-soft)'},
+    formal:{label:t('register.formal'),color:'var(--clay-text)',bg:'var(--clay-soft)'},
     casual:{label:t('register.casual'),color:'var(--teal)',bg:'var(--teal-soft)'},
     intimate:{label:t('register.intimate'),color:'var(--rose)',bg:'var(--rose-surface)'}
   };
   const s=styles[r];
   if(!s)return '';
-  return `<span style="display:inline-block;padding:2px 8px;margin-left:6px;border-radius:var(--r-pill);font-size:12px;font-weight:700;color:${s.color};background:${s.bg};vertical-align:middle">${s.label}</span>`;
+  return `<span class="register-badge" style="display:inline-block;padding:2px 8px;margin-left:6px;border-radius:var(--r-pill);font-size:12px;font-weight:700;color:${s.color};background:${s.bg};vertical-align:middle">${s.label}</span>`;
 }
 
 function speak(text){
@@ -3152,7 +3242,6 @@ function createAudioReportControl(item){
     picker.classList.toggle("hidden",!opening);
     trigger.setAttribute("aria-expanded",opening?"true":"false");
   };
-
   function showOtherReportInput(){
     reasons.classList.add("hidden");
     const other=document.createElement("div");
@@ -3206,6 +3295,24 @@ function createAudioReportControl(item){
   return control;
 }
 
+document.addEventListener("click",event=>{
+  document.querySelectorAll(".report-control").forEach(control=>{
+    if(control.contains(event.target))return;
+    control.querySelector(".report-picker")?.classList.add("hidden");
+    control.querySelector(".report-btn")?.setAttribute("aria-expanded","false");
+  });
+});
+document.addEventListener("keydown",event=>{
+  if(event.key!=="Escape")return;
+  const openPicker=document.querySelector(".report-picker:not(.hidden)");
+  if(!openPicker)return;
+  event.preventDefault();
+  openPicker.classList.add("hidden");
+  const trigger=openPicker.closest(".report-control")?.querySelector(".report-btn");
+  trigger?.setAttribute("aria-expanded","false");
+  trigger?.focus();
+});
+
 let curMission=null;
 
 function renderMission(){
@@ -3222,10 +3329,12 @@ function renderMission(){
 
 async function markMissionDone(){
   if(user&&!user.isGuest&&curMission){
+    const missionIdx=curLesson.vocab.indexOf(curMission);
+    const milestone={ar:curMission.ar,franco:curMission.franco,en:curMission.en,ru:curMission.ru||"",lessonId:curLesson.id,idx:missionIdx};
     user.milestones=user.milestones||[];
-    user.milestones.push({ar:curMission.ar,franco:curMission.franco,date:new Date().toISOString().slice(0,10)});
+    user.milestones.push({...milestone,date:new Date().toISOString().slice(0,10)});
     refreshTopBar();
-    await saveMilestone(curMission.ar,curMission.franco);
+    await saveMilestone(milestone);
   }
   const btn=document.getElementById("missionBtn");
   if(!btn) return;
