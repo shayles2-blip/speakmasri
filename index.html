@@ -97,6 +97,18 @@ body {
 
 .hidden { display: none !important; }
 
+.connection-pill{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:var(--r-pill);background:var(--teal-soft);color:var(--teal);font-size:12px;font-weight:800;white-space:nowrap}
+.connection-card{margin:14px 16px 18px;padding:16px;border:1.5px solid var(--teal);border-radius:var(--r-lg);background:linear-gradient(135deg,var(--teal-soft),var(--surface));box-shadow:var(--shadow-card)}
+.connection-card-head{display:flex;align-items:center;gap:12px}.connection-card-head img{width:64px;height:64px;object-fit:contain}.connection-card-copy{font-weight:800;line-height:1.35}
+.connection-dots{display:flex;gap:7px;margin:12px 0}.connection-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--teal);background:var(--surface)}.connection-dot.filled{background:var(--teal)}
+.connection-meta{color:var(--teal);font-size:10px;font-weight:800;letter-spacing:.06em;margin-bottom:10px}
+.connection-card .btn{background:var(--teal);box-shadow:0 8px 24px rgba(11,114,133,.16)}
+.connection-rhythm{margin:0 16px 22px;padding:16px;text-align:left;background:var(--teal-soft);border:1px solid rgba(11,114,133,.3);border-radius:var(--r-lg)}
+.connection-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;text-align:center}.connection-stat-value{font-size:26px;font-weight:700;color:var(--teal)}.connection-stat-label{font-size:11px;color:var(--ink-soft)}
+.connection-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0}.connection-week-cell{text-align:center;font-size:10px;color:var(--ink-soft)}.connection-week-dot{width:24px;height:24px;margin:4px auto 0;border-radius:50%;border:1px solid rgba(11,114,133,.35);background:var(--surface)}.connection-week-cell.done .connection-week-dot{background:var(--teal)}.connection-week-cell.today .connection-week-dot{outline:2px solid var(--teal);outline-offset:2px}
+.connection-phrase-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;background:var(--surface);border-radius:var(--r-md)}
+.connection-complete{padding:20px 16px 36px}.connection-complete>img{width:108px;height:108px;object-fit:contain}.connection-final-phrase{margin:16px 0;padding:18px;background:var(--teal-soft);border-radius:var(--r-lg)}.connection-share{margin:12px 0;padding:14px;text-align:left;background:var(--rose-surface);border:1px solid var(--rose);border-radius:var(--r-lg)}.connection-xp{margin:16px auto;font-size:30px;font-weight:800;color:var(--gold-text)}.connection-actions{display:flex;flex-direction:column;gap:8px}.connection-reminder{margin-top:18px;padding:14px;background:var(--surface);border:1px solid var(--border-light);border-radius:var(--r-lg)}.connection-reminder-options{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.connection-reminder-options button{width:auto;padding:9px 12px;font-size:12px}
+
 .lang-toggle {
   display: inline-flex;
   padding: 3px;
@@ -1181,6 +1193,7 @@ input:focus, select:focus {
     <div class="top">
       <div class="stat">💬 <span id="milestoneCount">0</span> <span data-i18n="ui.said">said</span></div>
       <div class="stat">⭐ <span id="xp" style="color:var(--gold-text)">0</span></div>
+      <div class="connection-pill">🔗 <span id="cdCount">0</span> <span data-i18n="connection.days">Connection Days</span></div>
     </div>
     <div id="homeMiraGreeting" class="home-mira-greeting hidden">
       <img src="mascot/mira_reference.webp" alt="">
@@ -1220,6 +1233,7 @@ input:focus, select:focus {
         <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold-text)" id="pXp">0</div><span data-i18n="ui.total_xp">Total XP</span></div>
         <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pMilestones">0</div><span data-i18n="ui.phrases_said">Phrases Said</span></div>
       </div>
+      <div id="connectionRhythm"></div>
       <div style="text-align:left;padding:0 16px">
         <div style="font-weight:800;margin-bottom:8px" data-i18n="ui.your_moments">Your moments</div>
         <div id="milestoneLog" style="color:var(--ink-soft);font-size:14px"></div>
@@ -1378,6 +1392,8 @@ input:focus, select:focus {
     </div>
   </div>
 
+  <div id="connectionDone" class="hidden center connection-complete"></div>
+
   <!-- REHEARSAL -->
   <div id="rehearsal" class="hidden center">
     <div id="rehearsal-content"></div>
@@ -1482,6 +1498,9 @@ let exIdx=0;
 let correctCount=0;
 let currentStreak=0;
 let halfwayCelebrated=false;
+let isConnectionDay=false;
+let connectionPrompts=[];
+let connectionAnswerWasCorrect=false;
 let currentAudio=null;
 let selection=null;     // current selection for check()
 let matchState=null;    // state for match exercise
@@ -1525,6 +1544,40 @@ const STRINGS={
   "ui.privacy_policy":{en:"Privacy Policy",ru:"Политика конфиденциальности"},
   "ui.terms_of_service":{en:"Terms of Service",ru:"Условия использования"},
   "ui.said":{en:"said",ru:"произнёс"},
+  "connection.days":{en:"Connection Days",ru:"Дни связи"},
+  "connection.home_copy":{en:"A tiny bit of Masri for your next conversation.",ru:"Немного масри для вашего следующего разговора."},
+  "connection.meta":{en:"TODAY · 3 QUICK PROMPTS · ~1 MIN",ru:"СЕГОДНЯ · 3 БЫСТРЫХ ЗАДАНИЯ · ~1 МИН"},
+  "connection.start":{en:"Start 3 prompts",ru:"Начать 3 задания"},
+  "connection.complete_today":{en:"Today's Connection complete",ru:"Сегодняшняя связь завершена"},
+  "connection.header":{en:"Connection Day",ru:"День связи"},
+  "connection.prompt_header":{en:"Prompt {n} of 3 · what does this mean?",ru:"Задание {n} из 3 · что это значит?"},
+  "connection.transition_wrong":{en:"One phrase left — you'll hear it once more.",ru:"Осталась одна фраза — вы услышите её ещё раз."},
+  "connection.transition_right":{en:"One more phrase for your next conversation.",ru:"Ещё одна фраза для вашего следующего разговора."},
+  "connection.line_1":{en:"Connection kept for today.",ru:"Связь на сегодня сохранена."},
+  "connection.line_2":{en:"One small step toward an easier conversation.",ru:"Маленький шаг к более лёгкому разговору."},
+  "connection.line_3":{en:"You made room for the language today.",ru:"Сегодня вы нашли место для языка."},
+  "connection.line_4":{en:"A useful phrase, ready when you need it.",ru:"Полезная фраза готова, когда понадобится."},
+  "connection.line_5":{en:"Today's practice is in the bank.",ru:"Сегодняшняя практика уже в копилке."},
+  "connection.someone_hears":{en:"💌 Someone gets to hear this too",ru:"💌 Кто-то тоже сможет это услышать"},
+  "connection.send_phrase":{en:"Send \"{phrase}\" to them",ru:"Отправить им «{phrase}»"},
+  "connection.sent_phrase":{en:"Sent — they'll hear you say it, not just read it.",ru:"Отправлено — они услышат, как вы это говорите, а не только прочитают."},
+  "connection.share_text":{en:"{ar} ({meaning}) — practicing this for you 💛",ru:"{ar} ({meaning}) — я учу эту фразу для тебя 💛"},
+  "connection.rhythm":{en:"🔗 Your Connection Rhythm",ru:"🔗 Ваш ритм связи"},
+  "connection.current":{en:"Current",ru:"Сейчас"},
+  "connection.longest":{en:"Longest",ru:"Рекорд"},
+  "connection.total":{en:"Total",ru:"Всего"},
+  "connection.stats":{en:"Connection Days: {current} current · {total} total",ru:"Дни связи: сейчас {current} · всего {total}"},
+  "connection.today_phrase":{en:"Today's practice phrase",ru:"Сегодняшняя фраза"},
+  "connection.empty":{en:"Your next Connection Day starts on Home.",ru:"Ваш первый День связи начинается на главной."},
+  "connection.resume":{en:"Your next Connection Day starts today. You've practiced on {total} days so far.",ru:"Следующий День связи начинается сегодня. Вы практиковались уже {total} дней."},
+  "connection.hear_again":{en:"Hear it again",ru:"Послушать ещё раз"},
+  "connection.back_path":{en:"Back to my path",ru:"Вернуться к моему пути"},
+  "connection.reminder":{en:"Want a quiet reminder for tomorrow?",ru:"Хотите ненавязчивое напоминание на завтра?"},
+  "connection.choose_time":{en:"Choose a time",ru:"Выберите время"},
+  "connection.not_now":{en:"Not now",ru:"Не сейчас"},
+  "connection.morning":{en:"Morning",ru:"Утро"},
+  "connection.afternoon":{en:"Afternoon",ru:"День"},
+  "connection.evening":{en:"Evening",ru:"Вечер"},
   "ui.mira_home_greeting":{en:"Hey, {name}! Ready to practice?",ru:"Привет, {name}! Готовы позаниматься?"},
   "ui.mira_home_greeting_no_name":{en:"Hey! Ready to practice?",ru:"Привет! Готовы позаниматься?"},
   "ui.verify_your_email_to_secure_your_account":{en:"Verify your email to secure your account",ru:"Подтвердите почту, чтобы защитить аккаунт"},
@@ -1732,7 +1785,8 @@ async function loadUserData(){
     progress,
     milestones,
     visitedPlaces,
-    customPhrases
+    customPhrases,
+    connection:normalizeConnection(userData.connection)
   };
   if(user.baseLang)baseLang=user.baseLang;
   if(user.voicePref)voicePref=user.voicePref==='male'?'female':user.voicePref;
@@ -1775,6 +1829,24 @@ async function saveXp(newXpTotal){
   try{
     await firebase.firestore().collection('users').doc(uid).update({xp:newXpTotal});
   }catch(e){console.error('saveXp error',e);}
+}
+
+function normalizeConnection(value){
+  const c=value&&typeof value==='object'?value:{};
+  const active=!c.lastDate||c.lastDate===todayKey()||c.lastDate===yesterdayKey();
+  return {current:active?(Number(c.current)||0):0,longest:Number(c.longest)||0,total:Number(c.total)||0,
+    lastDate:c.lastDate||null,history:Array.isArray(c.history)?c.history.slice(-35):[],
+    reminderAsked:!!c.reminderAsked,reminder:c.reminder||'off',lastPhrase:c.lastPhrase||null};
+}
+
+async function saveConnection(){
+  if(!user)return;
+  user.connection=normalizeConnection(user.connection);
+  if(user.isGuest){localStorage.setItem('speakmasri_guestConnection',JSON.stringify(user.connection));return;}
+  const fbUser=firebase.auth().currentUser;
+  if(!fbUser)return;
+  try{await firebase.firestore().collection('users').doc(fbUser.uid).set({connection:user.connection},{merge:true});}
+  catch(e){console.error('saveConnection error',e);}
 }
 
 function showNameEdit(){
@@ -1869,11 +1941,14 @@ async function signup(){
   if(!name||!email||!pass){err.textContent=t('ui.fill_in_all_fields_to_sign_up');return;}
   if(pass.length<8){err.textContent=t('ui.password_must_be_at_least_8_characters');return;}
   try{
+    let guestConnection=null;
+    try{guestConnection=normalizeConnection(JSON.parse(localStorage.getItem('speakmasri_guestConnection')));}catch(e){}
     const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
     cred.user.sendEmailVerification().catch(e=>console.error('Email verification error',e));
     await firebase.firestore().collection('users').doc(cred.user.uid).set({
-      name,motivation,xp:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      name,motivation,xp:guestConnection&&guestConnection.total?guestConnection.total*10:0,connection:guestConnection&&guestConnection.total?guestConnection:normalizeConnection(),createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
+    if(guestConnection&&guestConnection.total)localStorage.removeItem('speakmasri_guestConnection');
     analytics.logEvent('sign_up');
     closeAuthSheet(true);
   }catch(e){
@@ -2084,7 +2159,9 @@ async function sharePartnerLink(){
 }
 
 function startGuestLesson(){
-  user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[],visitedPlaces:[]};
+  let connection;
+  try{connection=normalizeConnection(JSON.parse(localStorage.getItem('speakmasri_guestConnection')));}catch(e){connection=normalizeConnection();}
+  user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[],visitedPlaces:[],connection};
   openGuestArrival();
 }
 
@@ -2237,6 +2314,7 @@ function resendEmailVerification(){
 function refreshTopBar(){
   document.getElementById("milestoneCount").textContent=(user.milestones||[]).length;
   document.getElementById("xp").textContent=user.xp;
+  document.getElementById("cdCount").textContent=normalizeConnection(user.connection).current;
 }
 
 /* ---------- NAV ---------- */
@@ -2422,6 +2500,7 @@ function closeArrival(){
 function renderPath(){
   const el=document.getElementById("learn");
   el.innerHTML="";
+  renderConnectionCard(el);
   EXPLORE_PLACES.forEach(place=>{
     if(place.arrival)return;
     const unit=findUnit(place.unitId);
@@ -2488,6 +2567,53 @@ function renderPath(){
   });
 }
 
+function todayKey(){return new Date().toISOString().slice(0,10);}
+function yesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
+
+function renderConnectionCard(el){
+  const c=normalizeConnection(user.connection),done=c.lastDate===todayKey();
+  const card=document.createElement('section');card.className='connection-card';
+  card.innerHTML=`<div class="connection-card-head"><img src="mascot/mira_happy.webp" alt=""><div class="connection-card-copy">${t('connection.home_copy')}</div></div>
+    <div class="connection-dots" aria-hidden="true">${[0,1,2].map(()=>`<span class="connection-dot${done?' filled':''}"></span>`).join('')}</div>
+    <div class="connection-meta">${t('connection.meta')}</div><button class="btn" ${done?'disabled':''}>${done?t('connection.complete_today'):t('connection.start')}</button>`;
+  card.querySelector('button').onclick=startConnectionDay;el.appendChild(card);
+}
+
+function flattenedLessons(){const out=[];COURSE.units.forEach(u=>u.lessons.forEach(l=>out.push(l)));return out;}
+function pickConnectionPrompts(){
+  const lessons=flattenedLessons();
+  let completed=lessons.filter(l=>isLessonDone(l.id));
+  let source=completed.flatMap(l=>l.vocab.map((item,idx)=>({item,lessonId:l.id,idx,lesson:l})));
+  if(source.length<3){
+    const unlocked=lessons.filter((l,i)=>i===0||isLessonDone(lessons[i-1].id));
+    const fallback=completed.at(-1)||unlocked.at(-1)||lessons[0];
+    source=fallback.vocab.map((item,idx)=>({item,lessonId:fallback.id,idx,lesson:fallback}));
+  }
+  if(!source.length)return [];
+  let chosen;
+  if(source.length>=3){
+    const completedItems=(completed.length?completed:[source[0].lesson]).map(l=>l.vocab.map((item,idx)=>({item,lessonId:l.id,idx,lesson:l})));
+    const groups=[completedItems[0],completedItems[Math.floor((completedItems.length-1)/2)],completedItems.at(-1)];
+    chosen=[];groups.forEach((g,n)=>{const candidate=g[n%g.length];if(candidate&&!chosen.some(x=>x.lessonId===candidate.lessonId&&x.idx===candidate.idx))chosen.push(candidate);});
+    source.forEach(x=>{if(chosen.length<3&&!chosen.some(y=>y.lessonId===x.lessonId&&y.idx===x.idx))chosen.push(x);});
+  }else chosen=source.slice();
+  return chosen.slice(0,3).map(entry=>{
+    const correct=vocabText(entry.item);
+    const distractors=shuffle(source.map(x=>vocabText(x.item)).filter((v,i,a)=>v!==correct&&a.indexOf(v)===i)).slice(0,2);
+    if(distractors.length<2)distractors.push(...shuffle(allVocab().map(v=>vocabText(v)).filter((v,i,a)=>v!==correct&&!distractors.includes(v)&&a.indexOf(v)===i)).slice(0,2-distractors.length));
+    return {...entry,opts:shuffle([correct,...distractors])};
+  });
+}
+
+function startConnectionDay(){
+  if(!user||normalizeConnection(user.connection).lastDate===todayKey())return;
+  connectionPrompts=pickConnectionPrompts();if(!connectionPrompts.length)return;
+  isConnectionDay=true;curLesson={id:'connection-day',title:t('connection.header'),xp:10,vocab:connectionPrompts.map(p=>p.item)};
+  exList=connectionPrompts.map(p=>({type:'mc',item:p.item,q:p.item.ar,answer:vocabText(p.item),franco:p.item.franco,register:p.item.register,opts:p.opts,lessonId:p.lessonId,idx:p.idx,audio:audioPath(p.lessonId,p.idx),connection:true}));
+  exIdx=0;correctCount=0;currentStreak=0;halfwayCelebrated=false;setLessonStreak(0);
+  document.getElementById('main').classList.add('hidden');document.getElementById('lesson').classList.remove('hidden');renderExercise();
+}
+
 /* ---------- PROFILE ---------- */
 function renderProfile(){
   document.getElementById("pName").textContent=user.name;
@@ -2495,6 +2621,7 @@ function renderProfile(){
   countUp(document.getElementById("pXp"),user.xp);
   const milestones=user.milestones||[];
   countUp(document.getElementById("pMilestones"),milestones.length);
+  renderConnectionRhythm();
   const log=document.getElementById("milestoneLog");
   if(!milestones.length){
     log.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;gap:10px;color:var(--ink-soft)">
@@ -2532,6 +2659,21 @@ function renderProfile(){
     </div>`;
   }).join("");
   renderPartnerPhrases();
+}
+
+function renderConnectionRhythm(){
+  const host=document.getElementById('connectionRhythm');if(!host)return;
+  const c=normalizeConnection(user.connection);
+  if(!c.total){host.innerHTML=`<section class="connection-rhythm"><div style="font-weight:800;color:var(--teal)">${t('connection.rhythm')}</div><p style="margin:12px 0 0;color:var(--ink-soft)">${t('connection.empty')}</p></section>`;return;}
+  const now=new Date(),day=(now.getDay()+6)%7,monday=new Date(now);monday.setDate(now.getDate()-day);
+  const history=new Set(c.history||[]),labels=['M','T','W','T','F','S','S'];
+  const cells=labels.map((label,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);const key=d.toISOString().slice(0,10);return `<div class="connection-week-cell${history.has(key)?' done':''}${i===day?' today':''}">${label}<div class="connection-week-dot"></div></div>`;}).join('');
+  const phrase=c.lastDate===todayKey()?c.lastPhrase:null;
+  host.innerHTML=`<section class="connection-rhythm"><div style="font-weight:800;color:var(--teal)">${t('connection.rhythm')}</div>
+    <div class="connection-stats"><div><div class="connection-stat-value">${c.current}</div><div class="connection-stat-label">${t('connection.current')}</div></div><div><div class="connection-stat-value">${c.longest}</div><div class="connection-stat-label">${t('connection.longest')}</div></div><div><div class="connection-stat-value">${c.total}</div><div class="connection-stat-label">${t('connection.total')}</div></div></div>
+    <div class="connection-week">${cells}</div>${c.lastDate!==todayKey()?`<p style="font-size:12px;color:var(--ink-soft)">${t('connection.resume').replace('{total}',c.total)}</p>`:''}
+    <div style="font-size:11px;font-weight:800;margin:12px 0 5px">${t('connection.today_phrase')}</div><div class="connection-phrase-row"><div>${phrase?`<span class="ar" lang="ar">${phrase.ar}</span><br><span style="font-size:12px;color:var(--ink-soft)">${vocabText(phrase)}</span>`:'?'}</div>${phrase?'<button type="button" class="audio-btn" style="width:42px;height:42px;margin:0">🔊</button>':''}</div></section>`;
+  const audio=host.querySelector('.audio-btn');if(audio)audio.onclick=()=>playAudio(phrase.ar,audioPath(phrase.lessonId,phrase.idx));
 }
 
 function resolveMilestoneSource(milestone){
@@ -2744,6 +2886,7 @@ function buildExercises(lesson){
 
 /* ---------- LESSON RUNTIME ---------- */
 function startLesson(lesson){
+  isConnectionDay=false;
   curLesson=lesson;
   exList=buildExercises(lesson);
   exIdx=0;
@@ -2759,7 +2902,8 @@ function startLesson(lesson){
 function quitLesson(){
   if((exIdx>0||correctCount>0)&&!confirm(t('msg.quit_this_lesson_you_ll_lose_your_progress_in_it')))return;
   document.getElementById("lesson").classList.add("hidden");
-  if(user&&user.isGuest){
+  const wasConnection=isConnectionDay;isConnectionDay=false;
+  if(user&&user.isGuest&&!wasConnection){
     user=null;
     showAuthScreen();
     backToChoice();
@@ -2773,7 +2917,9 @@ function updateProg(){
   const pct=Math.round((exIdx/exList.length)*100);
   document.getElementById("prog").style.width=pct+"%";
   document.getElementById("progbarEl").setAttribute("aria-valuenow",pct);
-  document.getElementById("progCount").textContent=(exIdx+1)+" / "+exList.length;
+  const count=document.getElementById("progCount");
+  count.textContent=isConnectionDay?`${t('connection.header')} ${Math.min(exIdx+1,exList.length)}/${exList.length}`:(exIdx+1)+" / "+exList.length;
+  count.classList.toggle('connection-pill',isConnectionDay);
 }
 
 function renderExercise(){
@@ -2828,12 +2974,17 @@ function renderExercise(){
     area.appendChild(gotItBtn);
     playAudio(ex.item.ar,ex.audio);
   } else if(ex.type==="mc"){
-    const q=document.createElement("div");q.className="q";q.textContent=t('exercise.translate_prompt')+' \"'+ex.q+'\"';
+    const q=document.createElement("div");q.className="q";
+    q.textContent=isConnectionDay?t('connection.prompt_header').replace('{n}',exIdx+1):t('exercise.translate_prompt')+' \"'+ex.q+'\"';
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
     area.appendChild(q);
+    if(isConnectionDay){
+      const ar=document.createElement('div');ar.className='ar';ar.lang='ar';ar.style.cssText='font-size:26px;margin:6px 0 14px';ar.textContent=ex.q;area.appendChild(ar);
+      const audioBtn=document.createElement('button');audioBtn.className='audio-btn';audioBtn.textContent='🔊';audioBtn.setAttribute('aria-label',t('aria.play_phrase_audio'));audioBtn.onclick=()=>playAudio(ex.item.ar,ex.audio);area.appendChild(audioBtn);playAudio(ex.item.ar,ex.audio);
+    }
     ex.opts.forEach(o=>{
       const b=document.createElement("button");
-      b.className="opt ar";b.textContent=o;b.lang="ar";
+      b.className="opt"+(isConnectionDay?"":" ar");b.textContent=o;if(!isConnectionDay)b.lang="ar";
       b.onclick=()=>selectOpt(b,o);
       area.appendChild(b);
     });
@@ -3078,6 +3229,7 @@ function check(){
   } else {
     setLessonStreak(0);
   }
+  if(isConnectionDay)connectionAnswerWasCorrect=ok;
   const arabicWord = ex.type==="mc" ? ex.answer : ex.type==="listen" ? ex.q : ex.type==="fill" ? ex.ar : null;
   playAnswerFeedback(ok,targetEl,arabicWord);
   showFeedback(ok,ex);
@@ -3120,12 +3272,20 @@ document.addEventListener("keydown",e=>{
 function nextExercise(){
   exIdx++;
   document.getElementById("checkWrap").classList.remove("hidden");
-  if(exIdx>=exList.length){finishAsSuccess();}
+  if(exIdx>=exList.length){if(isConnectionDay)finishConnectionDay();else finishAsSuccess();}
+  else if(isConnectionDay&&exIdx===2)showConnectionTransition(connectionAnswerWasCorrect);
   else renderExercise();
+}
+
+function showConnectionTransition(ok){
+  document.getElementById('checkWrap').classList.add('hidden');document.getElementById('fbArea').innerHTML='';
+  const area=document.getElementById('exArea');area.innerHTML=`<div style="padding:48px 24px;text-align:center;color:var(--teal);font-weight:800">${t(ok?'connection.transition_right':'connection.transition_wrong')}</div>`;
+  setTimeout(renderExercise,550);
 }
 
 function skipExercise(){
   setLessonStreak(0);
+  if(isConnectionDay)connectionAnswerWasCorrect=false;
   nextExercise();
 }
 
@@ -3509,6 +3669,50 @@ function celebrateWordsLearned(vocabArray){
   });
 }
 
+async function finishConnectionDay(){
+  if(!isConnectionDay)return;
+  const final=connectionPrompts.at(-1),today=todayKey(),c=normalizeConnection(user.connection);
+  if(c.lastDate!==today){
+    c.current=c.lastDate===yesterdayKey()?c.current+1:1;c.longest=Math.max(c.longest,c.current);c.total+=1;c.lastDate=today;
+    c.history=Array.from(new Set([...(c.history||[]),today])).slice(-35);
+    c.lastPhrase={...final.item,lessonId:final.lessonId,idx:final.idx};user.connection=c;user.xp+=10;
+    await Promise.all([saveConnection(),user.isGuest?Promise.resolve():saveXp(user.xp)]);
+  }
+  document.getElementById('lesson').classList.add('hidden');document.getElementById('checkWrap').classList.remove('hidden');
+  isConnectionDay=false;
+  const sheet=document.getElementById('connectionDone'),line=t('connection.line_'+(((c.total-1)%5)+1));
+  sheet.innerHTML=`<img src="mascot/mira_encouraging.webp" alt=""><h1 style="font-size:23px">${line}</h1>
+    <div class="connection-final-phrase"><div class="ar" lang="ar" style="font-size:32px">${final.item.ar}</div><div>${vocabText(final.item)}</div><button type="button" class="audio-btn" id="connectionPhraseAudio" style="margin:12px auto 0">🔊</button></div>
+    <div class="connection-share"><div style="font-weight:800;color:var(--rose)">${t('connection.someone_hears')}</div><button type="button" id="connectionShareBtn" class="btn btn-ghost" style="margin-top:9px;color:var(--rose);border-color:var(--rose)">${t('connection.send_phrase').replace('{phrase}',final.item.ar)}</button><div id="connectionShareStatus" style="font-size:12px;margin-top:6px"></div></div>
+    <div class="connection-xp">+<span id="connectionXpCount">0</span> XP</div><div style="font-size:13px;color:var(--teal);font-weight:800">${t('connection.stats').replace('{current}',c.current).replace('{total}',c.total)}</div>
+    <div class="connection-actions" style="margin-top:18px"><button class="btn btn-ghost" id="connectionHearAgain">${t('connection.hear_again')}</button><button class="btn" id="connectionBack">${t('connection.back_path')}</button></div>
+    ${c.reminderAsked?'':`<div id="connectionReminder" class="connection-reminder"><div style="font-weight:800">${t('connection.reminder')}</div><div class="connection-reminder-options"><button class="btn btn-ghost" data-reminder="choose">${t('connection.choose_time')}</button><button class="btn btn-ghost" data-reminder="off">${t('connection.not_now')}</button></div></div>`}`;
+  sheet.classList.remove('hidden');
+  const play=()=>playAudio(final.item.ar,audioPath(final.lessonId,final.idx));
+  document.getElementById('connectionPhraseAudio').onclick=play;document.getElementById('connectionHearAgain').onclick=play;
+  document.getElementById('connectionShareBtn').onclick=()=>shareConnectionPhrase(final.item);
+  document.getElementById('connectionBack').onclick=leaveConnectionDay;
+  sheet.querySelectorAll('[data-reminder]').forEach(btn=>btn.onclick=()=>handleReminderChoice(btn.dataset.reminder));
+  countUp(document.getElementById('connectionXpCount'),10,{duration:650});refreshTopBar();spawnConfettiBurst();
+}
+
+async function shareConnectionPhrase(item){
+  const data={title:'SpeakMasri',text:t('connection.share_text').replace('{ar}',item.ar).replace('{meaning}',vocabText(item)),url:'https://speakmasri.com'};
+  if(navigator.share){try{await navigator.share(data);document.getElementById('connectionShareStatus').textContent=t('connection.sent_phrase');return;}catch(e){if(e.name==='AbortError')return;}}
+  navigator.clipboard.writeText(`${data.text} ${data.url}`).then(()=>{document.getElementById('connectionShareStatus').textContent=t('ui.copied');}).catch(()=>prompt(t('ui.copy_this_link_to_send_your_partner'),`${data.text} ${data.url}`));
+}
+
+async function handleReminderChoice(choice){
+  const box=document.getElementById('connectionReminder');if(!box)return;
+  if(choice==='choose'){
+    box.querySelector('.connection-reminder-options').innerHTML=['morning','afternoon','evening'].map(v=>`<button class="btn btn-ghost" data-time="${v}">${t('connection.'+v)}</button>`).join('');
+    box.querySelectorAll('[data-time]').forEach(btn=>btn.onclick=()=>saveReminder(btn.dataset.time));return;
+  }
+  await saveReminder('off');
+}
+async function saveReminder(value){user.connection.reminder=value;user.connection.reminderAsked=true;await saveConnection();document.getElementById('connectionReminder')?.remove();}
+function leaveConnectionDay(){isConnectionDay=false;document.getElementById('connectionDone').classList.add('hidden');document.getElementById('main').classList.remove('hidden');refreshTopBar();tab('learn');}
+
 async function finishAsSuccess(){
   celebrateWordsLearned(curLesson.vocab);
   const total=exList.length;
@@ -3520,6 +3724,7 @@ async function finishAsSuccess(){
   countUp(dXpEl,curLesson.xp,{prefix:"+"});
   countUp(dAccEl,acc,{suffix:"%"});
   if(user.isGuest){
+    user.progress[curLesson.id]={done:true,score:acc};
     document.getElementById("doneTitle").textContent=t('ui.nice_sign_up_to_save_this_progress');
   } else {
     user.progress[curLesson.id]={done:true,score:acc};
