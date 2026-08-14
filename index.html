@@ -64,6 +64,7 @@ body { max-width: none; margin: 0; }
   --brick: var(--error);
   --line: var(--border-light);
   --gold: var(--accent-gold);
+  --gold-text: #946E00;
   --gold-soft: #FBF3E0;
   --teal: #0B7285;
   --teal-soft: #E3F4F6;
@@ -263,7 +264,8 @@ input:focus, select:focus {
 }
 .email-verification-reminder button {
   width: auto;
-  min-width: 0;
+  min-width: 44px;
+  min-height: 44px;
   margin: 0;
   border: 0;
   background: none;
@@ -344,8 +346,8 @@ input:focus, select:focus {
   bottom: 12px;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -361,7 +363,7 @@ input:focus, select:focus {
 .explore-rail-title { font-size:14px; font-weight:800; display:flex; align-items:center; gap:5px; }
 .explore-rail-count { font-size:11px; color:var(--ink-soft); font-weight:600; }
 .explore-view-toggle { flex:0 0 auto; width:fit-content; display:flex; padding:2px; border:1px solid var(--border-light); border-radius:9px; background:var(--surface); }
-.explore-view-btn { width:auto; flex:0 0 auto; min-height:28px; margin:0; padding:4px 8px; border:0; border-radius:7px; background:transparent; color:var(--ink-soft); font:inherit; font-size:10px; font-weight:800; cursor:pointer; }
+.explore-view-btn { width:auto; flex:0 0 auto; min-height:38px; margin:0; padding:4px 8px; border:0; border-radius:7px; background:transparent; color:var(--ink-soft); font:inherit; font-size:10px; font-weight:800; cursor:pointer; }
 .explore-view-btn[aria-pressed="true"] { background:var(--primary); color:#fff; }
 .explore-rail { display:flex; gap:8px; padding:0 0 16px; overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .explore-rail::-webkit-scrollbar { display:none; }
@@ -781,15 +783,8 @@ input:focus, select:focus {
 
 /* ===== FEEDBACK SLIDE ===== */
 .feedback {
-  position: fixed;
-  bottom: 80px;
-  left: 0; right: 0;
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 20px;
-  border-top-left-radius: var(--r-lg);
-  border-top-right-radius: var(--r-lg);
-  z-index: 5;
+  margin: -16px -20px 12px;
+  padding: 14px 20px;
 }
 .fb-ok {
   background: var(--primary-surface);
@@ -916,6 +911,7 @@ input:focus, select:focus {
 /* ===== BOTTOM NAV ===== */
 .nav {
   position: fixed;
+  z-index: 50;
   bottom: 0; left: 0; right: 0;
   max-width: 480px;
   margin: 0 auto;
@@ -1136,7 +1132,7 @@ input:focus, select:focus {
   <div id="main" class="hidden">
     <div class="top">
       <div class="stat">💬 <span id="milestoneCount">0</span> <span data-i18n="ui.said">said</span></div>
-      <div class="stat" style="color:var(--gold)">⭐ <span id="xp">0</span></div>
+      <div class="stat">⭐ <span id="xp" style="color:var(--gold-text)">0</span></div>
     </div>
     <div id="homeMiraGreeting" class="home-mira-greeting hidden">
       <img src="mascot/mira_reference.webp" alt="">
@@ -1173,7 +1169,7 @@ input:focus, select:focus {
       <h2 id="pName"></h2>
       <p style="color:var(--ink-soft)" id="pEmail"></p>
       <div style="display:flex;justify-content:space-around;margin:24px 0">
-        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold)" id="pXp">0</div><span data-i18n="ui.total_xp">Total XP</span></div>
+        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold-text)" id="pXp">0</div><span data-i18n="ui.total_xp">Total XP</span></div>
         <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pMilestones">0</div><span data-i18n="ui.phrases_said">Phrases Said</span></div>
       </div>
       <div style="text-align:left;padding:0 16px">
@@ -1314,8 +1310,7 @@ input:focus, select:focus {
       </div>
     </div>
     <div id="exArea"></div>
-    <div id="fbArea" aria-live="polite"></div>
-    <div id="checkWrap"><button class="btn" id="checkBtn" onclick="check()" disabled data-i18n="btn.check">Check</button><button class="skip-btn" id="skipBtn" onclick="skipExercise()" data-i18n="ui.skip">Skip this one</button></div>
+    <div id="checkWrap"><div id="fbArea" aria-live="polite"></div><button class="btn" id="checkBtn" onclick="check()" disabled data-i18n="btn.check">Check</button><button class="skip-btn" id="skipBtn" onclick="skipExercise()" data-i18n="ui.skip">Skip this one</button></div>
   </div>
 
   <!-- COMPLETE -->
@@ -1966,10 +1961,18 @@ function pullPartnerSubmissions(){
   return pullPartnerSubmissionsPromise;
 }
 
-function sharePartnerLink(){
+async function sharePartnerLink(){
   const fbUser=firebase.auth().currentUser;
   if(!fbUser)return;
   const url=`https://speakmasri.com/partner.html?u=${fbUser.uid}`;
+  if(navigator.share){
+    try{
+      await navigator.share({title:'SpeakMasri Partner Phrases',text:"Add your phrases for me in SpeakMasri!",url});
+      return;
+    }catch(e){
+      if(e.name==='AbortError')return;
+    }
+  }
   const btn=document.getElementById("shareLinkBtn");
   navigator.clipboard.writeText(url).then(()=>{
     if(btn){const orig=btn.textContent;btn.textContent=t('ui.copied');setTimeout(()=>{btn.textContent=orig;},2000);}
@@ -2168,7 +2171,6 @@ const LOCATION_NARRATIONS={
   koshary:"وصلنا لعربية الكشري... تحب تجرّب؟",
   khan:"إحنا في خان الخليلي... يلا نفاصل شوية!"
 };
-let locationNarrationObserver=null;
 let arrivalUnit=null;
 
 const EXPLORE_PLACES=[
@@ -2311,25 +2313,8 @@ function closeArrival(){
   arrivalUnit=null;
 }
 
-function observeLocationNarration(head,locationKey){
-  if(localStorage.getItem('locationNarrationPlayed_'+locationKey))return;
-  locationNarrationObserver.observe(head);
-}
-
 function renderPath(){
   const el=document.getElementById("learn");
-  if(locationNarrationObserver)locationNarrationObserver.disconnect();
-  locationNarrationObserver=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(!entry.isIntersecting)return;
-      const locationKey=entry.target.dataset.location;
-      const playedKey='locationNarrationPlayed_'+locationKey;
-      locationNarrationObserver.unobserve(entry.target);
-      if(localStorage.getItem(playedKey))return;
-      localStorage.setItem(playedKey,'1');
-      playAudio(LOCATION_NARRATIONS[locationKey],locationAudioPath(locationKey));
-    });
-  },{threshold:0.5});
   el.innerHTML="";
   EXPLORE_PLACES.forEach(place=>{
     if(place.arrival)return;
@@ -2360,7 +2345,6 @@ function renderPath(){
       audioBtn.textContent="🔊";
       audioBtn.onclick=()=>playAudio(LOCATION_NARRATIONS[locationKey],locationAudioPath(locationKey));
       head.appendChild(audioBtn);
-      observeLocationNarration(head,locationKey);
     }
     card.appendChild(head);
 
@@ -2444,7 +2428,7 @@ function renderPartnerPhrases(){
     div.appendChild(text);
     const del=document.createElement("button");
     del.textContent="🗑️";
-    del.style.cssText="background:none;border:none;cursor:pointer;font-size:16px";
+    del.style.cssText="min-width:44px;min-height:44px;display:grid;place-items:center;background:none;border:none;cursor:pointer;font-size:16px";
     del.setAttribute("aria-label",t('aria.delete_phrase'));
     del.onclick=()=>deleteCustomPhrase(i);
     div.appendChild(del);
@@ -2504,6 +2488,7 @@ function importPartnerPhrases(fileInputEl){
 
 async function deleteCustomPhrase(idx){
   if(!user.customPhrases)return;
+  if(!confirm("Delete this phrase?"))return;
   const [removed]=user.customPhrases.splice(idx,1);
   renderPartnerPhrases();
   if(removed&&removed._id)await deleteCustomPhraseRemote(removed._id);
@@ -2720,7 +2705,15 @@ function renderExercise(){
     const inp=document.createElement("input");
     inp.id="fillInput";inp.placeholder=t('ui.e_g_shukran');inp.autocomplete="off";
     inp.oninput=()=>{selection=inp.value;checkBtn.disabled=!inp.value.trim();};
+    inp.onkeydown=e=>{
+      if(e.key==="Enter"&&!checkBtn.disabled){
+        e.preventDefault();
+        e.stopPropagation();
+        check();
+      }
+    };
     fw.appendChild(inp);area.appendChild(fw);
+    requestAnimationFrame(()=>inp.focus());
   } else if(ex.type==="match"){
     const q=document.createElement("div");q.className="q";q.textContent=t('exercise.match_prompt');
     area.appendChild(q);
@@ -2840,11 +2833,11 @@ function playAnswerFeedback(ok, targetEl, arabicWord){
 
   if(ok){
     restartAnim(targetEl, "fx-correct", 450);
-    spawnParticles(targetEl, ["var(--primary)", "var(--gold)", "var(--teal)"]);
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      spawnParticles(targetEl, ["var(--primary)", "var(--gold)", "var(--teal)"]);
+    }
     const prog = document.getElementById("prog");
     if(prog) restartAnim(prog, "prog-flash", 550);
-    sweepLine(exArea, "var(--primary)");
-    if(arabicWord) arabicBloom(arabicWord);
   } else {
     restartAnim(targetEl, "fx-shake", 320);
     const correctEl = document.querySelector(".opt.correct");
@@ -2939,7 +2932,20 @@ function showFeedback(ok,ex){
   checkBtn.textContent=t('btn.continue');
   checkBtn.disabled=false;
   checkBtn.onclick=nextExercise;
+  const optionToReveal=document.querySelector(".opt.correct")||document.querySelector(".opt.wrong");
+  if(optionToReveal){
+    requestAnimationFrame(()=>optionToReveal.scrollIntoView({behavior:'smooth',block:'center'}));
+  }
 }
+
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Enter"&&e.key!==" ")return;
+  const lesson=document.getElementById("lesson");
+  const feedback=document.querySelector("#fbArea .feedback");
+  if(!lesson||lesson.classList.contains("hidden")||!feedback)return;
+  e.preventDefault();
+  nextExercise();
+});
 
 function nextExercise(){
   exIdx++;
