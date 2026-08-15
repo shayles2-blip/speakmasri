@@ -629,6 +629,39 @@ input:focus, select:focus {
 }
 
 /* ===== Lesson-complete celebration ===== */
+.done-eyebrow{
+  margin:12px 0 6px;
+  color:var(--text-muted);
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.done-competence{
+  margin:0 16px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:clamp(28px,7vw,38px);
+  line-height:1.15;
+  font-weight:800;
+  color:var(--text-main);
+}
+.done-competence-label{
+  display:block;
+  margin-bottom:4px;
+  color:var(--teal);
+  font-size:.55em;
+  line-height:1.3;
+}
+.done-unlocked{
+  display:inline-block;
+  margin:0 16px 4px;
+  padding:7px 12px;
+  border-radius:var(--r-pill);
+  background:var(--teal-soft);
+  color:var(--teal);
+  font-size:13px;
+  font-weight:700;
+}
 .stat-pop{
   opacity:0;
   animation: statPopIn .7s cubic-bezier(.34,1.56,.64,1) forwards;
@@ -1379,12 +1412,14 @@ input:focus, select:focus {
   <div id="done" class="hidden center">
     <div class="confetti"><img src="mascot/mira_happy.webp" alt="Mira celebrating the completed lesson" style="display:block;width:112px;height:112px;object-fit:contain;margin:0 auto"></div>
     <h1 id="doneTitle" data-i18n="ui.donetitle">Lesson Complete!</h1>
+    <h2 id="doneCompetence" class="done-competence hidden"><span class="done-competence-label" data-i18n="done.you_can_now_handle">You can now handle:</span><span id="doneLessonTitle"></span></h2>
     <div style="display:flex;justify-content:space-around;margin:24px 0">
       <div class="stat-pop" style="background:var(--gold-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--gold)">
         <div style="font-size:22px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold)" id="dXp">+10</div><span data-i18n="ui.xp_earned">XP Earned</span></div>
       <div class="stat-pop" style="background:var(--teal-soft);padding:16px;border-radius:var(--r-lg);border:1.5px solid var(--teal)">
         <div style="font-size:22px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--teal)" id="dAcc">100%</div><span data-i18n="ui.accuracy">Accuracy</span></div>
     </div>
+    <div id="doneUnlocked" class="done-unlocked hidden"></div>
     <div id="missionBox" style="background:var(--clay-soft);border:1.5px dashed var(--clay);border-radius:var(--r-lg);margin:16px;padding:16px;text-align:left"></div>
     <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px">
       <button class="btn btn-ghost" onclick="startRehearsal()" data-i18n="ui.rehearse_this_lesson">🎙️ Rehearse This Lesson</button>
@@ -1614,6 +1649,8 @@ const STRINGS={
   "ui.streak":{en:"Streak",ru:"Серия"},
   "ui.halfway_tonight":{en:"Halfway there — keep going for tonight!",ru:"Половина позади — продолжайте, пригодится уже сегодня вечером!"},
   "ui.donetitle":{en:"Lesson Complete!",ru:"Урок пройден!"},
+  "done.you_can_now_handle":{en:"You can now handle:",ru:"Теперь вы можете справиться с ситуацией:"},
+  "done.unlocked":{en:"Unlocked: {lesson}",ru:"Открыто: {lesson}"},
   "ui.xp_earned":{en:"XP Earned",ru:"Получено XP"},
   "ui.accuracy":{en:"Accuracy",ru:"Точность"},
   "ui.rehearse_this_lesson":{en:"🎙️ Rehearse This Lesson",ru:"🎙️ Отрепетировать урок"},
@@ -3723,12 +3760,26 @@ async function finishAsSuccess(){
   dAccEl.textContent="0%";
   countUp(dXpEl,curLesson.xp,{prefix:"+"});
   countUp(dAccEl,acc,{suffix:"%"});
+  const doneTitle=document.getElementById("doneTitle");
+  const doneCompetence=document.getElementById("doneCompetence");
+  const doneUnlocked=document.getElementById("doneUnlocked");
   if(user.isGuest){
     user.progress[curLesson.id]={done:true,score:acc};
     document.getElementById("doneTitle").textContent=t('ui.nice_sign_up_to_save_this_progress');
   } else {
     user.progress[curLesson.id]={done:true,score:acc};
-    document.getElementById("doneTitle").textContent=t('ui.donetitle');
+    doneTitle.textContent=t('ui.donetitle');
+    doneTitle.classList.add("done-eyebrow");
+    document.getElementById("doneLessonTitle").textContent=curLesson.title;
+    doneCompetence.classList.remove("hidden");
+    doneUnlocked.classList.add("hidden");
+    const flatLessons=COURSE.units.flatMap(unit=>unit.lessons);
+    const lessonIndex=flatLessons.findIndex(lesson=>lesson.id===curLesson.id);
+    const nextLesson=lessonIndex>=0?flatLessons[lessonIndex+1]:null;
+    if(nextLesson){
+      doneUnlocked.textContent=t('done.unlocked').replace('{lesson}',nextLesson.title);
+      doneUnlocked.classList.remove("hidden");
+    }
     await Promise.all([saveProgress(curLesson.id,true,acc),saveXp(user.xp)]);
     analytics.logEvent('lesson_complete',{lesson_id:curLesson.id});
   }
