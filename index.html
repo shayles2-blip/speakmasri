@@ -867,6 +867,27 @@ input:focus, select:focus {
 }
 .match-cols .opt { width:100%; min-height:44px; margin:0; padding:10px 8px; }
 .match-cols .register-badge { padding:1px 4px; margin-left:3px; font-size:10px; }
+.register-badge { cursor: pointer; }
+.register-badge:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.register-info-tooltip {
+  position: fixed;
+  z-index: 1000;
+  width: max-content;
+  max-width: min(280px, calc(100vw - 24px));
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  color: var(--text-main);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+}
+.register-info-tooltip[hidden] { display: none; }
 
 /* ===== AUDIO BUTTON ===== */
 .audio-btn {
@@ -1690,6 +1711,9 @@ const STRINGS={
   "register.formal":{en:"Formal",ru:"Формально"},
   "register.casual":{en:"Casual",ru:"Неформально"},
   "register.intimate":{en:"Intimate",ru:"Интимно"},
+  "register.formal_explanation":{en:"Best for: parents, older relatives, shopkeepers, or someone you don't know well.",ru:"Лучше всего подходит для общения с родителями, старшими родственниками, продавцами или с теми, кого вы плохо знаете."},
+  "register.casual_explanation":{en:"Best for: friends, peers, people your age.",ru:"Лучше всего подходит для общения с друзьями, ровесниками и людьми вашего возраста."},
+  "register.intimate_explanation":{en:"Only for your partner — this is too personal for anyone else.",ru:"Только для вашего партнёра — для кого-либо другого это слишком личное."},
   "msg.this_email_is_already_registered":{en:"This email is already registered.",ru:"Эта почта уже зарегистрирована."},
   "msg.incorrect_password":{en:"Incorrect password.",ru:"Неверный пароль."},
   "msg.invalid_email_or_password":{en:"Invalid email or password.",ru:"Неверная почта или пароль."},
@@ -3553,8 +3577,96 @@ function registerBadge(v){
   };
   const s=styles[r];
   if(!s)return '';
-  return `<span class="register-badge" style="display:inline-block;padding:2px 8px;margin-left:6px;border-radius:var(--r-pill);font-size:12px;font-weight:700;color:${s.color};background:${s.bg};vertical-align:middle">${s.label}</span>`;
+  const ariaLabel=baseLang==='ru'?`Что означает «${s.label}»?`:`What does ${s.label} mean?`;
+  return `<span class="register-badge" role="button" tabindex="0" data-register="${r}" aria-label="${ariaLabel}" aria-expanded="false" style="display:inline-block;padding:2px 8px;margin-left:6px;border-radius:var(--r-pill);font-size:12px;font-weight:700;color:${s.color};background:${s.bg};vertical-align:middle">${s.label}</span>`;
 }
+
+let openRegisterBadge=null;
+
+function getRegisterInfoTooltip(){
+  let tooltip=document.getElementById("registerInfoTooltip");
+  if(tooltip)return tooltip;
+  tooltip=document.createElement("div");
+  tooltip.id="registerInfoTooltip";
+  tooltip.className="register-info-tooltip";
+  tooltip.setAttribute("role","tooltip");
+  tooltip.hidden=true;
+  document.body.appendChild(tooltip);
+  return tooltip;
+}
+
+function closeRegisterInfo({returnFocus=false}={}){
+  const tooltip=document.getElementById("registerInfoTooltip");
+  if(tooltip)tooltip.hidden=true;
+  if(openRegisterBadge){
+    openRegisterBadge.setAttribute("aria-expanded","false");
+    openRegisterBadge.removeAttribute("aria-describedby");
+    if(returnFocus&&openRegisterBadge.isConnected)openRegisterBadge.focus();
+  }
+  openRegisterBadge=null;
+}
+
+function positionRegisterInfo(){
+  const tooltip=document.getElementById("registerInfoTooltip");
+  if(!openRegisterBadge||!tooltip||tooltip.hidden)return;
+  const gap=8;
+  const edge=12;
+  const badgeRect=openRegisterBadge.getBoundingClientRect();
+  const tooltipRect=tooltip.getBoundingClientRect();
+  let top=badgeRect.bottom+gap;
+  if(top+tooltipRect.height>window.innerHeight-edge){
+    top=Math.max(edge,badgeRect.top-tooltipRect.height-gap);
+  }
+  const left=Math.min(
+    window.innerWidth-tooltipRect.width-edge,
+    Math.max(edge,badgeRect.left+(badgeRect.width-tooltipRect.width)/2)
+  );
+  tooltip.style.top=`${top}px`;
+  tooltip.style.left=`${left}px`;
+}
+
+function toggleRegisterInfo(badge){
+  if(openRegisterBadge===badge){
+    closeRegisterInfo();
+    return;
+  }
+  closeRegisterInfo();
+  const register=badge.dataset.register;
+  const tooltip=getRegisterInfoTooltip();
+  tooltip.textContent=t(`register.${register}_explanation`);
+  tooltip.hidden=false;
+  openRegisterBadge=badge;
+  badge.setAttribute("aria-expanded","true");
+  badge.setAttribute("aria-describedby",tooltip.id);
+  positionRegisterInfo();
+}
+
+document.addEventListener("click",event=>{
+  const badge=event.target.closest(".register-badge[data-register]");
+  if(badge){
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    toggleRegisterInfo(badge);
+    return;
+  }
+  const tooltip=document.getElementById("registerInfoTooltip");
+  if(openRegisterBadge&&(!tooltip||!tooltip.contains(event.target)))closeRegisterInfo();
+},true);
+document.addEventListener("keydown",event=>{
+  const badge=event.target.closest?.(".register-badge[data-register]");
+  if(badge&&(event.key==="Enter"||event.key===" ")){
+    event.preventDefault();
+    event.stopPropagation();
+    toggleRegisterInfo(badge);
+    return;
+  }
+  if(event.key!=="Escape"||!openRegisterBadge)return;
+  event.preventDefault();
+  closeRegisterInfo({returnFocus:true});
+});
+window.addEventListener("resize",positionRegisterInfo);
+window.addEventListener("scroll",positionRegisterInfo,true);
 
 function speak(text){
   if(!("speechSynthesis" in window))return;
