@@ -103,6 +103,9 @@ body {
 .connection-dots{display:flex;gap:7px;margin:12px 0}.connection-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--teal);background:var(--surface)}.connection-dot.filled{background:var(--teal)}
 .connection-meta{color:var(--teal);font-size:10px;font-weight:800;letter-spacing:.06em;margin-bottom:10px}
 .connection-card .btn{background:var(--teal);box-shadow:0 8px 24px rgba(11,114,133,.16)}
+.review-card{margin:0 16px 18px;padding:16px;border:1.5px dashed var(--clay);border-radius:var(--r-lg);background:var(--clay-soft);box-shadow:var(--shadow-card)}
+.review-card-title{font-weight:800;font-size:18px}.review-card-copy{margin:6px 0 12px;color:var(--ink-soft)}
+.review-pill{display:inline-flex;align-items:center;padding:7px 10px;border-radius:var(--r-pill);background:var(--clay-soft);color:var(--clay);font-size:12px;font-weight:800;white-space:nowrap}
 .connection-rhythm{margin:0 16px 22px;padding:16px;text-align:left;background:var(--teal-soft);border:1px solid rgba(11,114,133,.3);border-radius:var(--r-lg)}
 .connection-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;text-align:center}.connection-stat-value{font-size:26px;font-weight:700;color:var(--teal)}.connection-stat-label{font-size:11px;color:var(--ink-soft)}
 .connection-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0}.connection-week-cell{text-align:center;font-size:10px;color:var(--ink-soft)}.connection-week-dot{width:24px;height:24px;margin:4px auto 0;border-radius:50%;border:1px solid rgba(11,114,133,.35);background:var(--surface)}.connection-week-cell.done .connection-week-dot{background:var(--teal)}.connection-week-cell.today .connection-week-dot{outline:2px solid var(--teal);outline-offset:2px}
@@ -1534,6 +1537,7 @@ let correctCount=0;
 let currentStreak=0;
 let halfwayCelebrated=false;
 let isConnectionDay=false;
+let isReviewSession=false;
 let connectionPrompts=[];
 let connectionAnswerWasCorrect=false;
 let currentAudio=null;
@@ -1607,6 +1611,13 @@ const STRINGS={
   "connection.resume":{en:"Your next Connection Day starts today. You've practiced on {total} days so far.",ru:"Следующий День связи начинается сегодня. Вы практиковались уже {total} дней."},
   "connection.hear_again":{en:"Hear it again",ru:"Послушать ещё раз"},
   "connection.back_path":{en:"Back to my path",ru:"Вернуться к моему пути"},
+  "review.needs_refresh":{en:"Needs a quick refresh",ru:"Стоит быстро освежить"},
+  "review.phrase_count_one":{en:"1 phrase you nearly had",ru:"1 фраза, которую вы почти вспомнили"},
+  "review.phrase_count_many":{en:"{n} phrases you nearly had",ru:"{n} фразы, которые вы почти вспомнили"},
+  "review.start":{en:"Review them",ru:"Повторить"},
+  "review.header":{en:"Quick Refresh",ru:"Быстрое повторение"},
+  "review.prompt_header":{en:"Quick Refresh {n}/{total} · what does this mean?",ru:"Быстрое повторение {n}/{total} · что это значит?"},
+  "review.complete":{en:"Refreshed — these are ready when you need them.",ru:"Освежили — эти фразы будут готовы, когда понадобятся."},
   "connection.reminder":{en:"Want a quiet reminder for tomorrow?",ru:"Хотите ненавязчивое напоминание на завтра?"},
   "connection.choose_time":{en:"Choose a time",ru:"Выберите время"},
   "connection.not_now":{en:"Not now",ru:"Не сейчас"},
@@ -1823,7 +1834,8 @@ async function loadUserData(){
     milestones,
     visitedPlaces,
     customPhrases,
-    connection:normalizeConnection(userData.connection)
+    connection:normalizeConnection(userData.connection),
+    itemStats:normalizeItemStats(userData.itemStats)
   };
   if(user.baseLang)baseLang=user.baseLang;
   if(user.voicePref)voicePref=user.voicePref==='male'?'female':user.voicePref;
@@ -1874,6 +1886,25 @@ function normalizeConnection(value){
   return {current:active?(Number(c.current)||0):0,longest:Number(c.longest)||0,total:Number(c.total)||0,
     lastDate:c.lastDate||null,history:Array.isArray(c.history)?c.history.slice(-35):[],
     reminderAsked:!!c.reminderAsked,reminder:c.reminder||'off',lastPhrase:c.lastPhrase||null};
+}
+
+function normalizeItemStats(value){
+  if(!value||typeof value!=='object'||Array.isArray(value))return {};
+  const normalized={};
+  Object.entries(value).forEach(([key,stats])=>{
+    if(!stats||typeof stats!=='object'||Array.isArray(stats))return;
+    normalized[key]={correct:Number(stats.correct)||0,incorrect:Number(stats.incorrect)||0,
+      lastSeen:typeof stats.lastSeen==='string'?stats.lastSeen:null};
+  });
+  return normalized;
+}
+
+async function saveItemStats(){
+  if(!user||user.isGuest)return;
+  const fbUser=firebase.auth().currentUser;
+  if(!fbUser)return;
+  try{await firebase.firestore().collection('users').doc(fbUser.uid).set({itemStats:user.itemStats||{}},{merge:true});}
+  catch(e){console.error('saveItemStats error',e);}
 }
 
 async function saveConnection(){
@@ -2538,6 +2569,7 @@ function renderPath(){
   const el=document.getElementById("learn");
   el.innerHTML="";
   renderConnectionCard(el);
+  renderReviewCard(el);
   EXPLORE_PLACES.forEach(place=>{
     if(place.arrival)return;
     const unit=findUnit(place.unitId);
@@ -2642,11 +2674,54 @@ function pickConnectionPrompts(){
   });
 }
 
+function pickReviewItems(){
+  if(!user||user.isGuest)return [];
+  const lessons=flattenedLessons();
+  return Object.entries(user.itemStats||{})
+    .filter(([,stats])=>(Number(stats&&stats.incorrect)||0)>(Number(stats&&stats.correct)||0))
+    .sort((a,b)=>{
+      const weaknessB=(Number(b[1].incorrect)||0)-(Number(b[1].correct)||0);
+      const weaknessA=(Number(a[1].incorrect)||0)-(Number(a[1].correct)||0);
+      return weaknessB-weaknessA||String(a[1].lastSeen||'').localeCompare(String(b[1].lastSeen||''));
+    })
+    .map(([key])=>{
+      const delimiter=key.lastIndexOf('_');
+      if(delimiter<1)return null;
+      const lessonId=key.slice(0,delimiter),idx=Number(key.slice(delimiter+1));
+      const lesson=lessons.find(candidate=>candidate.id===lessonId),item=lesson&&lesson.vocab[idx];
+      return item?{item,lessonId,idx,lesson}:null;
+    })
+    .filter(Boolean).slice(0,3).map(entry=>{
+      const correct=vocabText(entry.item);
+      const distractors=shuffle(allVocab().map(v=>vocabText(v)).filter((v,i,a)=>v!==correct&&a.indexOf(v)===i)).slice(0,2);
+      return {...entry,opts:shuffle([correct,...distractors])};
+    });
+}
+
+function renderReviewCard(el){
+  const items=pickReviewItems();
+  if(!items.length)return;
+  const card=document.createElement('section');card.className='review-card';
+  const countText=t(items.length===1?'review.phrase_count_one':'review.phrase_count_many').replace('{n}',items.length);
+  card.innerHTML=`<div class="review-card-title">${t('review.needs_refresh')}</div><div class="review-card-copy">${countText}</div><button class="btn">${t('review.start')}</button>`;
+  card.querySelector('button').onclick=startReviewSession;el.appendChild(card);
+}
+
 function startConnectionDay(){
   if(!user||normalizeConnection(user.connection).lastDate===todayKey())return;
   connectionPrompts=pickConnectionPrompts();if(!connectionPrompts.length)return;
-  isConnectionDay=true;curLesson={id:'connection-day',title:t('connection.header'),xp:10,vocab:connectionPrompts.map(p=>p.item)};
+  isReviewSession=false;isConnectionDay=true;curLesson={id:'connection-day',title:t('connection.header'),xp:10,vocab:connectionPrompts.map(p=>p.item)};
   exList=connectionPrompts.map(p=>({type:'mc',item:p.item,q:p.item.ar,answer:vocabText(p.item),franco:p.item.franco,register:p.item.register,opts:p.opts,lessonId:p.lessonId,idx:p.idx,audio:audioPath(p.lessonId,p.idx),connection:true}));
+  exIdx=0;correctCount=0;currentStreak=0;halfwayCelebrated=false;setLessonStreak(0);
+  document.getElementById('main').classList.add('hidden');document.getElementById('lesson').classList.remove('hidden');renderExercise();
+}
+
+function startReviewSession(){
+  if(!user||user.isGuest)return;
+  const reviewItems=pickReviewItems();if(!reviewItems.length)return;
+  isConnectionDay=false;isReviewSession=true;
+  curLesson={id:'quick-refresh',title:t('review.header'),xp:0,vocab:reviewItems.map(p=>p.item)};
+  exList=reviewItems.map(p=>({type:'mc',item:p.item,q:p.item.ar,answer:vocabText(p.item),franco:p.item.franco,register:p.item.register,opts:p.opts,lessonId:p.lessonId,idx:p.idx,audio:audioPath(p.lessonId,p.idx)}));
   exIdx=0;correctCount=0;currentStreak=0;halfwayCelebrated=false;setLessonStreak(0);
   document.getElementById('main').classList.add('hidden');document.getElementById('lesson').classList.remove('hidden');renderExercise();
 }
@@ -2924,6 +2999,7 @@ function buildExercises(lesson){
 /* ---------- LESSON RUNTIME ---------- */
 function startLesson(lesson){
   isConnectionDay=false;
+  isReviewSession=false;
   curLesson=lesson;
   exList=buildExercises(lesson);
   exIdx=0;
@@ -2939,8 +3015,8 @@ function startLesson(lesson){
 function quitLesson(){
   if((exIdx>0||correctCount>0)&&!confirm(t('msg.quit_this_lesson_you_ll_lose_your_progress_in_it')))return;
   document.getElementById("lesson").classList.add("hidden");
-  const wasConnection=isConnectionDay;isConnectionDay=false;
-  if(user&&user.isGuest&&!wasConnection){
+  const wasSpecial=isConnectionDay||isReviewSession;isConnectionDay=false;isReviewSession=false;
+  if(user&&user.isGuest&&!wasSpecial){
     user=null;
     showAuthScreen();
     backToChoice();
@@ -2955,8 +3031,9 @@ function updateProg(){
   document.getElementById("prog").style.width=pct+"%";
   document.getElementById("progbarEl").setAttribute("aria-valuenow",pct);
   const count=document.getElementById("progCount");
-  count.textContent=isConnectionDay?`${t('connection.header')} ${Math.min(exIdx+1,exList.length)}/${exList.length}`:(exIdx+1)+" / "+exList.length;
+  count.textContent=isConnectionDay?`${t('connection.header')} ${Math.min(exIdx+1,exList.length)}/${exList.length}`:isReviewSession?`${t('review.header')} ${Math.min(exIdx+1,exList.length)}/${exList.length}`:(exIdx+1)+" / "+exList.length;
   count.classList.toggle('connection-pill',isConnectionDay);
+  count.classList.toggle('review-pill',isReviewSession);
 }
 
 function renderExercise(){
@@ -3012,16 +3089,16 @@ function renderExercise(){
     playAudio(ex.item.ar,ex.audio);
   } else if(ex.type==="mc"){
     const q=document.createElement("div");q.className="q";
-    q.textContent=isConnectionDay?t('connection.prompt_header').replace('{n}',exIdx+1):t('exercise.translate_prompt')+' \"'+ex.q+'\"';
+    q.textContent=isConnectionDay?t('connection.prompt_header').replace('{n}',exIdx+1):isReviewSession?t('review.prompt_header').replace('{n}',exIdx+1).replace('{total}',exList.length):t('exercise.translate_prompt')+' \"'+ex.q+'\"';
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
     area.appendChild(q);
-    if(isConnectionDay){
+    if(isConnectionDay||isReviewSession){
       const ar=document.createElement('div');ar.className='ar';ar.lang='ar';ar.style.cssText='font-size:26px;margin:6px 0 14px';ar.textContent=ex.q;area.appendChild(ar);
       const audioBtn=document.createElement('button');audioBtn.className='audio-btn';audioBtn.textContent='🔊';audioBtn.setAttribute('aria-label',t('aria.play_phrase_audio'));audioBtn.onclick=()=>playAudio(ex.item.ar,ex.audio);area.appendChild(audioBtn);playAudio(ex.item.ar,ex.audio);
     }
     ex.opts.forEach(o=>{
       const b=document.createElement("button");
-      b.className="opt"+(isConnectionDay?"":" ar");b.textContent=o;if(!isConnectionDay)b.lang="ar";
+      b.className="opt"+(isConnectionDay||isReviewSession?"":" ar");b.textContent=o;if(!isConnectionDay&&!isReviewSession)b.lang="ar";
       b.onclick=()=>selectOpt(b,o);
       area.appendChild(b);
     });
@@ -3260,6 +3337,16 @@ function check(){
     const fillInput=document.getElementById("fillInput");
     if(fillInput){fillInput.classList.add(ok?"correct":"wrong");targetEl=fillInput;}
   }
+  if(user&&!user.isGuest&&(ex.type==="mc"||ex.type==="listen"||ex.type==="fill")){
+    const lessonId=ex.lessonId||(curLesson&&curLesson.id);
+    const idx=ex.idx!==undefined?ex.idx:(curLesson&&curLesson.vocab.indexOf(ex.item));
+    if(lessonId&&idx!==undefined&&idx!==null&&idx!==-1){
+      user.itemStats=user.itemStats||{};
+      const key=`${lessonId}_${idx}`,stats=user.itemStats[key]||{correct:0,incorrect:0,lastSeen:null};
+      stats[ok?'correct':'incorrect']=(Number(stats[ok?'correct':'incorrect'])||0)+1;
+      stats.lastSeen=todayKey();user.itemStats[key]=stats;saveItemStats();
+    }
+  }
   if(ok){
     correctCount++;
     setLessonStreak(currentStreak+1,true);
@@ -3309,9 +3396,18 @@ document.addEventListener("keydown",e=>{
 function nextExercise(){
   exIdx++;
   document.getElementById("checkWrap").classList.remove("hidden");
-  if(exIdx>=exList.length){if(isConnectionDay)finishConnectionDay();else finishAsSuccess();}
+  if(exIdx>=exList.length){if(isConnectionDay)finishConnectionDay();else if(isReviewSession)finishReviewSession();else finishAsSuccess();}
   else if(isConnectionDay&&exIdx===2)showConnectionTransition(connectionAnswerWasCorrect);
   else renderExercise();
+}
+
+function finishReviewSession(){
+  if(!isReviewSession)return;
+  isReviewSession=false;
+  document.getElementById('checkWrap').classList.add('hidden');document.getElementById('fbArea').innerHTML='';
+  const area=document.getElementById('exArea');
+  area.innerHTML=`<div style="padding:36px 20px;text-align:center"><img src="mascot/mira_encouraging.webp" alt="" style="width:72px;height:72px;object-fit:contain"><div style="font-weight:800;margin-top:10px">${t('review.complete')}</div></div>`;
+  setTimeout(()=>{document.getElementById('lesson').classList.add('hidden');document.getElementById('checkWrap').classList.remove('hidden');document.getElementById('main').classList.remove('hidden');tab('learn');},1500);
 }
 
 function showConnectionTransition(ok){
