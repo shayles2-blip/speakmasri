@@ -491,6 +491,19 @@ input:focus, select:focus {
 .lesson-row:disabled .lesson-name { color: #b8ab9c; }
 
 /* ===== EXERCISE AREA ===== */
+#exArea.linear-exercise {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 14px;
+}
+.exercise-prompt,
+.exercise-answer {
+  flex: 0 0 auto;
+}
+.exercise-answer {
+  margin-top: auto;
+  padding-top: 28px;
+}
 .q {
   font-size: 22px;
   font-weight: 800;
@@ -3060,6 +3073,23 @@ function updateProg(){
   count.classList.toggle('review-pill',isReviewSession);
 }
 
+function sizeLinearExerciseArea(){
+  const area=document.getElementById("exArea");
+  if(!area.classList.contains("linear-exercise"))return;
+  const checkWrap=document.getElementById("checkWrap");
+  const viewportHeight=window.visualViewport?window.visualViewport.height:window.innerHeight;
+  const availableHeight=Math.max(0,viewportHeight-area.getBoundingClientRect().top-checkWrap.offsetHeight);
+  area.style.minHeight=availableHeight+"px";
+}
+
+function setLinearExerciseLayout(area,prompt,answer){
+  area.classList.add("linear-exercise");
+  prompt.classList.add("exercise-prompt");
+  answer.classList.add("exercise-answer");
+  area.append(prompt,answer);
+  requestAnimationFrame(sizeLinearExerciseArea);
+}
+
 function renderExercise(){
   selection=null;matchState=null;
   updateProg();
@@ -3076,6 +3106,8 @@ function renderExercise(){
   if(!halfwayCelebrated&&ex.type!=="intro"&&interactiveCompleted>=Math.ceil(interactiveTotal/2))showHalfwayCelebration();
   const area=document.getElementById("exArea");
   area.innerHTML="";
+  area.classList.remove("linear-exercise");
+  area.style.removeProperty("min-height");
 
   if(ex.type==="intro"){
     document.getElementById("checkWrap").classList.add("hidden");
@@ -3112,24 +3144,29 @@ function renderExercise(){
     area.appendChild(gotItBtn);
     playAudio(ex.item.ar,ex.audio);
   } else if(ex.type==="mc"){
+    const prompt=document.createElement("div");
+    const answer=document.createElement("div");
     const q=document.createElement("div");q.className="q";
     q.textContent=isConnectionDay?t('connection.prompt_header').replace('{n}',exIdx+1):isReviewSession?t('review.prompt_header').replace('{n}',exIdx+1).replace('{total}',exList.length):t('exercise.translate_prompt')+' \"'+ex.q+'\"';
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
-    area.appendChild(q);
+    prompt.appendChild(q);
     if(isConnectionDay||isReviewSession){
-      const ar=document.createElement('div');ar.className='ar';ar.lang='ar';ar.style.cssText='font-size:26px;margin:6px 0 14px';ar.textContent=ex.q;area.appendChild(ar);
-      const audioBtn=document.createElement('button');audioBtn.className='audio-btn';audioBtn.textContent='🔊';audioBtn.setAttribute('aria-label',t('aria.play_phrase_audio'));audioBtn.onclick=()=>playAudio(ex.item.ar,ex.audio);area.appendChild(audioBtn);playAudio(ex.item.ar,ex.audio);
+      const ar=document.createElement('div');ar.className='ar';ar.lang='ar';ar.style.cssText='font-size:26px;margin:6px 0 14px';ar.textContent=ex.q;prompt.appendChild(ar);
+      const audioBtn=document.createElement('button');audioBtn.className='audio-btn';audioBtn.textContent='🔊';audioBtn.setAttribute('aria-label',t('aria.play_phrase_audio'));audioBtn.onclick=()=>playAudio(ex.item.ar,ex.audio);prompt.appendChild(audioBtn);playAudio(ex.item.ar,ex.audio);
     }
     ex.opts.forEach(o=>{
       const b=document.createElement("button");
       b.className="opt"+(isConnectionDay||isReviewSession?"":" ar");b.textContent=o;if(!isConnectionDay&&!isReviewSession)b.lang="ar";
       b.onclick=()=>selectOpt(b,o);
-      area.appendChild(b);
+      answer.appendChild(b);
     });
+    setLinearExerciseLayout(area,prompt,answer);
   } else if(ex.type==="listen"){
+    const prompt=document.createElement("div");
+    const answer=document.createElement("div");
     const q=document.createElement("div");q.className="q";q.textContent=t('exercise.listen_prompt');
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
-    area.appendChild(q);
+    prompt.appendChild(q);
     const audioBtn=document.createElement("button");
     audioBtn.className="audio-btn";audioBtn.textContent="🔊";
     audioBtn.setAttribute("aria-label","Play audio");
@@ -3138,21 +3175,24 @@ function renderExercise(){
     audioActions.className="audio-report-actions";
     audioBtn.style.margin="16px 0";
     audioActions.append(audioBtn,createAudioReportControl({lessonId:ex.lessonId,idx:ex.idx,ar:ex.q,franco:ex.franco}));
-    area.appendChild(audioActions);
+    prompt.appendChild(audioActions);
     ex.opts.forEach(o=>{
       const b=document.createElement("button");
       b.className="opt";b.textContent=o.label;
       b.dataset.value=o.value;
       b.onclick=()=>selectOpt(b,o.value);
-      area.appendChild(b);
+      answer.appendChild(b);
     });
+    setLinearExerciseLayout(area,prompt,answer);
     playAudio(ex.q,ex.audio);
   } else if(ex.type==="fill"){
+    const prompt=document.createElement("div");
+    const answer=document.createElement("div");
     const q=document.createElement("div");q.className="q";q.textContent=t('exercise.franco_prompt');
-    area.appendChild(q);
+    prompt.appendChild(q);
     const sub=document.createElement("div");sub.style.padding="0 16px";
     sub.innerHTML=`<div class="ar" lang="ar" style="font-size:26px">${ex.ar}</div>${registerBadge(ex)}<div style="color:var(--ink-soft);margin-top:4px">${ex.q}</div>`;
-    area.appendChild(sub);
+    prompt.appendChild(sub);
     const fw=document.createElement("div");fw.className="fillwrap";
     const inp=document.createElement("input");
     inp.id="fillInput";inp.placeholder=t('ui.e_g_shukran');inp.autocomplete="off";
@@ -3164,7 +3204,8 @@ function renderExercise(){
         check();
       }
     };
-    fw.appendChild(inp);area.appendChild(fw);
+    fw.appendChild(inp);answer.appendChild(fw);
+    setLinearExerciseLayout(area,prompt,answer);
     requestAnimationFrame(()=>inp.focus());
   } else if(ex.type==="match"){
     const q=document.createElement("div");q.className="q";q.textContent=t('exercise.match_prompt');
@@ -4064,6 +4105,11 @@ function initLandingAnimations(){
 }
 
 /* ---------- BOOTSTRAP ---------- */
+window.addEventListener("resize",sizeLinearExerciseArea);
+if(window.visualViewport)window.visualViewport.addEventListener("resize",sizeLinearExerciseArea);
+if("ResizeObserver" in window){
+  new ResizeObserver(sizeLinearExerciseArea).observe(document.getElementById("checkWrap"));
+}
 const storedBaseLang=localStorage.getItem('baseLang');
 if(storedBaseLang)baseLang=storedBaseLang;
 const storedVoicePref=localStorage.getItem('voicePref');
