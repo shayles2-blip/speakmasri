@@ -327,9 +327,13 @@ input:focus, select:focus {
   align-items: center;
   gap: 12px;
   padding: 16px 18px;
-  background: var(--primary-surface);
+  background: linear-gradient(135deg, var(--primary-surface), var(--surface));
 }
 .scenario-icon { font-size: 22px; }
+.scenario-head:not(.location-backdrop):not(.katya-figure) .scenario-icon {
+  font-size: 30px;
+  filter: drop-shadow(0 2px 2px rgba(28,32,36,.08));
+}
 .scenario-title {
   font-weight: 800;
   font-size: 17px;
@@ -357,6 +361,38 @@ input:focus, select:focus {
   z-index: 1;
   color: #fff;
   text-shadow: 0 1px 3px rgba(0,0,0,0.65);
+}
+.scenario-head.katya-figure {
+  position: relative;
+  min-height: 120px;
+  padding: 18px 122px 18px 18px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--clay), var(--primary-hover));
+}
+.scenario-head.katya-figure .scenario-icon,
+.scenario-head.katya-figure .scenario-title,
+.scenario-head.katya-figure .scenario-progress {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.65);
+}
+.katya-scenario-figure {
+  position: absolute;
+  z-index: 1;
+  right: 10px;
+  bottom: 0;
+  width: 100px;
+  height: 108px;
+  border-radius: 50px 50px 0 0;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.28);
+}
+.scenario-head.katya-figure .location-audio-btn {
+  right: 104px;
+  bottom: 10px;
+  width: 40px;
+  height: 40px;
 }
 .location-audio-btn {
   position: absolute;
@@ -2452,13 +2488,15 @@ function isLessonUnlocked(uIdx,lIdx){
 }
 
 const SCENARIO_ICONS={u0:"💬",u1:"🤝",u2:"❤️",u3:"🎉",u4:"🚕",u5:"🍲",pyramids:"🏛️",corniche:"🌊",katya_visit:"💛"};
-const UNIT_LOCATIONS={u1:"doorstep",u2:"balcony",u3:"eid",u4:"khan",u5:"koshary"};
+const UNIT_LOCATIONS={u1:"doorstep",u2:"balcony",u3:"eid",u4:"khan",u5:"koshary",pyramids:"pyramids",corniche:"corniche"};
 const LOCATION_NARRATIONS={
   doorstep:"إحنا قدام باب العيلة... يلا بينا ندخل!",
   balcony:"تعالى نقعد على البلكونة، والنيل قدامنا.",
   eid:"كل سنة وانتوا طيبين! يلا نعيّد مع بعض.",
   koshary:"وصلنا لعربية الكشري... تحب تجرّب؟",
-  khan:"إحنا في خان الخليلي... يلا نفاصل شوية!"
+  khan:"إحنا في خان الخليلي... يلا نفاصل شوية!",
+  pyramids:"وصلنا للأهرامات... مصدق إننا هنا؟!",
+  corniche:"يلا نتمشى على كورنيش إسكندرية، والبحر قدامنا."
 };
 let arrivalUnit=null;
 
@@ -2635,6 +2673,20 @@ function renderPath(){
       audioBtn.setAttribute("aria-label","Play location narration");
       audioBtn.textContent="🔊";
       audioBtn.onclick=()=>playAudio(LOCATION_NARRATIONS[locationKey],locationAudioPath(locationKey));
+      head.appendChild(audioBtn);
+    }else if(u.id==="katya_visit"){
+      head.classList.add("katya-figure");
+      const figure=document.createElement("img");
+      figure.className="katya-scenario-figure";
+      figure.src="mascot/katya_happy.webp";
+      figure.alt="";
+      head.appendChild(figure);
+      const audioBtn=document.createElement("button");
+      audioBtn.type="button";
+      audioBtn.className="location-audio-btn";
+      audioBtn.setAttribute("aria-label","Play Katya welcome narration");
+      audioBtn.textContent="🔊";
+      audioBtn.onclick=()=>playAudio(u.lessons[0].vocab[0].ar,locationAudioPath("katya_visit"));
       head.appendChild(audioBtn);
     }
     card.appendChild(head);
