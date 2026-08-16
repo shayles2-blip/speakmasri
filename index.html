@@ -432,10 +432,21 @@ input:focus, select:focus {
 .explore-map-image { display:block; width:100%; height:100%; object-fit:cover; }
 .explore-map-pin { position:absolute; left:var(--pin-left); top:var(--pin-top); width:44px; height:44px; padding:0; transform:translate(-50%,-50%); border:0; border-radius:50%; background:transparent; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .explore-map-pin::before { content:""; position:absolute; inset:7px; border:2px solid #fff; border-radius:50% 50% 50% 0; background:var(--primary); box-shadow:0 2px 7px rgba(0,0,0,0.3); transform:rotate(-45deg); }
+.map-node--next { z-index:1; isolation:isolate; }
+.map-node--next::after { content:""; position:absolute; inset:-14px; z-index:-1; border-radius:50%; background:radial-gradient(circle, var(--gold) 0%, transparent 70%); opacity:.55; pointer-events:none; }
+.map-node--next.is-newly-unlocked::after { animation:nextNodeSpotlight 900ms ease-out 1; }
+.explore-map-next-label { position:absolute; left:var(--pin-left); top:var(--pin-top); z-index:2; transform:translate(-50%,25px); padding:3px 7px; border:1px solid #fff; border-radius:999px; background:var(--text-main); color:#fff; box-shadow:0 2px 6px rgba(0,0,0,.22); font-size:11px; font-weight:900; line-height:1.2; pointer-events:none; }
+@keyframes nextNodeSpotlight {
+  from { opacity:0; transform:scale(.4); }
+  to { opacity:.55; transform:scale(1); }
+}
 .explore-map-pin:active { transform:translate(-50%,-50%) scale(0.94); }
 .explore-map-pin .glyph { position:absolute; inset:7px; z-index:1; display:grid; place-items:center; font-size:15px; line-height:1; }
 .explore-map-pin .badge { position:absolute; z-index:2; top:-2px; right:-5px; min-width:20px; padding:2px 4px; border:1px solid #fff; border-radius:999px; background:var(--text-main); color:#fff; font-size:12px; font-weight:900; line-height:1.2; }
 .explore-map-pin:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce) {
+  .map-node--next.is-newly-unlocked::after { animation:none !important; }
+}
 
 /* ===== AUTH → HOME LOADING SKELETON ===== */
 #homeLoadingSkeleton { min-height:100dvh; background:var(--surface); }
@@ -2695,18 +2706,41 @@ function renderExploreMap(el){
   const map=document.createElement("div");
   map.className="explore-map";
   map.innerHTML='<img class="explore-map-image" src="mascot/egypt_map.webp" alt="Illustrated map of Egypt">';
+  const nextPlace=EXPLORE_PLACES.find(place=>explorePlaceBadge(place)!=='✓');
+  const spotlightKey='speakmasri_lastSpotlightNode';
+  const isNewSpotlight=!!nextPlace&&localStorage.getItem(spotlightKey)!==nextPlace.unitId;
+  const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(isNewSpotlight)localStorage.setItem(spotlightKey,nextPlace.unitId);
   EXPLORE_PLACES.forEach(place=>{
     const pin=document.createElement("button");
     const position=pinPositions[place.unitId];
     const badge=explorePlaceBadge(place);
     pin.type="button";
-    pin.className="explore-map-pin";
+    const isNext=place===nextPlace;
+    pin.className=`explore-map-pin${isNext?' map-node--next':''}${isNext&&isNewSpotlight&&!reduceMotion?' is-newly-unlocked':''}`;
     pin.setAttribute("aria-label",place.label);
     pin.style.setProperty('--pin-left',position[0]+'%');
     pin.style.setProperty('--pin-top',position[1]+'%');
     pin.innerHTML=`<span class="glyph" aria-hidden="true">${place.glyph}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}`;
     pin.onclick=()=>activateExplorePlace(place,pin);
+    if(pin.classList.contains('is-newly-unlocked')){
+      const settleSpotlight=event=>{
+        if(event.target!==pin||event.animationName!=='nextNodeSpotlight')return;
+        pin.classList.remove('is-newly-unlocked');
+        pin.removeEventListener('animationend',settleSpotlight);
+      };
+      pin.addEventListener('animationend',settleSpotlight);
+    }
     map.appendChild(pin);
+    if(isNext){
+      const nextLabel=document.createElement("span");
+      nextLabel.className="explore-map-next-label";
+      nextLabel.setAttribute("aria-hidden","true");
+      nextLabel.style.setProperty('--pin-left',position[0]+'%');
+      nextLabel.style.setProperty('--pin-top',position[1]+'%');
+      nextLabel.textContent="Next";
+      map.appendChild(nextLabel);
+    }
   });
   el.appendChild(map);
 }
