@@ -437,6 +437,23 @@ input:focus, select:focus {
 .explore-map-pin .badge { position:absolute; z-index:2; top:-2px; right:-5px; min-width:20px; padding:2px 4px; border:1px solid #fff; border-radius:999px; background:var(--text-main); color:#fff; font-size:12px; font-weight:900; line-height:1.2; }
 .explore-map-pin:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
 
+/* ===== AUTH → HOME LOADING SKELETON ===== */
+#homeLoadingSkeleton { min-height:100dvh; background:var(--surface); }
+.home-skeleton-top { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 16px; border-bottom:1px solid var(--border-light); }
+.home-skeleton-body { padding:12px 16px 24px; overflow:hidden; }
+.skeleton-shape { background:linear-gradient(100deg,#f7f1e8 20%,#fffaf2 38%,#f7f1e8 56%); background-size:220% 100%; animation:homeSkeletonShimmer 1.8s ease-in-out infinite; }
+.home-skeleton-pill { width:82px; height:30px; border-radius:var(--r-pill); }
+.home-skeleton-pill:last-child { width:132px; }
+.home-skeleton-heading { width:138px; height:16px; margin:4px 0 12px; border-radius:7px; }
+.home-skeleton-rail { display:flex; gap:8px; margin-bottom:18px; }
+.home-skeleton-rail-card { flex:0 0 92px; height:112px; border-radius:14px; }
+.home-skeleton-scenario { height:122px; margin:14px 0; border:1px solid var(--border-light); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow-card); }
+.home-skeleton-scenario .skeleton-shape { width:100%; height:100%; }
+@keyframes homeSkeletonShimmer { from { background-position:100% 0; } to { background-position:-100% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shape { animation:none !important; background:#f7f1e8; }
+}
+
 .arrival-screen { position:fixed; inset:0; background:var(--bg-canvas); z-index:200; display:flex; flex-direction:column; }
 .arrival-hero { height:48%; position:relative; display:flex; align-items:flex-end; justify-content:center; background-size:cover; background-position:center; }
 .arrival-hero::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, var(--bg-canvas) 100%); }
@@ -1294,6 +1311,27 @@ input:focus, select:focus {
     <div id="landingToast" class="landing-toast hidden" role="status" aria-live="polite"></div>
   </div>
 
+  <!-- AUTHENTICATED HOME LOADING STATE -->
+  <div id="homeLoadingSkeleton" class="hidden" role="status" aria-label="Loading your home screen">
+    <div class="home-skeleton-top" aria-hidden="true">
+      <div class="skeleton-shape home-skeleton-pill"></div>
+      <div class="skeleton-shape home-skeleton-pill"></div>
+      <div class="skeleton-shape home-skeleton-pill"></div>
+    </div>
+    <div class="home-skeleton-body" aria-hidden="true">
+      <div class="skeleton-shape home-skeleton-heading"></div>
+      <div class="home-skeleton-rail">
+        <div class="skeleton-shape home-skeleton-rail-card"></div>
+        <div class="skeleton-shape home-skeleton-rail-card"></div>
+        <div class="skeleton-shape home-skeleton-rail-card"></div>
+        <div class="skeleton-shape home-skeleton-rail-card"></div>
+      </div>
+      <div class="home-skeleton-scenario"><div class="skeleton-shape"></div></div>
+      <div class="home-skeleton-scenario"><div class="skeleton-shape"></div></div>
+      <div class="home-skeleton-scenario"><div class="skeleton-shape"></div></div>
+    </div>
+  </div>
+
   <!-- MAIN -->
   <div id="main" class="hidden">
     <div class="top">
@@ -1877,22 +1915,24 @@ function getAuthErrorMessage(code){
 async function loadUserData(){
   const uid=firebase.auth().currentUser.uid;
   const db=firebase.firestore();
-  const userDocSnap=await db.collection('users').doc(uid).get();
+  const [userDocSnap,progressSnap,milestonesSnap,visitedPlacesSnap,phrasesSnap]=await Promise.all([
+    db.collection('users').doc(uid).get(),
+    db.collection(`users/${uid}/progress`).get(),
+    db.collection(`users/${uid}/milestones`).get(),
+    db.collection(`users/${uid}/visitedPlaces`).get(),
+    db.collection(`users/${uid}/customPhrases`).get()
+  ]);
   const userData=userDocSnap.exists?userDocSnap.data():{};
 
-  const progressSnap=await db.collection(`users/${uid}/progress`).get();
   const progress={};
   progressSnap.forEach(doc=>{progress[doc.id]=doc.data();});
 
-  const milestonesSnap=await db.collection(`users/${uid}/milestones`).get();
   const milestones=[];
   milestonesSnap.forEach(doc=>{milestones.push(doc.data());});
 
-  const visitedPlacesSnap=await db.collection(`users/${uid}/visitedPlaces`).get();
   const visitedPlaces=[];
   visitedPlacesSnap.forEach(doc=>{visitedPlaces.push(doc.id);});
 
-  const phrasesSnap=await db.collection(`users/${uid}/customPhrases`).get();
   const customPhrases=[];
   phrasesSnap.forEach(doc=>{const p=doc.data();p._id=doc.id;customPhrases.push(p);});
 
@@ -4171,11 +4211,26 @@ renderVoicePrefToggles();
 applyStaticStrings();
 if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
 initLandingAnimations();
+let homeLoadingSkeletonTimer=null;
+function scheduleHomeLoadingSkeleton(){
+  clearTimeout(homeLoadingSkeletonTimer);
+  homeLoadingSkeletonTimer=setTimeout(()=>{
+    document.getElementById('auth').classList.add('hidden');
+    document.getElementById('homeLoadingSkeleton').classList.remove('hidden');
+  },150);
+}
+function hideHomeLoadingSkeleton(){
+  clearTimeout(homeLoadingSkeletonTimer);
+  homeLoadingSkeletonTimer=null;
+  document.getElementById('homeLoadingSkeleton').classList.add('hidden');
+}
 firebase.auth().onAuthStateChanged(async(fbUser)=>{
   if(fbUser&&(!user||user.isGuest)){
+    scheduleHomeLoadingSkeleton();
     await loadUserData();
     await checkReturnVisit();
     await pullPartnerSubmissions();
+    hideHomeLoadingSkeleton();
     enterApp();
   }
 });
