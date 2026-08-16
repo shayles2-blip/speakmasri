@@ -901,9 +901,14 @@ input:focus, select:focus {
 }
 
 /* ===== FEEDBACK SLIDE ===== */
+@keyframes fbBlurIn {
+  from { opacity: 0; filter: blur(6px); transform: translateY(4px) scale(0.98); }
+  to   { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+}
 .feedback {
   margin: -16px -20px 12px;
   padding: 14px 20px;
+  animation: fbBlurIn 260ms ease-out;
 }
 .fb-ok {
   background: var(--primary-surface);
@@ -1099,6 +1104,7 @@ input:focus, select:focus {
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .feedback { animation: none !important; opacity: 1; filter: none; transform: none; }
 }
 
 /* ===== LANDING SCREEN WOW ===== */
