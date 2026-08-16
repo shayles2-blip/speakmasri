@@ -454,6 +454,23 @@ input:focus, select:focus {
   .skeleton-shape { animation:none !important; background:#f7f1e8; }
 }
 
+/* ===== FIRST PATH REVEAL ===== */
+.plan-reveal-overlay { position:fixed; inset:0; z-index:190; display:flex; align-items:center; justify-content:center; padding:24px 16px; background:rgba(28,32,36,.42); }
+.plan-reveal { position:relative; width:min(100%,440px); padding:24px; overflow:hidden; border:1.5px solid var(--gold); border-radius:var(--r-lg); background:linear-gradient(135deg,var(--gold-soft),var(--surface)); box-shadow:var(--shadow-float); }
+.plan-reveal > * { opacity:0; transform:translateY(7px); filter:blur(4px); transition:opacity 200ms ease-out, transform 200ms ease-out, filter 200ms ease-out; }
+.plan-reveal.is-ready > * { opacity:1; transform:translateY(0); filter:blur(0); }
+.plan-reveal.is-ready > :nth-child(2) { transition-delay:85ms; }
+.plan-reveal-copy { padding-right:36px; }
+.plan-reveal-eyebrow { margin-bottom:8px; color:var(--gold-text); font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.plan-reveal-title { margin:0; color:var(--text-main); font-size:clamp(23px,6vw,30px); line-height:1.2; }
+.plan-reveal-close { position:absolute; top:10px; right:10px; width:44px; height:44px; margin:0; padding:0; border:0; background:transparent; color:var(--ink-soft); font-size:25px; line-height:1; cursor:pointer; }
+.plan-reveal-actions { display:flex; flex-direction:column; gap:6px; margin-top:22px; }
+.plan-reveal-actions .btn { margin:0; }
+.plan-reveal-later { min-height:40px; margin:0; padding:8px; border:0; background:transparent; color:var(--teal); font-size:13px; font-weight:700; text-decoration:underline; cursor:pointer; }
+@media (prefers-reduced-motion: reduce) {
+  .plan-reveal > * { opacity:1; transform:none; filter:none; transition:none !important; }
+}
+
 .arrival-screen { position:fixed; inset:0; background:var(--bg-canvas); z-index:200; display:flex; flex-direction:column; }
 .arrival-hero { height:48%; position:relative; display:flex; align-items:flex-end; justify-content:center; background-size:cover; background-position:center; }
 .arrival-hero::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, var(--bg-canvas) 100%); }
@@ -1354,6 +1371,21 @@ input:focus, select:focus {
     </div>
   </div>
 
+  <!-- ONE-TIME PERSONALIZED FIRST PATH -->
+  <div id="planRevealOverlay" class="plan-reveal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="planRevealTitle">
+    <div id="planReveal" class="plan-reveal">
+      <div class="plan-reveal-copy">
+        <button id="planRevealClose" class="plan-reveal-close" type="button" aria-label="Dismiss your first path">&times;</button>
+        <div class="plan-reveal-eyebrow">Your first path</div>
+        <h2 id="planRevealTitle" class="plan-reveal-title"></h2>
+      </div>
+      <div class="plan-reveal-actions">
+        <button id="planRevealStart" class="btn" type="button">Start</button>
+        <button id="planRevealLater" class="plan-reveal-later" type="button">Maybe later</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MAIN -->
   <div id="main" class="hidden">
     <div class="top">
@@ -2154,6 +2186,7 @@ async function signup(){
     });
     if(guestConnection&&guestConnection.total)localStorage.removeItem('speakmasri_guestConnection');
     analytics.logEvent('sign_up');
+    sessionStorage.setItem('speakmasri_justSignedUpMotivation',motivation);
     closeAuthSheet(true);
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
@@ -2474,6 +2507,41 @@ function enterApp(){
   refreshTopBar();
   renderPath();
   tab("learn");
+  maybeShowPlanReveal();
+}
+
+function hidePlanReveal(){
+  const overlay=document.getElementById("planRevealOverlay");
+  document.getElementById("planReveal").classList.remove("is-ready");
+  overlay.classList.add("hidden");
+}
+
+function maybeShowPlanReveal(){
+  const storageKey='speakmasri_justSignedUpMotivation';
+  const motivation=sessionStorage.getItem(storageKey);
+  sessionStorage.removeItem(storageKey);
+  const paths={
+    partner:{unitId:"u1",lessonId:"l1-1",label:"Warm greetings for meeting the family"},
+    traveler:{unitId:"u4",lessonId:"l4-1",label:"Numbers and getting around Egypt"},
+    heritage:{unitId:"u2",lessonId:"l2-2",label:"Family words the way Egyptians really say them"}
+  };
+  const path=paths[motivation];
+  if(!path)return;
+  const unit=COURSE.units.find(candidate=>candidate.id===path.unitId);
+  const lesson=unit&&unit.lessons.find(candidate=>candidate.id===path.lessonId);
+  if(!lesson)return;
+  const overlay=document.getElementById("planRevealOverlay");
+  const reveal=document.getElementById("planReveal");
+  const startButton=document.getElementById("planRevealStart");
+  document.getElementById("planRevealTitle").textContent=path.label;
+  document.getElementById("planRevealClose").onclick=hidePlanReveal;
+  document.getElementById("planRevealLater").onclick=hidePlanReveal;
+  startButton.onclick=()=>{hidePlanReveal();startLesson(lesson);};
+  overlay.classList.remove("hidden");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    reveal.classList.add("is-ready");
+    startButton.focus();
+  }));
 }
 
 function updateHomeMiraGreeting(){
