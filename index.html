@@ -962,6 +962,7 @@ input:focus, select:focus {
 
 /* ===== AUDIO BUTTON ===== */
 .audio-btn {
+  position: relative;
   background: var(--primary);
   width: 72px;
   height: 72px;
@@ -975,6 +976,20 @@ input:focus, select:focus {
   display: block;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
+.audio-btn.is-playing::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(from 0deg, var(--primary), var(--gold), var(--primary));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: audioBeamSpin 1.1s linear infinite;
+  pointer-events: none;
+}
+@keyframes audioBeamSpin { to { transform: rotate(360deg); } }
 .audio-btn:active {
   transform: scale(0.94);
   box-shadow: 0 4px 12px rgba(29, 161, 74, 0.2);
@@ -1105,6 +1120,7 @@ input:focus, select:focus {
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
   .feedback { animation: none !important; opacity: 1; filter: none; transform: none; }
+  .audio-btn.is-playing::before { animation: none !important; }
 }
 
 /* ===== LANDING SCREEN WOW ===== */
@@ -1655,6 +1671,7 @@ let isReviewSession=false;
 let connectionPrompts=[];
 let connectionAnswerWasCorrect=false;
 let currentAudio=null;
+let pendingAudioTrigger=null;
 let selection=null;     // current selection for check()
 let matchState=null;    // state for match exercise
 let refreshLandingPhrase=null;
@@ -3818,7 +3835,31 @@ function speak(text){
   speechSynthesis.speak(u);
 }
 
+document.addEventListener('click',e=>{
+  const btn=e.target.closest?.('.audio-btn');
+  if(btn)pendingAudioTrigger=btn;
+},true);
+
+function setAudioBtnPlaying(btn,isPlaying){
+  if(!btn.dataset.audioOriginalGlyph){
+    btn.dataset.audioOriginalGlyph=btn.textContent;
+    btn.dataset.audioOriginalAria=btn.getAttribute('aria-label')||'';
+    btn.dataset.audioOriginalAriaPresent=String(btn.hasAttribute('aria-label'));
+  }
+  btn.classList.toggle('is-playing',isPlaying);
+  if(isPlaying){
+    btn.textContent='♫';
+    btn.setAttribute('aria-label','Playing audio…');
+  }else{
+    btn.textContent=btn.dataset.audioOriginalGlyph;
+    if(btn.dataset.audioOriginalAriaPresent==='true')btn.setAttribute('aria-label',btn.dataset.audioOriginalAria);
+    else btn.removeAttribute('aria-label');
+  }
+}
+
 function playAudio(text,audioPath){
+  const btn=pendingAudioTrigger;
+  pendingAudioTrigger=null;
   if(currentAudio){
     currentAudio.pause();
     currentAudio.currentTime=0;
@@ -3826,6 +3867,10 @@ function playAudio(text,audioPath){
   if(!audioPath){speak(text);return;}
   const audio=new Audio(audioPath);
   currentAudio=audio;
+  if(btn){
+    audio.addEventListener('play',()=>setAudioBtnPlaying(btn,true));
+    ['pause','ended','error'].forEach(ev=>audio.addEventListener(ev,()=>setAudioBtnPlaying(btn,false)));
+  }
   audio.onerror=()=>speak(text);
   audio.play().catch(()=>speak(text));
 }
