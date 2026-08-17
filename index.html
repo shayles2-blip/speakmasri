@@ -350,6 +350,18 @@ input:focus, select:focus {
   color: var(--text-muted);
   font-weight: 500;
 }
+.scenario-readiness {
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
 .scenario-progress-bar { height:4px; background:rgba(104,112,118,.25); }
 .scenario-progress-fill { height:100%; background:var(--primary); }
 .scenario-head.location-backdrop {
@@ -2902,10 +2914,22 @@ function renderPath(){
     card.id='scenario-'+u.id;
 
     const doneCount=u.lessons.filter(l=>isLessonDone(l.id)).length;
+    const unitVocab=u.lessons.flatMap(lesson=>lesson.vocab.map((_,idx)=>({lessonId:lesson.id,idx})));
+    const ownedCount=unitVocab.filter(({lessonId,idx})=>{
+      const stats=user.itemStats?.[`${lessonId}_${idx}`];
+      const correct=Number(stats?.correct)||0;
+      const incorrect=Number(stats?.incorrect)||0;
+      return correct>=3&&correct>=incorrect*3;
+    }).length;
+    const readinessPct=unitVocab.length?Math.round(ownedCount/unitVocab.length*100):0;
+    const readinessLabel=ownedCount>0&&!user.isGuest
+      ?`<span class="scenario-readiness" title="${ownedCount} of ${unitVocab.length} phrases owned">${readinessPct}% ready</span>`
+      :"";
     const head=document.createElement("div");
     head.className="scenario-head";
     head.innerHTML=`<span class="scenario-icon">${SCENARIO_ICONS[u.id]||"📍"}</span>
       <span class="scenario-title">${titleText(u).replace(/^Scenario:\s*/,"")}</span>
+      ${readinessLabel}
       <span class="scenario-progress">${doneCount}/${u.lessons.length}</span>`;
     const locationKey=UNIT_LOCATIONS[u.id];
     if(locationKey){
