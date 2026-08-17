@@ -1845,6 +1845,15 @@ const STRINGS={
   "moment.days_heritage":{en:"{n} days until your moment",ru:"{n} дн. до вашего особого момента"},
   "moment.today":{en:"Your moment is today",ru:"Ваш особый момент — сегодня"},
   "moment.past":{en:"That moment is part of your story now.",ru:"Теперь этот момент — часть вашей истории."},
+  "moment.reflection_prompt":{en:"How did it go?",ru:"Как всё прошло?"},
+  "moment.reflection_used":{en:"I used something I learned",ru:"Мне удалось использовать то, что я выучил(а)"},
+  "moment.reflection_understood":{en:"I understood more than before",ru:"Я понял(а) больше, чем раньше"},
+  "moment.reflection_froze":{en:"I froze / didn't know what to say",ru:"Я растерялся(-ась) / не знал(а), что сказать"},
+  "moment.reflection_heard":{en:"I heard phrases I want to learn",ru:"Я услышал(а) фразы, которые хочу выучить"},
+  "moment.reflection_ack_used":{en:"That's wonderful — that's exactly what all this practice is for.",ru:"Это замечательно — именно ради таких моментов вы и занимались."},
+  "moment.reflection_ack_understood":{en:"Understanding even a little more is real progress.",ru:"Понимать хотя бы немного больше — это настоящий прогресс."},
+  "moment.reflection_ack_froze":{en:"That happens to everyone. You showed up, and that's what matters — it'll feel easier next time.",ru:"Так бывает со всеми. Главное, что вы пришли — в следующий раз будет немного легче."},
+  "moment.reflection_ack_heard":{en:"Good ear. Head to your Phrasebook anytime to jot down what you heard.",ru:"Хороший слух. Загляните в Разговорник в любое время, чтобы записать то, что вы услышали."},
   "ui.mira_home_greeting":{en:"Hey, {name}! Ready to practice?",ru:"Привет, {name}! Готовы позаниматься?"},
   "ui.mira_home_greeting_no_name":{en:"Hey! Ready to practice?",ru:"Привет! Готовы позаниматься?"},
   "ui.verify_your_email_to_secure_your_account":{en:"Verify your email to secure your account",ru:"Подтвердите почту, чтобы защитить аккаунт"},
@@ -2122,9 +2131,13 @@ function normalizeConnection(value){
 function normalizeMoment(value){
   const m=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
   const validTypes=['partner','traveler','heritage'];
+  const r=m.reflection&&typeof m.reflection==='object'&&!Array.isArray(m.reflection)?m.reflection:{};
+  const validReflectionChoices=['used','understood','froze','heard'];
+  const reflectionChoice=validReflectionChoices.includes(r.choice)?r.choice:'';
   return {type:validTypes.includes(m.type)?m.type:'',date:typeof m.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(m.date)?m.date:'',
     personName:typeof m.personName==='string'?m.personName.slice(0,60):'',setAt:typeof m.setAt==='string'?m.setAt:'',
-    askedAndDismissed:!!m.askedAndDismissed};
+    askedAndDismissed:!!m.askedAndDismissed,reflection:{choice:reflectionChoice,
+      respondedAt:reflectionChoice&&typeof r.respondedAt==='string'?r.respondedAt:''}};
 }
 
 function normalizeItemStats(value){
@@ -3015,7 +3028,7 @@ function momentSummary(moment){
     const parts=moment.date.split('-').map(Number),target=new Date(parts[0],parts[1]-1,parts[2]);
     const today=new Date();today.setHours(0,0,0,0);
     const days=Math.round((target-today)/86400000);
-    if(days<0)return {title:t('moment.past'),note:momentTypeLabel(moment.type)};
+    if(days<0)return {title:t('moment.past'),note:momentTypeLabel(moment.type),isPast:true};
     if(days===0)return {title:t('moment.today'),note:momentTypeLabel(moment.type)};
     let key='moment.days_heritage';
     if(moment.type==='traveler')key='moment.days_trip';
@@ -3047,12 +3060,12 @@ function renderMomentCardState(card,editing){
     };});
     card.querySelector('.moment-save').onclick=async()=>{
       const selected=card.querySelector('[data-moment-type].selected');if(!selected)return;
-      user.moment={type:selected.dataset.momentType,date:card.querySelector('.moment-date').value,personName:nameInput.value.trim(),setAt:new Date().toISOString(),askedAndDismissed:false};
+      user.moment={type:selected.dataset.momentType,date:card.querySelector('.moment-date').value,personName:nameInput.value.trim(),setAt:new Date().toISOString(),askedAndDismissed:false,reflection:{choice:'',respondedAt:''}};
       await saveMoment();renderMomentCardState(card,false);
     };
     const dismiss=card.querySelector('.moment-dismiss');if(dismiss)dismiss.onclick=async()=>{user.moment={...moment,askedAndDismissed:true};await saveMoment();renderMomentCardState(card,false);};
     const cancel=card.querySelector('.moment-cancel');if(cancel)cancel.onclick=()=>renderMomentCardState(card,false);
-    const clear=card.querySelector('.moment-clear');if(clear)clear.onclick=async()=>{user.moment={type:'',date:'',personName:'',setAt:'',askedAndDismissed:true};await saveMoment();renderMomentCardState(card,false);};
+    const clear=card.querySelector('.moment-clear');if(clear)clear.onclick=async()=>{user.moment={type:'',date:'',personName:'',setAt:'',askedAndDismissed:true,reflection:{choice:'',respondedAt:''}};await saveMoment();renderMomentCardState(card,false);};
     return;
   }
   if(!moment.type){
@@ -3061,6 +3074,24 @@ function renderMomentCardState(card,editing){
     card.querySelector('button').onclick=()=>renderMomentCardState(card,true);return;
   }
   const summary=momentSummary(moment);card.className='moment-card';
+  if(summary.isPast&&!moment.reflection.choice){
+    const choices=[['used','moment.reflection_used'],['understood','moment.reflection_understood'],['froze','moment.reflection_froze'],['heard','moment.reflection_heard']];
+    card.innerHTML=`<div class="moment-summary"><div class="moment-card-title" data-i18n="moment.reflection_prompt">${t('moment.reflection_prompt')}</div><button type="button" class="moment-link" data-i18n="moment.edit">${t('moment.edit')}</button></div>
+      <div class="moment-type-options" role="group" aria-label="${t('moment.reflection_prompt')}" data-i18n-aria-label="moment.reflection_prompt">${choices.map(([choice,key])=>`<button type="button" class="moment-type-option" data-reflection-choice="${choice}" data-i18n="${key}">${t(key)}</button>`).join('')}</div>`;
+    card.querySelector('.moment-link').onclick=()=>renderMomentCardState(card,true);
+    card.querySelectorAll('[data-reflection-choice]').forEach(btn=>{btn.onclick=async()=>{
+      user.moment={...moment,reflection:{choice:btn.dataset.reflectionChoice,respondedAt:new Date().toISOString()}};
+      await saveMoment();renderMomentCardState(card,false);
+    };});
+    return;
+  }
+  if(summary.isPast&&moment.reflection.choice){
+    const acknowledgmentKey={used:'moment.reflection_ack_used',understood:'moment.reflection_ack_understood',froze:'moment.reflection_ack_froze',heard:'moment.reflection_ack_heard'}[moment.reflection.choice];
+    card.innerHTML=`<div class="moment-summary"><div><div class="moment-card-title" data-i18n="${acknowledgmentKey}">${t(acknowledgmentKey)}</div><div class="moment-date-note"></div></div><button type="button" class="moment-link" data-i18n="moment.edit">${t('moment.edit')}</button></div>`;
+    card.querySelector('.moment-date-note').textContent=summary.note;
+    card.querySelector('.moment-link').onclick=()=>renderMomentCardState(card,true);
+    return;
+  }
   card.innerHTML=`<div class="moment-summary"><div><div class="moment-card-title"></div>${summary.note?'<div class="moment-date-note"></div>':''}</div><button type="button" class="moment-link">${t('moment.edit')}</button></div>`;
   card.querySelector('.moment-card-title').textContent=summary.title;
   const note=card.querySelector('.moment-date-note');if(note)note.textContent=summary.note;
