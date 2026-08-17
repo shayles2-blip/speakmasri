@@ -105,6 +105,10 @@ body {
 .connection-card .btn{background:var(--teal);box-shadow:0 8px 24px rgba(11,114,133,.16)}
 .review-card{margin:0 16px 18px;padding:16px;border:1.5px dashed var(--clay);border-radius:var(--r-lg);background:var(--clay-soft);box-shadow:var(--shadow-card)}
 .review-card-title{font-weight:800;font-size:18px}.review-card-copy{margin:6px 0 12px;color:var(--ink-soft)}
+.moment-card{margin:0 16px 18px;padding:16px;border:1px solid var(--border-light);border-radius:var(--r-lg);background:linear-gradient(135deg,var(--gold-soft),var(--surface));box-shadow:var(--shadow-card)}
+.moment-card-title{font-size:18px;font-weight:800;line-height:1.3}.moment-card-copy{margin:6px 0 14px;color:var(--ink-soft);font-size:13px;line-height:1.5}
+.moment-type-options{display:grid;gap:7px;margin-bottom:10px}.moment-type-option{width:100%;min-height:42px;padding:9px 12px;border:1px solid var(--border-light);border-radius:var(--r-md);background:var(--surface);color:var(--text-main);font:inherit;font-size:13px;font-weight:700;text-align:left;cursor:pointer}.moment-type-option.selected{border-color:var(--teal);background:var(--teal-soft);color:var(--teal)}
+.moment-fields{display:grid;gap:8px}.moment-fields input{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--border-light);border-radius:var(--r-md);background:var(--surface);color:var(--text-main);font:inherit;font-size:14px}.moment-fields label{color:var(--ink-soft);font-size:12px;font-weight:700}.moment-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:12px}.moment-actions .btn{width:auto;min-width:112px;margin:0}.moment-link{min-height:40px;padding:7px 9px;border:0;background:transparent;color:var(--teal);font:inherit;font-size:12px;font-weight:700;text-decoration:underline;cursor:pointer}.moment-compact{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px}.moment-compact .moment-card-copy{margin:0}.moment-summary{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.moment-summary .moment-link{flex:0 0 auto}.moment-date-note{margin-top:8px;color:var(--ink-soft);font-size:12px}
 .review-pill{display:inline-flex;align-items:center;padding:7px 10px;border-radius:var(--r-pill);background:var(--clay-soft);color:var(--clay);font-size:12px;font-weight:800;white-space:nowrap}
 .connection-rhythm{margin:0 16px 22px;padding:16px;text-align:left;background:var(--teal-soft);border:1px solid rgba(11,114,133,.3);border-radius:var(--r-lg)}
 .connection-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;text-align:center}.connection-stat-value{font-size:26px;font-weight:700;color:var(--teal)}.connection-stat-label{font-size:11px;color:var(--ink-soft)}
@@ -1807,6 +1811,26 @@ const STRINGS={
   "connection.morning":{en:"Morning",ru:"Утро"},
   "connection.afternoon":{en:"Afternoon",ru:"День"},
   "connection.evening":{en:"Evening",ru:"Вечер"},
+  "moment.invite_title":{en:"Got a moment you're getting ready for?",ru:"Готовитесь к особому моменту?"},
+  "moment.invite_copy":{en:"A family meeting, a trip, or a return to your roots — name it here so your learning has somewhere warm to point.",ru:"Встреча с семьёй, поездка или возвращение к корням — сохраните этот момент, чтобы у занятий был тёплый ориентир."},
+  "moment.date_label":{en:"Date (optional)",ru:"Дата (необязательно)"},
+  "moment.person_label":{en:"Person or relationship (optional)",ru:"Человек или кем он вам приходится (необязательно)"},
+  "moment.person_placeholder":{en:"Optional — her mom, his dad…",ru:"Например, её мама, его папа…"},
+  "moment.save":{en:"Save my moment",ru:"Сохранить момент"},
+  "moment.not_now":{en:"Not right now",ru:"Не сейчас"},
+  "moment.set_later":{en:"Have a moment in mind? Add it anytime",ru:"Появился особый момент? Добавьте его в любое время"},
+  "moment.edit":{en:"Edit",ru:"Изменить"},
+  "moment.clear":{en:"Clear moment",ru:"Удалить момент"},
+  "moment.cancel":{en:"Cancel",ru:"Отмена"},
+  "moment.partner_summary":{en:"Getting ready for your Egyptian partner's family",ru:"Готовимся к встрече с семьёй египетского партнёра"},
+  "moment.traveler_summary":{en:"Getting ready for your trip to Egypt",ru:"Готовимся к поездке в Египет"},
+  "moment.heritage_summary":{en:"Making space to reconnect with your heritage",ru:"Находим путь к своим корням"},
+  "moment.days_partner_name":{en:"{n} days until meeting {name}",ru:"{n} дн. до встречи с {name}"},
+  "moment.days_partner_them":{en:"{n} days until meeting them",ru:"{n} дн. до встречи"},
+  "moment.days_trip":{en:"{n} days until your trip to Egypt",ru:"{n} дн. до поездки в Египет"},
+  "moment.days_heritage":{en:"{n} days until your moment",ru:"{n} дн. до вашего особого момента"},
+  "moment.today":{en:"Your moment is today",ru:"Ваш особый момент — сегодня"},
+  "moment.past":{en:"That moment is part of your story now.",ru:"Теперь этот момент — часть вашей истории."},
   "ui.mira_home_greeting":{en:"Hey, {name}! Ready to practice?",ru:"Привет, {name}! Готовы позаниматься?"},
   "ui.mira_home_greeting_no_name":{en:"Hey! Ready to practice?",ru:"Привет! Готовы позаниматься?"},
   "ui.verify_your_email_to_secure_your_account":{en:"Verify your email to secure your account",ru:"Подтвердите почту, чтобы защитить аккаунт"},
@@ -2027,6 +2051,7 @@ async function loadUserData(){
     visitedPlaces,
     customPhrases,
     connection:normalizeConnection(userData.connection),
+    moment:normalizeMoment(userData.moment),
     itemStats:normalizeItemStats(userData.itemStats)
   };
   if(user.baseLang)baseLang=user.baseLang;
@@ -2080,6 +2105,14 @@ function normalizeConnection(value){
     reminderAsked:!!c.reminderAsked,reminder:c.reminder||'off',lastPhrase:c.lastPhrase||null};
 }
 
+function normalizeMoment(value){
+  const m=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+  const validTypes=['partner','traveler','heritage'];
+  return {type:validTypes.includes(m.type)?m.type:'',date:typeof m.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(m.date)?m.date:'',
+    personName:typeof m.personName==='string'?m.personName.slice(0,60):'',setAt:typeof m.setAt==='string'?m.setAt:'',
+    askedAndDismissed:!!m.askedAndDismissed};
+}
+
 function normalizeItemStats(value){
   if(!value||typeof value!=='object'||Array.isArray(value))return {};
   const normalized={};
@@ -2107,6 +2140,15 @@ async function saveConnection(){
   if(!fbUser)return;
   try{await firebase.firestore().collection('users').doc(fbUser.uid).set({connection:user.connection},{merge:true});}
   catch(e){console.error('saveConnection error',e);}
+}
+
+async function saveMoment(){
+  if(!user||user.isGuest)return;
+  user.moment=normalizeMoment(user.moment);
+  const fbUser=firebase.auth().currentUser;
+  if(!fbUser)return;
+  try{await firebase.firestore().collection('users').doc(fbUser.uid).set({moment:user.moment},{merge:true});}
+  catch(e){console.error('saveMoment error',e);}
 }
 
 function showNameEdit(){
@@ -2822,6 +2864,7 @@ function renderPath(){
   const el=document.getElementById("learn");
   el.innerHTML="";
   renderConnectionCard(el);
+  renderMomentCard(el);
   renderReviewCard(el);
   EXPLORE_PLACES.forEach(place=>{
     if(place.arrival)return;
@@ -2913,6 +2956,67 @@ function renderConnectionCard(el){
     <div class="connection-dots" aria-hidden="true">${[0,1,2].map(()=>`<span class="connection-dot${done?' filled':''}"></span>`).join('')}</div>
     <div class="connection-meta">${t('connection.meta')}</div><button class="btn" ${done?'disabled':''}>${done?t('connection.complete_today'):t('connection.start')}</button>`;
   card.querySelector('button').onclick=startConnectionDay;el.appendChild(card);
+}
+
+function momentTypeLabel(type){
+  return t({partner:'ui.egyptian_partner_in_laws',traveler:'ui.upcoming_trip_to_egypt',heritage:'ui.reconnecting_with_heritage'}[type]||'ui.egyptian_partner_in_laws');
+}
+
+function momentSummary(moment){
+  if(moment.date){
+    const parts=moment.date.split('-').map(Number),target=new Date(parts[0],parts[1]-1,parts[2]);
+    const today=new Date();today.setHours(0,0,0,0);
+    const days=Math.round((target-today)/86400000);
+    if(days<0)return {title:t('moment.past'),note:momentTypeLabel(moment.type)};
+    if(days===0)return {title:t('moment.today'),note:momentTypeLabel(moment.type)};
+    let key='moment.days_heritage';
+    if(moment.type==='traveler')key='moment.days_trip';
+    if(moment.type==='partner')key=moment.personName?'moment.days_partner_name':'moment.days_partner_them';
+    return {title:t(key).replace('{n}',days).replace('{name}',moment.personName),note:momentTypeLabel(moment.type)};
+  }
+  const key={partner:'moment.partner_summary',traveler:'moment.traveler_summary',heritage:'moment.heritage_summary'}[moment.type];
+  return {title:t(key),note:''};
+}
+
+function renderMomentCard(el){
+  if(!user||user.isGuest)return;
+  const card=document.createElement('section');card.className='moment-card';
+  el.appendChild(card);renderMomentCardState(card,false);
+}
+
+function renderMomentCardState(card,editing){
+  const moment=normalizeMoment(user.moment);
+  if(editing||(!moment.type&&!moment.askedAndDismissed)){
+    card.className='moment-card';
+    card.innerHTML=`<div class="moment-card-title">${t('moment.invite_title')}</div><div class="moment-card-copy">${t('moment.invite_copy')}</div>
+      <div class="moment-type-options" role="group" aria-label="${t('moment.invite_title')}">${['partner','traveler','heritage'].map(type=>`<button type="button" class="moment-type-option${moment.type===type?' selected':''}" data-moment-type="${type}" aria-pressed="${moment.type===type}">${momentTypeLabel(type)}</button>`).join('')}</div>
+      <div class="moment-fields"><label>${t('moment.date_label')}<input class="moment-date" type="date" value="${moment.date}"></label><label>${t('moment.person_label')}<input class="moment-name" type="text" maxlength="60" value="" placeholder="${t('moment.person_placeholder')}"></label></div>
+      <div class="moment-actions"><button type="button" class="btn moment-save" ${moment.type?'':'disabled'}>${t('moment.save')}</button>${editing?`<button type="button" class="moment-link moment-cancel">${t('moment.cancel')}</button><button type="button" class="moment-link moment-clear">${t('moment.clear')}</button>`:`<button type="button" class="moment-link moment-dismiss">${t('moment.not_now')}</button>`}</div>`;
+    const nameInput=card.querySelector('.moment-name');nameInput.value=moment.personName;
+    card.querySelectorAll('[data-moment-type]').forEach(btn=>{btn.onclick=()=>{
+      card.querySelectorAll('[data-moment-type]').forEach(option=>{const selected=option===btn;option.classList.toggle('selected',selected);option.setAttribute('aria-pressed',String(selected));});
+      card.querySelector('.moment-save').disabled=false;
+    };});
+    card.querySelector('.moment-save').onclick=async()=>{
+      const selected=card.querySelector('[data-moment-type].selected');if(!selected)return;
+      user.moment={type:selected.dataset.momentType,date:card.querySelector('.moment-date').value,personName:nameInput.value.trim(),setAt:new Date().toISOString(),askedAndDismissed:false};
+      await saveMoment();renderMomentCardState(card,false);
+    };
+    const dismiss=card.querySelector('.moment-dismiss');if(dismiss)dismiss.onclick=async()=>{user.moment={...moment,askedAndDismissed:true};await saveMoment();renderMomentCardState(card,false);};
+    const cancel=card.querySelector('.moment-cancel');if(cancel)cancel.onclick=()=>renderMomentCardState(card,false);
+    const clear=card.querySelector('.moment-clear');if(clear)clear.onclick=async()=>{user.moment={type:'',date:'',personName:'',setAt:'',askedAndDismissed:true};await saveMoment();renderMomentCardState(card,false);};
+    return;
+  }
+  if(!moment.type){
+    card.className='moment-card moment-compact';
+    card.innerHTML=`<div class="moment-card-copy">${t('moment.set_later')}</div><button type="button" class="moment-link">${t('moment.edit')}</button>`;
+    card.querySelector('button').onclick=()=>renderMomentCardState(card,true);return;
+  }
+  const summary=momentSummary(moment);card.className='moment-card';
+  card.innerHTML=`<div class="moment-summary"><div><div class="moment-card-title"></div>${summary.note?'<div class="moment-date-note"></div>':''}</div><button type="button" class="moment-link">${t('moment.edit')}</button></div>`;
+  card.querySelector('.moment-card-title').textContent=summary.title;
+  const note=card.querySelector('.moment-date-note');if(note)note.textContent=summary.note;
+  card.querySelector('button').onclick=()=>renderMomentCardState(card,true);
 }
 
 function flattenedLessons(){const out=[];COURSE.units.forEach(u=>u.lessons.forEach(l=>out.push(l)));return out;}
