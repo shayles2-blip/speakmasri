@@ -67,3 +67,39 @@ a { color: var(--primary); }
   margin-bottom: 20px;
   color: var(--text-main);
 }
+
+/* Blog */
+.blog-wrap { max-width: 860px; }
+.article-header { margin-bottom: 28px; }
+.article-header h1 { font-size: clamp(30px, 6vw, 46px); line-height: 1.12; margin-bottom: 12px; }
+.lede { color: var(--text-muted); font-size: 16px; margin: 0; }
+.article-card { padding: clamp(22px, 5vw, 44px); }
+.article-card h2 { font-size: 22px; line-height: 1.25; margin-top: 38px; }
+.article-card h3 { font-size: 17px; margin: 26px 0 8px; }
+.article-card p, .article-card li { font-size: 15.5px; }
+.article-card ul, .article-card ol { margin: 10px 0 18px 22px; padding: 0; }
+.tldr { background: #EAF5ED; border-left: 4px solid var(--primary); border-radius: 0 12px 12px 0; padding: 16px 20px; margin-bottom: 30px; }
+.tldr h2 { margin: 0 0 8px; }
+.table-scroll { overflow-x: auto; margin: 16px 0 24px; border: 1px solid var(--border-light); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: 14px; }
+th, td { padding: 12px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border-light); }
+th { background: #F5F6F5; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+tr:last-child td { border-bottom: 0; }
+td[lang="ar"] { font-size: 17px; font-weight: 600; text-align: right; white-space: nowrap; }
+.tag { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+.tag-formal { color: #8A431E; background: #F7E8DF; }
+.tag-casual { color: #116C32; background: #E2F3E7; }
+.tag-intimate { color: #765E0D; background: #F7EFCB; }
+.tag-neutral { color: #566066; background: #ECEEEF; }
+.callout { border: 1px solid var(--border-light); border-left: 4px solid #D4AF37; border-radius: 0 12px 12px 0; background: #FFFDF4; padding: 14px 18px; margin: 20px 0; }
+.callout p { margin: 0; }
+.post-grid { display: grid; gap: 18px; margin-top: 28px; }
+.post-card { display: block; color: var(--text-main); text-decoration: none; transition: border-color .15s, transform .15s; }
+.post-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+.post-card h2 { font-size: 20px; margin: 0 0 8px; }
+.post-card p { color: var(--text-muted); margin: 0 0 14px; }
+.read-more { color: var(--primary); font-size: 14px; font-weight: 800; }
+@media (max-width: 600px) {
+  .article-card { margin-left: -4px; margin-right: -4px; }
+  th, td { padding: 10px; }
+}
