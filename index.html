@@ -4354,6 +4354,9 @@ function renderMission(){
 }
 
 async function markMissionDone(){
+  const btn=document.getElementById("missionBtn");
+  if(!btn||btn.disabled) return;
+  btn.disabled=true;
   if(user&&!user.isGuest&&curMission){
     const missionIdx=curLesson.vocab.indexOf(curMission);
     const milestone={ar:curMission.ar,franco:curMission.franco,en:curMission.en,ru:curMission.ru||"",lessonId:curLesson.id,idx:missionIdx};
@@ -4362,14 +4365,11 @@ async function markMissionDone(){
     refreshTopBar();
     await saveMilestone(milestone);
   }
-  const btn=document.getElementById("missionBtn");
-  if(!btn) return;
   const missionMira=document.getElementById("missionMira");
   if(missionMira){
     missionMira.src="mascot/mira_proud.webp";
     missionMira.alt="Mira proudly celebrating the completed mission";
   }
-  btn.disabled=true;
   btn.classList.add("sealing");
   setTimeout(()=>{
     btn.classList.remove("sealing");
