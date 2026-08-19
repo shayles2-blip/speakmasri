@@ -1569,7 +1569,7 @@ input:focus, select:focus {
       <div class="guest-arrival-card" style="background:var(--surface);border:1px solid var(--border-light);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow-card);margin-bottom:16px;">
         <div style="font-size:11px;font-weight:800;letter-spacing:0.05em;color:var(--teal);text-transform:uppercase;margin-bottom:4px;" data-i18n="ui.guest_welcome_badge">First Lesson • ~2 Min</div>
         <div id="guestArrivalTitle" style="font-size:17px;font-weight:800;color:var(--text-main);margin-bottom:6px;"></div>
-        <div id="guestArrivalDesc" style="font-size:13px;color:var(--ink-soft);line-height:1.5;" data-i18n="ui.guest_welcome_desc">Learn essential words you'll use every day in Egypt. No account needed — jump right in!</div>
+        <div id="guestArrivalDesc" style="font-size:13px;color:var(--ink-soft);line-height:1.5;" data-i18n="ui.guest_welcome_desc">Learn the Arabic that matters for the people you love — starting today, no account needed.</div>
       </div>
       <button id="guestArrivalCta" type="button" class="arrival-cta" onclick="startGuestLessonNow()" style="margin-top:auto;" data-i18n="btn.start_guest_lesson_cta">Start Lesson →</button>
     </div>
@@ -1645,7 +1645,7 @@ const COURSE={units:[
  {id:"u0",title:"Everyday Basics أساسيات يومية",title_ru:"Основы на каждый день أساسيات يومية",lessons:[
   {id:"l3-1",title:"Yes, No & Common",title_ru:"Да, нет и самое важное",xp:10,vocab:[{en:"Yes",ar:"أيوة",franco:"Aywa",register:"neutral",ru:"Да"},{en:"No",ar:"لأ",franco:"La'",register:"neutral",ru:"Нет"},{en:"Let's go / Come on",ar:"يلا",franco:"Yalla",register:"casual",ru:"Погнали / Давай"},{en:"Finished / Enough / OK",ar:"خلاص",franco:"Khalas",register:"neutral",ru:"Всё / Хватит / Ладно"},{en:"God willing",ar:"إن شاء الله",franco:"Inshallah",register:"neutral",ru:"Если Бог даст (дай Бог)"}]}
  ]},
- {id:"u1",title:"Scenario: Meeting Her Family for the First Time",title_ru:"Сценарий: первая встреча с её семьёй",lessons:[
+ {id:"u1",title:"Scenario: Meeting the Family for the First Time",title_ru:"Сценарий: первая встреча с семьёй",lessons:[
   {id:"l1-1",title:"Hello & Hi",title_ru:"Привет и здравствуй",xp:10,vocab:[{en:"Hi (informal)",ar:"إزيك",franco:"ezzayyak / ezzayyik",register:"casual",ru:"Привет (неформально)"},{en:"Welcome / Hey",ar:"أهلاً",franco:"Ahlan",register:"neutral",ru:"Добро пожаловать / Привет"},{en:"Good morning",ar:"صباح الخير",franco:"Sabah el kheir",register:"neutral",ru:"Доброе утро"},{en:"Good evening",ar:"مساء الخير",franco:"Masa el kheir",register:"neutral",ru:"Добрый вечер"},{en:"Goodbye",ar:"مع السلامة",franco:"Ma'a el salama",register:"neutral",ru:"До свидания"}]},
   {id:"l1-2",title:"How are you?",title_ru:"Как дела?",xp:10,vocab:[{en:"How are you? (to a man)",ar:"عامل إيه",franco:"3amel eh",register:"casual",ru:"Как дела? (мужчине)"},{en:"I'm good, thank God",ar:"كويس الحمد لله",franco:"Kwayyes el-7amdulillah",register:"neutral",ru:"Хорошо, слава Богу"},{en:"Fine / OK",ar:"تمام",franco:"Tamam",register:"neutral",ru:"Нормально / Окей"},{en:"Not good",ar:"مش كويس",franco:"Mesh kwayyes",register:"neutral",ru:"Не очень"}]},
   {id:"l2-1",title:"Please & Thanks",title_ru:"Пожалуйста и спасибо",xp:10,vocab:[{en:"Thank you",ar:"متشكر",franco:"motshakker",register:"neutral",ru:"Спасибо"},{en:"You're welcome",ar:"العفو",franco:"el-3afw",register:"neutral",ru:"Пожалуйста (в ответ на спасибо)"},{en:"Please (to a man)",ar:"لو سمحت",franco:"Law samaht",register:"neutral",ru:"Пожалуйста (обращаясь к мужчине)"},{en:"Sorry / Excuse me",ar:"معلش",franco:"ma3lesh",register:"neutral",ru:"Извините / Простите"},{en:"Never mind / It's OK",ar:"معلش",franco:"Ma3lesh",register:"neutral",ru:"Ничего страшного / Всё нормально"}]},
@@ -1764,7 +1764,7 @@ const STRINGS={
   "btn.try_lesson_free":{en:"Try a Lesson Free",ru:"Попробовать урок бесплатно"},
   "ui.guest_welcome_badge":{en:"First Lesson • ~2 Min",ru:"Первый урок • ~2 мин"},
   "ui.guest_welcome_bubble_en":{en:"Ahlan! Ready to try your first lesson?",ru:"Ахлан! Готовы к первому уроку?"},
-  "ui.guest_welcome_desc":{en:"Learn essential words you'll use every day in Egypt. No account needed — jump right in!",ru:"Выучите основные слова, которые пригодятся в Египте каждый день. Без регистрации — начните прямо сейчас!"},
+  "ui.guest_welcome_desc":{en:"Learn the Arabic that matters for the people you love — starting today, no account needed.",ru:"Учите арабский для общения с близкими — начните сегодня, регистрация не нужна."},
   "btn.start_guest_lesson_cta":{en:"Start Lesson →",ru:"Начать урок →"},
   "ui.katya_welcome_bubble_en":{en:"Welcome to Egypt—and welcome to our home!",ru:"Добро пожаловать в Египет — и в наш дом!"},
   "ui.katya_welcome_context":{en:"Katya's here! Help Mira welcome her and show her around.",ru:"Катя приехала! Помогите Мире тепло встретить её и показать ей дом."},
@@ -1934,6 +1934,7 @@ const STRINGS={
   "msg.please_enter_a_valid_email_address":{en:"Please enter a valid email address.",ru:"Введите корректный адрес электронной почты."},
   "msg.no_account_found_with_this_email":{en:"No account found with this email.",ru:"Аккаунт с такой почтой не найден."},
   "msg.something_went_wrong_please_try_again":{en:"Something went wrong. Please try again.",ru:"Что-то пошло не так. Попробуйте ещё раз."},
+  "msg.partner_link_needs_signup":{en:"Sign up free to get your own partner link — it only takes a few seconds.",ru:"Зарегистрируйтесь бесплатно, чтобы получить свою ссылку для партнёра — это займёт всего несколько секунд."},
   "ui.copy_this_link_to_send_your_partner":{en:"Copy this link to send your partner:",ru:"Скопируйте эту ссылку и отправьте партнёру:"},
   "msg.no_moments_yet_finish_a_lesson_and_try_the_mission_t":{en:"No moments yet — finish a lesson and try the mission tonight.",ru:"Пока нет моментов — пройдите урок и попробуйте задание сегодня вечером."},
   "msg.no_partner_phrases_yet":{en:"No partner phrases yet.",ru:"Пока нет фраз от партнёра."},
@@ -2470,7 +2471,11 @@ function pullPartnerSubmissions(){
 
 async function sharePartnerLink(){
   const fbUser=firebase.auth().currentUser;
-  if(!fbUser)return;
+  if(!fbUser){
+    alert(t('msg.partner_link_needs_signup'));
+    showSignup();
+    return;
+  }
   const url=`https://speakmasri.com/partner.html?u=${fbUser.uid}`;
   if(navigator.share){
     try{
@@ -2747,7 +2752,7 @@ const LOCATION_NARRATIONS={
 let arrivalUnit=null;
 
 const EXPLORE_PLACES=[
-  {unitId:"u1",location:"doorstep",glyph:"🚪",label:"Her Doorstep"},
+  {unitId:"u1",location:"doorstep",glyph:"🚪",label:"The Family's Doorstep"},
   {unitId:"u2",location:"balcony",glyph:"🌇",label:"Nile Balcony"},
   {unitId:"u3",location:"eid",glyph:"🏮",label:"Eid Street"},
   {unitId:"u5",location:"koshary",glyph:"🍲",label:"The Koshary Stand"},
