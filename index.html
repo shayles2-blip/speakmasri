@@ -1671,7 +1671,7 @@ input:focus, select:focus {
     <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px">
       <button class="btn btn-ghost" onclick="startRehearsal()" data-i18n="ui.rehearse_this_lesson">🎙️ Rehearse This Lesson</button>
       <button class="btn btn-ghost hidden" id="testMeBtn" onclick="shareCompletedLesson()">📤 Test Me</button>
-      <button class="btn" onclick="finishLesson()" data-i18n="btn.continue">Continue</button>
+      <button id="doneContinueBtn" class="btn" onclick="finishLesson()" data-i18n="btn.continue">Continue</button>
     </div>
   </div>
 
@@ -1965,6 +1965,7 @@ const STRINGS={
   "ui.accuracy":{en:"Accuracy",ru:"Точность"},
   "ui.rehearse_this_lesson":{en:"🎙️ Rehearse This Lesson",ru:"🎙️ Отрепетировать урок"},
   "btn.continue":{en:"Continue",ru:"Продолжить"},
+  "ui.next_lesson_guest":{en:"Next Lesson →",ru:"Следующий урок →"},
   "ui.name_can_t_be_empty":{en:"Name can't be empty.",ru:"Имя не может быть пустым."},
   "ui.saved":{en:"Saved ✓",ru:"Сохранено ✓"},
   "ui.couldn_t_save_try_again":{en:"Couldn't save. Try again.",ru:"Не удалось сохранить. Попробуйте ещё раз."},
@@ -4291,7 +4292,7 @@ function check(){
     const fillInput=document.getElementById("fillInput");
     if(fillInput){fillInput.classList.add(ok?"correct":"wrong");targetEl=fillInput;}
   }
-  if(user&&!user.isGuest&&(ex.type==="mc"||ex.type==="listen"||ex.type==="fill")){
+  if(user&&(ex.type==="mc"||ex.type==="listen"||ex.type==="fill")){
     const lessonId=ex.lessonId||(curLesson&&curLesson.id);
     const idx=ex.idx!==undefined?ex.idx:(curLesson&&curLesson.vocab.indexOf(ex.item));
     if(lessonId&&idx!==undefined&&idx!==null&&idx!==-1){
@@ -4923,7 +4924,7 @@ async function finishAsSuccess(){
   celebrateWordsLearned(curLesson.vocab);
   const total=exList.length;
   const acc=Math.round((correctCount/total)*100);
-  const ownedThisLesson=user.isGuest?null:curLesson.vocab.filter((_,idx)=>{
+  const ownedThisLesson=curLesson.vocab.filter((_,idx)=>{
     const stats=user.itemStats?.[`${curLesson.id}_${idx}`];
     const correct=Number(stats?.correct)||0;
     const incorrect=Number(stats?.incorrect)||0;
@@ -4932,11 +4933,11 @@ async function finishAsSuccess(){
   user.xp+=curLesson.xp;
   const dXpEl=document.getElementById("dXp"), dAccEl=document.getElementById("dAcc");
   const dOwnedStat=document.getElementById("dOwnedStat"),dXpStat=document.getElementById("dXpStat");
-  dOwnedStat.classList.toggle("hidden",!!user.isGuest);
-  dXpStat.style.order=user.isGuest?"1":"3";
-  dXpStat.style.padding=user.isGuest?"16px":"10px";
-  dXpEl.style.fontSize=user.isGuest?"22px":"14px";
-  if(!user.isGuest)document.getElementById("dOwned").textContent=`${ownedThisLesson}/${curLesson.vocab.length}`;
+  dOwnedStat.classList.remove("hidden");
+  dXpStat.style.order="3";
+  dXpStat.style.padding="10px";
+  dXpEl.style.fontSize="14px";
+  document.getElementById("dOwned").textContent=`${ownedThisLesson}/${curLesson.vocab.length}`;
   dXpEl.textContent="+0";
   dAccEl.textContent="0%";
   countUp(dXpEl,curLesson.xp,{prefix:"+"});
@@ -4944,10 +4945,11 @@ async function finishAsSuccess(){
   const doneTitle=document.getElementById("doneTitle");
   const doneCompetence=document.getElementById("doneCompetence");
   const doneUnlocked=document.getElementById("doneUnlocked");
+  document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="l3-1"?'ui.next_lesson_guest':'btn.continue');
   document.getElementById("testMeBtn").classList.toggle("hidden",!!user.isGuest);
   if(user.isGuest){
     user.progress[curLesson.id]={done:true,score:acc};
-    document.getElementById("doneTitle").textContent=t('ui.nice_sign_up_to_save_this_progress');
+    document.getElementById("doneTitle").textContent=t(curLesson.id==="l1-1"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
   } else {
     user.progress[curLesson.id]={done:true,score:acc};
     doneTitle.textContent=t('ui.donetitle');
@@ -4975,6 +4977,13 @@ function finishLesson(){
   document.getElementById("done").classList.add("hidden");
   if(user&&user.isGuest){
     persistGuestProgress();
+    if(curLesson&&curLesson.id==="l3-1"){
+      const familyUnit=COURSE.units.find(unit=>unit.id==="u1");
+      if(familyUnit&&familyUnit.lessons[0]){
+        startLesson(familyUnit.lessons[0]);
+        return;
+      }
+    }
     user=null;
     showAuthScreen();
     backToChoice();
