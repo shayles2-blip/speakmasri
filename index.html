@@ -1873,6 +1873,7 @@ const STRINGS={
   "ui.total_xp":{en:"Total XP",ru:"Всего XP"},
   "ui.phrases_said":{en:"Phrases Said",ru:"Фраз произнесено"},
   "ui.your_moments":{en:"Your moments",ru:"Ваши моменты"},
+  "ui.your_path":{en:"Your path",ru:"Ваш путь"},
   "ui.owned_phrases":{en:"Phrases You Own",ru:"Фразы, которыми вы владеете"},
   "ui.phrases_owned_this_lesson":{en:"Phrases Owned",ru:"Освоено фраз"},
   "ui.owned_phrases_explainer":{en:"Phrases you can count on — reliably remembered, not just seen.",ru:"Фразы, на которые можно положиться: вы уверенно их помните, а не просто видели."},
@@ -2285,7 +2286,8 @@ async function signup(){
     const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
     cred.user.sendEmailVerification().catch(e=>console.error('Email verification error',e));
     await firebase.firestore().collection('users').doc(cred.user.uid).set({
-      name,motivation,xp:guestConnection&&guestConnection.total?guestConnection.total*10:0,connection:guestConnection&&guestConnection.total?guestConnection:normalizeConnection(),createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      name,motivation,...(['partner','traveler','heritage'].includes(motivation)?{moment:normalizeMoment({type:motivation})}:{}),
+      xp:guestConnection&&guestConnection.total?guestConnection.total*10:0,connection:guestConnection&&guestConnection.total?guestConnection:normalizeConnection(),createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
     if(guestConnection&&guestConnection.total)localStorage.removeItem('speakmasri_guestConnection');
     analytics.logEvent('sign_up');
@@ -2935,7 +2937,12 @@ function renderPath(){
     if(unit&&unit.lessons.every(lesson=>isLessonDone(lesson.id)))saveVisitedPlace(place.unitId);
   });
   renderExplore(el);
-  COURSE.units.forEach((u,ui)=>{
+  const motivationUnits={partner:"u1",traveler:"u4",heritage:"u2"};
+  const preferredUnitId=!user.isGuest?motivationUnits[user.motivation]:null;
+  const units=COURSE.units.map((unit,ui)=>({unit,ui}));
+  const preferredUnitIndex=units.findIndex(({unit})=>unit.id===preferredUnitId&&unit.lessons.some(lesson=>!isLessonDone(lesson.id)));
+  if(preferredUnitIndex>0)units.unshift(...units.splice(preferredUnitIndex,1));
+  units.forEach(({unit:u,ui})=>{
     const card=document.createElement("div");
     card.className="scenario-card";
     card.id='scenario-'+u.id;
@@ -2952,10 +2959,14 @@ function renderPath(){
     const readinessLabel=ownedCount>0&&!user.isGuest
       ?`<span class="scenario-readiness" title="${ownedCount} of ${unitVocab.length} phrases owned">${readinessPct}% ready</span>`
       :"";
+    const pathLabel=u.id===preferredUnitId&&preferredUnitIndex>=0
+      ?`<span class="scenario-readiness">${t('ui.your_path')}</span>`
+      :"";
     const head=document.createElement("div");
     head.className="scenario-head";
     head.innerHTML=`<span class="scenario-icon">${SCENARIO_ICONS[u.id]||"📍"}</span>
       <span class="scenario-title">${titleText(u).replace(/^Scenario:\s*/,"")}</span>
+      ${pathLabel}
       ${readinessLabel}
       <span class="scenario-progress">${doneCount}/${u.lessons.length}</span>`;
     const locationKey=UNIT_LOCATIONS[u.id];
