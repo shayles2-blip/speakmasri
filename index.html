@@ -2413,6 +2413,10 @@ async function signup(){
     }catch(e){console.error('Guest progress merge error',e);}
     analytics.logEvent('sign_up');
     sessionStorage.setItem('speakmasri_justSignedUpMotivation',motivation);
+    if(firebase.auth().currentUser){
+      await loadUserData();
+      enterApp();
+    }
     closeAuthSheet(true);
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
