@@ -1498,6 +1498,7 @@ input:focus, select:focus {
             </label>
           </div>
         </details>
+        <div id="pendingPartnerSubmissionsList" style="color:var(--ink-soft);font-size:14px"></div>
         <div id="partnerPhrasesList" style="color:var(--ink-soft);font-size:14px"></div>
       </div>
       <div style="height:24px"></div>
@@ -1894,6 +1895,7 @@ const STRINGS={
   "msg.no_owned_phrases_yet":{en:"Your first owned phrase is taking shape — keep practicing and it will appear here.",ru:"Ваша первая освоенная фраза уже формируется — продолжайте практиковаться, и она появится здесь."},
   "ui.your_passport":{en:"Your Passport",ru:"Ваш паспорт"},
   "ui.partner_phrases":{en:"Partner Phrases",ru:"Фразы от партнёра"},
+  "ui.pending_partner_submissions_heading":{en:"New from your partner — review before adding",ru:"Новое от партнёра — проверьте перед добавлением"},
   "ui.send_your_partner_this_link_they_add_family_names_in":{en:"Send your partner this link — they add family names, in-jokes, whatever they'd actually say, right from their phone. No account needed for them.",ru:"Отправьте эту ссылку партнёру — он добавит имена родных, семейные шутки и всё, что они реально говорят, прямо с телефона. Ему не нужен аккаунт."},
   "ui.sharelinkbtn":{en:"🔗 Share Link With Partner",ru:"🔗 Поделиться ссылкой с партнёром"},
   "ui.prefer_the_json_file_instead":{en:"Prefer the JSON file instead?",ru:"Предпочитаете JSON-файл?"},
@@ -1970,6 +1972,8 @@ const STRINGS={
   "msg.no_moments_yet_finish_a_lesson_and_try_the_mission_t":{en:"No moments yet — finish a lesson and try the mission tonight.",ru:"Пока нет моментов — пройдите урок и попробуйте задание сегодня вечером."},
   "msg.no_partner_phrases_yet":{en:"No partner phrases yet.",ru:"Пока нет фраз от партнёра."},
   "aria.delete_phrase":{en:"Delete phrase",ru:"Удалить фразу"},
+  "aria.accept_partner_phrase":{en:"Accept partner phrase",ru:"Принять фразу от партнёра"},
+  "aria.discard_partner_phrase":{en:"Discard partner phrase",ru:"Отклонить фразу от партнёра"},
   "msg.nothing_unlocked_yet_finish_your_first_lesson":{en:"Nothing unlocked yet — finish your first lesson.",ru:"Пока ничего не открыто — пройдите первый урок."},
   "exercise.translate_prompt":{en:"Translate:",ru:"Переведите:"},
   "ui.correct":{en:"Correct!",ru:"Верно!"},
@@ -2578,31 +2582,67 @@ function pullPartnerSubmissions(){
         if(counterDoc.exists&&counterDoc.data().pending!==0)await counterRef.set({pending:0});
         return;
       }
-      user.customPhrases=user.customPhrases||[];
-      const existingEns=new Set(user.customPhrases.map(p=>p.en));
-      let allProcessed=true;
+      user.pendingPartnerSubmissions=[];
+      let malformedCleanupSucceeded=true;
       for(const doc of snap.docs){
         const item=doc.data();
         if(typeof item.en!=="string"||typeof item.ar!=="string"||typeof item.franco!=="string"){
-          allProcessed=false;
+          try{await doc.ref.delete();}catch(e){malformedCleanupSucceeded=false;console.error('partner submission delete error',e);}
           continue;
         }
-        if(!existingEns.has(item.en)){
-          const id=await saveCustomPhrase(item.en,item.ar,item.franco);
-          if(!id){allProcessed=false;continue;}
-          user.customPhrases.push({en:item.en,ar:item.ar,franco:item.franco,source:"partner",_id:id});
-          existingEns.add(item.en);
-        }
-        try{await doc.ref.delete();}catch(e){allProcessed=false;console.error('partner submission delete error',e);}
+        user.pendingPartnerSubmissions.push({_id:doc.id,en:item.en,ar:item.ar,franco:item.franco});
       }
-      if(allProcessed){
+      if(user.pendingPartnerSubmissions.length===0&&malformedCleanupSucceeded){
         await counterRef.set({pending:0});
       }
+      if(typeof renderPendingPartnerSubmissions==="function")renderPendingPartnerSubmissions();
       if(typeof renderPartnerPhrases==="function")renderPartnerPhrases();
     }catch(e){console.error('pullPartnerSubmissions error',e);}
   })();
   pullPartnerSubmissionsPromise.finally(()=>{pullPartnerSubmissionsPromise=null;});
   return pullPartnerSubmissionsPromise;
+}
+
+async function finishPartnerSubmissionReview(id){
+  user.pendingPartnerSubmissions=(user.pendingPartnerSubmissions||[]).filter(item=>item._id!==id);
+  if(user.pendingPartnerSubmissions.length===0){
+    const fbUser=firebase.auth().currentUser;
+    if(fbUser){
+      try{
+        await firebase.firestore().doc(`partnerSubmissions/${fbUser.uid}/meta/counter`).set({pending:0});
+      }catch(e){console.error('partner submission counter reset error',e);}
+    }
+  }
+  renderPendingPartnerSubmissions();
+  renderPartnerPhrases();
+}
+
+async function acceptPartnerSubmission(id){
+  const item=(user.pendingPartnerSubmissions||[]).find(item=>item._id===id);
+  if(!item)return;
+  const newId=await saveCustomPhrase(item.en,item.ar,item.franco);
+  if(!newId)return;
+  user.customPhrases=user.customPhrases||[];
+  user.customPhrases.push({en:item.en,ar:item.ar,franco:item.franco,source:"partner",_id:newId});
+  const fbUser=firebase.auth().currentUser;
+  if(fbUser){
+    try{
+      await firebase.firestore().doc(`partnerSubmissions/${fbUser.uid}/items/${id}`).delete();
+    }catch(e){console.error('partner submission delete error',e);}
+  }
+  await finishPartnerSubmissionReview(id);
+}
+
+async function discardPartnerSubmission(id){
+  const item=(user.pendingPartnerSubmissions||[]).find(item=>item._id===id);
+  if(!item)return;
+  const fbUser=firebase.auth().currentUser;
+  if(fbUser){
+    try{
+      await firebase.firestore().doc(`partnerSubmissions/${fbUser.uid}/items/${id}`).delete();
+    }catch(e){console.error('partner submission delete error',e);}
+  }
+  await finishPartnerSubmissionReview(id);
 }
 
 async function sharePartnerLink(){
@@ -3382,6 +3422,7 @@ function renderProfile(){
       <span>${label}</span>${visited?'<span aria-hidden="true" style="color:var(--sage);font-weight:900">✓</span>':''}
     </div>`;
   }).join("");
+  renderPendingPartnerSubmissions();
   renderPartnerPhrases();
 }
 
@@ -3455,6 +3496,47 @@ function resolveMilestoneSource(milestone){
 }
 
 /* ---------- PARTNER PHRASES (personalization) ---------- */
+function renderPendingPartnerSubmissions(){
+  const listEl=document.getElementById("pendingPartnerSubmissionsList");
+  if(!listEl)return;
+  listEl.innerHTML="";
+  const submissions=user?.pendingPartnerSubmissions||[];
+  if(submissions.length===0)return;
+  const heading=document.createElement("div");
+  heading.style.cssText="font-weight:800;margin:12px 0 4px";
+  heading.textContent=t('ui.pending_partner_submissions_heading');
+  listEl.appendChild(heading);
+  submissions.forEach(item=>{
+    const div=document.createElement("div");
+    div.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)";
+    const text=document.createElement("div");
+    const ar=document.createElement("span");
+    ar.className="ar";
+    ar.lang="ar";
+    ar.textContent=item.ar;
+    const franco=document.createElement("span");
+    franco.className="franco";
+    franco.textContent=`(${item.franco})`;
+    text.append(ar," ",franco," — ",vocabText(item));
+    div.appendChild(text);
+    const actions=document.createElement("div");
+    actions.style.cssText="display:flex;flex-shrink:0";
+    const accept=document.createElement("button");
+    accept.textContent="✓";
+    accept.style.cssText="min-width:44px;min-height:44px;display:grid;place-items:center;background:none;border:none;cursor:pointer;font-size:18px";
+    accept.setAttribute("aria-label",t('aria.accept_partner_phrase'));
+    accept.onclick=()=>acceptPartnerSubmission(item._id);
+    const discard=document.createElement("button");
+    discard.textContent="✕";
+    discard.style.cssText="min-width:44px;min-height:44px;display:grid;place-items:center;background:none;border:none;cursor:pointer;font-size:18px";
+    discard.setAttribute("aria-label",t('aria.discard_partner_phrase'));
+    discard.onclick=()=>discardPartnerSubmission(item._id);
+    actions.append(accept,discard);
+    div.appendChild(actions);
+    listEl.appendChild(div);
+  });
+}
+
 function renderPartnerPhrases(){
   const listEl=document.getElementById("partnerPhrasesList");
   if(!listEl)return;
@@ -3527,6 +3609,7 @@ function importPartnerPhrases(fileInputEl){
         saved.push(item);
       }
       user.customPhrases.push(...saved);
+      renderPendingPartnerSubmissions();
       renderPartnerPhrases();
       if(failed)alert(`${failed} phrase${failed===1?"":"s"} couldn't be saved. Please try importing again.`);
     }catch(err){
@@ -3541,6 +3624,7 @@ async function deleteCustomPhrase(idx){
   if(!user.customPhrases)return;
   if(!confirm("Delete this phrase?"))return;
   const [removed]=user.customPhrases.splice(idx,1);
+  renderPendingPartnerSubmissions();
   renderPartnerPhrases();
   if(removed&&removed._id)await deleteCustomPhraseRemote(removed._id);
 }
