@@ -2191,6 +2191,12 @@ async function saveItemStats(){
   catch(e){console.error('saveItemStats error',e);}
 }
 
+function persistGuestProgress(){
+  if(!user||!user.isGuest)return;
+  if(!user.progress||!Object.keys(user.progress).length)return;
+  localStorage.setItem('speakmasri_guestProgress',JSON.stringify({progress:user.progress||{},xp:user.xp||0,itemStats:user.itemStats||{}}));
+}
+
 async function saveConnection(){
   if(!user)return;
   user.connection=normalizeConnection(user.connection);
@@ -2382,13 +2388,29 @@ async function signup(){
   try{
     let guestConnection=null;
     try{guestConnection=normalizeConnection(JSON.parse(localStorage.getItem('speakmasri_guestConnection')));}catch(e){}
+    let guestProgress=null;
+    try{guestProgress=JSON.parse(localStorage.getItem('speakmasri_guestProgress'));}catch(e){}
     const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
     cred.user.sendEmailVerification().catch(e=>console.error('Email verification error',e));
     await firebase.firestore().collection('users').doc(cred.user.uid).set({
       name,motivation,...(['partner','traveler','heritage'].includes(motivation)?{moment:normalizeMoment({type:motivation})}:{}),
-      xp:guestConnection&&guestConnection.total?guestConnection.total*10:0,connection:guestConnection&&guestConnection.total?guestConnection:normalizeConnection(),createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      xp:(Number(guestProgress&&guestProgress.xp)||0)+(guestConnection&&guestConnection.total?guestConnection.total*10:0),
+      itemStats:guestProgress&&guestProgress.itemStats||{},connection:guestConnection&&guestConnection.total?guestConnection:normalizeConnection(),createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
     if(guestConnection&&guestConnection.total)localStorage.removeItem('speakmasri_guestConnection');
+    try{
+      const progress=guestProgress&&guestProgress.progress&&typeof guestProgress.progress==='object'?guestProgress.progress:{};
+      const entries=Object.entries(progress);
+      if(entries.length){
+        const batch=firebase.firestore().batch();
+        entries.forEach(([lessonId,data])=>{
+          const ref=firebase.firestore().collection(`users/${cred.user.uid}/progress`).doc(lessonId);
+          batch.set(ref,{done:!!data.done,score:Number(data.score)||0},{merge:true});
+        });
+        await batch.commit();
+      }
+      if(guestProgress)localStorage.removeItem('speakmasri_guestProgress');
+    }catch(e){console.error('Guest progress merge error',e);}
     analytics.logEvent('sign_up');
     sessionStorage.setItem('speakmasri_justSignedUpMotivation',motivation);
     closeAuthSheet(true);
@@ -2628,7 +2650,10 @@ async function shareCompletedLesson(){
 function startGuestLesson(){
   let connection;
   try{connection=normalizeConnection(JSON.parse(localStorage.getItem('speakmasri_guestConnection')));}catch(e){connection=normalizeConnection();}
-  user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[],visitedPlaces:[],connection};
+  let guestProgress=null;
+  try{guestProgress=JSON.parse(localStorage.getItem('speakmasri_guestProgress'));}catch(e){}
+  user={name:"Guest",email:null,isGuest:true,xp:Number(guestProgress&&guestProgress.xp)||0,
+    progress:guestProgress&&guestProgress.progress||{},itemStats:guestProgress&&guestProgress.itemStats||{},milestones:[],visitedPlaces:[],connection};
   document.getElementById("accountDataActions").classList.add("hidden");
   openGuestArrival();
 }
@@ -3640,6 +3665,7 @@ function quitLesson(){
   document.getElementById("lesson").classList.add("hidden");
   const wasSpecial=isConnectionDay||isReviewSession;isConnectionDay=false;isReviewSession=false;
   if(user&&user.isGuest&&!wasSpecial){
+    persistGuestProgress();
     user=null;
     showAuthScreen();
     backToChoice();
@@ -4668,6 +4694,7 @@ async function finishAsSuccess(){
 function finishLesson(){
   document.getElementById("done").classList.add("hidden");
   if(user&&user.isGuest){
+    persistGuestProgress();
     user=null;
     showAuthScreen();
     backToChoice();
