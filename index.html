@@ -1514,6 +1514,19 @@ input:focus, select:focus {
         </div>
         <button type="button" onclick="changePasswordFromProfile()" data-i18n="ui.change_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">🔒 Change Password</button>
         <div id="pwMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
+        <div id="accountDataActions">
+          <button type="button" id="downloadDataBtn" onclick="downloadMyData()" data-i18n="ui.download_my_data" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer;display:block;margin-bottom:8px">⬇️ Download my data</button>
+          <button type="button" id="deleteAccountBtn" onclick="showDeleteAccount()" data-i18n="ui.delete_my_account" style="background:none;border:none;color:var(--error);font-size:13px;text-decoration:underline;cursor:pointer">Delete My Account</button>
+          <div id="deleteAccountBox" style="display:none;margin-top:8px;padding:12px;border:1px solid var(--error);border-radius:var(--r-sm);background:var(--error-surface)">
+            <p data-i18n="ui.delete_account_warning" style="color:var(--error);font-size:13px;font-weight:700;margin:0 0 10px">This permanently deletes your account, learning progress, milestones, and saved partner phrases. It cannot be undone.</p>
+            <input type="password" id="deleteAccountPassword" autocomplete="current-password" data-i18n-placeholder="placeholder.current_password" placeholder="Current password" oninput="updateDeleteAccountButton()">
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" id="confirmDeleteAccountBtn" data-i18n="ui.permanently_delete_account" style="flex:1;padding:10px;font-size:13px;background:var(--error);border-color:var(--error)" onclick="deleteMyAccount()" disabled>Permanently Delete Account</button>
+              <button class="btn btn-ghost" data-i18n="ui.cancel" style="flex:1;padding:10px;font-size:13px" onclick="hideDeleteAccount()">Cancel</button>
+            </div>
+            <div id="deleteAccountMsg" role="alert" style="color:var(--error);font-size:13px;min-height:16px;margin-top:6px"></div>
+          </div>
+        </div>
         <div style="display:flex;gap:12px;align-items:flex-end;margin-top:12px">
           <div>
             <div style="font-weight:800;margin-bottom:8px" data-i18n="settings.base_language">Base language</div>
@@ -1893,6 +1906,14 @@ const STRINGS={
   "ui.savenamebtn":{en:"Save",ru:"Сохранить"},
   "ui.cancel":{en:"Cancel",ru:"Отмена"},
   "ui.change_password":{en:"🔒 Change Password",ru:"🔒 Сменить пароль"},
+  "ui.download_my_data":{en:"⬇️ Download my data",ru:"⬇️ Скачать мои данные"},
+  "ui.delete_my_account":{en:"Delete My Account",ru:"Удалить мой аккаунт"},
+  "ui.delete_account_warning":{en:"This permanently deletes your account, learning progress, milestones, and saved partner phrases. It cannot be undone.",ru:"Это навсегда удалит ваш аккаунт, прогресс обучения, достижения и сохранённые фразы партнёра. Отменить это действие нельзя."},
+  "placeholder.current_password":{en:"Current password",ru:"Текущий пароль"},
+  "ui.permanently_delete_account":{en:"Permanently Delete Account",ru:"Удалить аккаунт навсегда"},
+  "ui.couldn_t_verify_password":{en:"Couldn't verify your password, try again.",ru:"Не удалось подтвердить пароль. Попробуйте ещё раз."},
+  "ui.couldn_t_delete_account":{en:"Couldn't delete your account. Please try again.",ru:"Не удалось удалить аккаунт. Попробуйте ещё раз."},
+  "ui.account_deleted":{en:"Your account was deleted.",ru:"Ваш аккаунт удалён."},
   "btn.logout":{en:"Log Out",ru:"Выйти"},
   "msg.confirm_logout":{en:"Log out?",ru:"Выйти из аккаунта?"},
   "nav.phrasebook":{en:"Phrasebook",ru:"Разговорник"},
@@ -2242,6 +2263,84 @@ async function changePasswordFromProfile(){
   setTimeout(()=>{pwMsg.textContent='';},5000);
 }
 
+function downloadMyData(){
+  if(!user||user.isGuest)return;
+  const {isGuest,...data}=user;
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`speakmasri-data-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+function showDeleteAccount(){
+  document.getElementById('deleteAccountBtn').style.display='none';
+  document.getElementById('deleteAccountBox').style.display='block';
+  document.getElementById('deleteAccountMsg').textContent='';
+  document.getElementById('deleteAccountPassword').focus();
+}
+
+function hideDeleteAccount(){
+  document.getElementById('deleteAccountBox').style.display='none';
+  document.getElementById('deleteAccountBtn').style.display='block';
+  document.getElementById('deleteAccountPassword').value='';
+  document.getElementById('deleteAccountMsg').textContent='';
+  updateDeleteAccountButton();
+}
+
+function updateDeleteAccountButton(){
+  document.getElementById('confirmDeleteAccountBtn').disabled=!document.getElementById('deleteAccountPassword').value;
+}
+
+async function deleteMyAccount(){
+  if(!user||user.isGuest)return;
+  const password=document.getElementById('deleteAccountPassword').value;
+  const btn=document.getElementById('confirmDeleteAccountBtn');
+  const msg=document.getElementById('deleteAccountMsg');
+  const fbUser=firebase.auth().currentUser;
+  if(!password||!fbUser)return;
+  btn.disabled=true;
+  msg.textContent='';
+
+  try{
+    const cred=firebase.auth.EmailAuthProvider.credential(user.email,password);
+    await fbUser.reauthenticateWithCredential(cred);
+  }catch(e){
+    const mapped=getAuthErrorMessage(e.code);
+    msg.textContent=['auth/wrong-password','auth/invalid-credential'].includes(e.code)?mapped:t('ui.couldn_t_verify_password');
+    btn.disabled=false;
+    console.error('deleteMyAccount reauthentication error',e);
+    return;
+  }
+
+  try{
+    const uid=fbUser.uid;
+    const db=firebase.firestore();
+    const collectionNames=['progress','milestones','visitedPlaces','customPhrases'];
+    const snapshots=await Promise.all(collectionNames.map(name=>db.collection(`users/${uid}/${name}`).get()));
+    const batch=db.batch();
+    snapshots.forEach(snapshot=>snapshot.forEach(doc=>batch.delete(doc.ref)));
+    batch.delete(db.collection('users').doc(uid));
+    await batch.commit();
+    await firebase.auth().currentUser.delete();
+  }catch(e){
+    msg.textContent=t('ui.couldn_t_delete_account');
+    btn.disabled=false;
+    console.error('deleteMyAccount deletion error',e);
+    return;
+  }
+
+  user=null;
+  localStorage.removeItem('speakmasri_guestConnection');
+  sessionStorage.removeItem('speakmasri_justSignedUpMotivation');
+  showAuthScreen();
+  document.getElementById('authErr').textContent='';
+  document.getElementById('authMsg').textContent=t('ui.account_deleted');
+}
+
 async function saveCustomPhrase(en,ar,franco){
   const uid=firebase.auth().currentUser.uid;
   try{
@@ -2530,6 +2629,7 @@ function startGuestLesson(){
   let connection;
   try{connection=normalizeConnection(JSON.parse(localStorage.getItem('speakmasri_guestConnection')));}catch(e){connection=normalizeConnection();}
   user={name:"Guest",email:null,isGuest:true,xp:0,progress:{},milestones:[],visitedPlaces:[],connection};
+  document.getElementById("accountDataActions").classList.add("hidden");
   openGuestArrival();
 }
 
@@ -2633,6 +2733,7 @@ async function logout(){
 function enterApp(){
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("main").classList.remove("hidden");
+  document.getElementById("accountDataActions").classList.toggle("hidden",!!user.isGuest);
   updateHomeMiraGreeting();
   checkEmailVerificationBanner();
   refreshTopBar();
