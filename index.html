@@ -1510,6 +1510,11 @@ input:focus, select:focus {
         <div id="partnerPhrasesList" style="color:var(--ink-soft);font-size:14px"></div>
       </div>
       <div style="height:24px"></div>
+      <div id="contentReportsSection" class="hidden" style="text-align:left;padding:0 16px">
+        <div style="font-weight:800;margin-bottom:8px" data-i18n="ui.content_reports_heading">Content Reports</div>
+        <div id="contentReportsList" style="color:var(--ink-soft);font-size:14px"></div>
+      </div>
+      <div id="contentReportsSpacer" class="hidden" style="height:24px"></div>
       <div style="text-align:left;padding:0 16px">
         <div style="font-weight:800;margin-bottom:8px" data-i18n="ui.account">Account</div>
         <button type="button" id="editNameBtn" data-i18n="ui.editnamebtn" onclick="showNameEdit()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer;display:block;margin-bottom:8px">✏️ Edit name</button>
@@ -1915,6 +1920,7 @@ const STRINGS={
   "ui.advanced_options":{en:"Advanced options",ru:"Дополнительные параметры"},
   "ui.template":{en:"⬇️ Template",ru:"⬇️ Шаблон"},
   "ui.import":{en:"⬆️ Import",ru:"⬆️ Импорт"},
+  "ui.content_reports_heading":{en:"Content Reports",ru:"Жалобы на контент"},
   "ui.account":{en:"Account",ru:"Аккаунт"},
   "ui.editnamebtn":{en:"✏️ Edit name",ru:"✏️ Изменить имя"},
   "placeholder.your_name":{en:"Your name",ru:"Ваше имя"},
@@ -3465,6 +3471,103 @@ function renderProfile(){
   }).join("");
   renderPendingPartnerSubmissions();
   renderPartnerPhrases();
+  renderContentReports();
+}
+
+async function renderContentReports(){
+  const section=document.getElementById("contentReportsSection");
+  const spacer=document.getElementById("contentReportsSpacer");
+  const list=document.getElementById("contentReportsList");
+  if(!section||!spacer||!list)return;
+  const visible=isAdminUser();
+  section.classList.toggle("hidden",!visible);
+  spacer.classList.toggle("hidden",!visible);
+  if(!visible){list.replaceChildren();return;}
+  list.textContent="Loading reports…";
+  try{
+    const snapshot=await firebase.firestore().collection("audioReports").orderBy("createdAt","desc").limit(100).get();
+    if(snapshot.empty){
+      list.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">No content reports yet.</p>`;
+      return;
+    }
+    const lessons=COURSE.units.flatMap(unit=>unit.lessons);
+    const reasonLabels={
+      not_egyptian:"Doesn't sound Egyptian",
+      mispronounced:"Mispronounced",
+      robotic_glitch:"Glitchy / robotic",
+      wrong_word:"Wrong word",
+      other:"Other",
+      translation_wrong:"Translation is wrong",
+      register_wrong:"Register/formality label is wrong",
+      grammar_wrong:"Grammar or gender is wrong"
+    };
+    list.replaceChildren();
+    snapshot.forEach(doc=>{
+      const report=doc.data();
+      const lesson=lessons.find(candidate=>candidate.id===report.lessonId);
+      const item=lesson?.vocab?.[report.idx];
+      const row=document.createElement("div");
+      row.style.cssText="padding:12px 0;border-bottom:1px solid var(--line)";
+      const header=document.createElement("div");
+      header.style.cssText="display:flex;justify-content:space-between;align-items:flex-start;gap:12px";
+      const context=document.createElement("div");
+      context.style.minWidth="0";
+      const phrase=document.createElement("div");
+      const ar=document.createElement("span");
+      ar.className="ar";
+      ar.lang="ar";
+      ar.textContent=report.ar||item?.ar||"";
+      const franco=document.createElement("span");
+      franco.className="franco";
+      franco.textContent=`(${report.franco||item?.franco||""})`;
+      phrase.append(ar," ",franco);
+      context.appendChild(phrase);
+      if(item){
+        const details=document.createElement("div");
+        details.style.cssText="margin-top:3px;color:var(--ink)";
+        details.textContent=`${item.en||""} · Register: ${item.register||"neutral"}`;
+        context.appendChild(details);
+      }
+      const dismiss=document.createElement("button");
+      dismiss.type="button";
+      dismiss.className="btn btn-ghost";
+      dismiss.style.cssText="flex-shrink:0;padding:7px 10px;font-size:12px";
+      dismiss.textContent="Dismiss";
+      dismiss.onclick=async()=>{
+        dismiss.disabled=true;
+        try{
+          await firebase.firestore().collection("audioReports").doc(doc.id).delete();
+          row.remove();
+          if(!list.children.length)list.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">No content reports yet.</p>`;
+        }catch(err){
+          console.error("dismiss audio report error",err);
+          dismiss.disabled=false;
+          dismiss.textContent="Try again";
+        }
+      };
+      header.append(context,dismiss);
+      row.appendChild(header);
+      const issue=document.createElement("div");
+      issue.style.cssText="margin-top:7px;font-weight:700;color:var(--ink)";
+      issue.textContent=reasonLabels[report.reason]||report.reason||"Unknown reason";
+      row.appendChild(issue);
+      if(report.note){
+        const note=document.createElement("div");
+        note.style.cssText="margin-top:3px;white-space:pre-wrap";
+        note.textContent=report.note;
+        row.appendChild(note);
+      }
+      const meta=document.createElement("div");
+      meta.style.cssText="margin-top:5px;font-size:12px;color:var(--ink-soft)";
+      const createdDate=report.createdAt?.toDate?.();
+      meta.textContent=[report.lessonId,Number.isInteger(report.idx)?`#${report.idx}`:"",createdDate&&!Number.isNaN(createdDate.getTime())?createdDate.toISOString().slice(0,10):"Date unavailable"].filter(Boolean).join(" · ");
+      row.appendChild(meta);
+      list.appendChild(row);
+    });
+  }catch(err){
+    console.error("content reports load error",err);
+    list.textContent="Couldn't load content reports.";
+  }
 }
 
 function renderOwnedPhrases(){
@@ -4507,7 +4610,7 @@ function createAudioReportControl(item){
   const trigger=document.createElement("button");
   trigger.type="button";
   trigger.className="report-btn";
-  trigger.setAttribute("aria-label","Report this sound");
+  trigger.setAttribute("aria-label","Flag an issue with this phrase");
   trigger.setAttribute("aria-expanded","false");
   trigger.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h11l-1 5 1 5H5"/></svg>';
   const picker=document.createElement("div");
@@ -4519,7 +4622,10 @@ function createAudioReportControl(item){
     ["Mispronounced","mispronounced"],
     ["Glitchy / robotic","robotic_glitch"],
     ["Wrong word","wrong_word"],
-    ["Other","other"]
+    ["Other","other"],
+    ["Translation is wrong","translation_wrong"],
+    ["Register/formality label is wrong","register_wrong"],
+    ["Grammar or gender is wrong","grammar_wrong"]
   ];
   options.forEach(([label,reason])=>{
     const button=document.createElement("button");
