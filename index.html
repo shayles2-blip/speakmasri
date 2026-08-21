@@ -1250,6 +1250,7 @@ input:focus, select:focus {
 .auth-sheet{position:relative;width:100%;max-height:min(92dvh,640px);overflow-y:auto;background:var(--surface);border-radius:22px 22px 0 0;padding:12px 22px 24px;text-align:left;box-shadow:0 -12px 40px rgba(20,16,12,.22);animation:sheetUp .28s ease-out}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .auth-grab{width:42px;height:4px;border-radius:var(--r-pill);background:var(--border-light);margin:0 auto 10px}.auth-close{position:absolute;right:12px;top:12px;width:44px;height:44px;padding:0;border:0;background:transparent;color:var(--text-main);font-size:24px;cursor:pointer}.auth-sheet h2{margin:10px 44px 16px 0}
+.google-sign-in{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px}.google-sign-in svg{flex:0 0 20px}.auth-divider{display:flex;align-items:center;gap:12px;margin:0 0 12px;color:var(--ink-soft);font-size:13px}.auth-divider::before,.auth-divider::after{content:"";height:1px;flex:1;background:var(--border-light)}
 .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:16px;border-radius:var(--r-pill);background:var(--bg-canvas)}.auth-tabs button{min-height:42px;margin:0;padding:8px;border:0;border-radius:var(--r-pill);background:transparent;color:var(--ink-soft);font-weight:700;cursor:pointer}.auth-tabs button.active{background:var(--surface);color:var(--primary-hover);box-shadow:var(--shadow-card)}
 .auth-dismiss-link{display:block;width:100%;margin-top:14px;padding:8px;border:0;background:transparent;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer}.landing-toast{position:fixed;z-index:1100;left:50%;bottom:24px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:10px 16px;border-radius:var(--r-pill);background:var(--text-main);color:var(--surface);font-size:13px;box-shadow:var(--shadow-float)}
 @media (min-width:768px){.auth-overlay{align-items:center;padding:24px}.auth-sheet{max-width:400px;border-radius:var(--r-lg);padding:20px 24px 24px;animation:modalIn .22s ease-out}.auth-grab{display:none}@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}}
@@ -1357,6 +1358,16 @@ input:focus, select:focus {
       <div class="auth-grab" aria-hidden="true"></div>
       <button type="button" class="auth-close" onclick="backToChoice()" aria-label="Close" data-i18n-aria-label="aria.close_auth">&times;</button>
       <h2 id="authSheetTitle" data-i18n="btn.login">Log In</h2>
+      <button id="googleSignInBtn" type="button" class="btn btn-ghost google-sign-in" onclick="signInWithGoogle()">
+        <svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#4285F4" d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.482h4.844a4.14 4.14 0 0 1-1.797 2.715v2.258h2.909c1.702-1.567 2.684-3.875 2.684-6.614Z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.468-.806 5.956-2.181l-2.909-2.258c-.806.54-1.835.859-3.047.859-2.344 0-4.328-1.585-5.037-3.715H.956v2.332A9 9 0 0 0 9 18Z"/>
+          <path fill="#FBBC05" d="M3.963 10.705A5.41 5.41 0 0 1 3.682 9c0-.592.102-1.168.281-1.705V4.963H.956A9 9 0 0 0 0 9c0 1.452.347 2.827.956 4.037l3.007-2.332Z"/>
+          <path fill="#EA4335" d="M9 3.58c1.321 0 2.507.454 3.441 1.345l2.581-2.581C13.464.891 11.426 0 9 0A9 9 0 0 0 .956 4.963l3.007 2.332C4.672 5.165 6.656 3.58 9 3.58Z"/>
+        </svg>
+        <span data-i18n="ui.continue_with_google">Continue with Google</span>
+      </button>
+      <div class="auth-divider"><span data-i18n="ui.or_divider">or</span></div>
       <div class="auth-tabs" role="tablist" aria-label="Account access" data-i18n-aria-label="aria.account_access">
         <button id="loginTab" type="button" role="tab" onclick="showLogin()" data-i18n="btn.login">Log In</button>
         <button id="signupTab" type="button" role="tab" onclick="showSignup()" data-i18n="btn.signup">Sign Up</button>
@@ -1807,6 +1818,8 @@ const STRINGS={
   "btn.start_katya_lesson_cta":{en:"Let's Welcome Her →",ru:"Встретим её →"},
   "btn.login":{en:"Log In",ru:"Войти"},
   "btn.signup":{en:"Sign Up",ru:"Регистрация"},
+  "ui.continue_with_google":{en:"Continue with Google",ru:"Продолжить с Google"},
+  "ui.or_divider":{en:"or",ru:"или"},
   "placeholder.name":{en:"Name (for signup)",ru:"Имя (для регистрации)"},
   "placeholder.email":{en:"Email",ru:"Электронная почта"},
   "placeholder.pass":{en:"Password (min 8 characters)",ru:"Пароль (мин. 8 символов)"},
@@ -2398,6 +2411,33 @@ function shuffle(arr){
 }
 
 /* ---------- AUTH ---------- */
+async function mergeGuestDataIntoNewAccount(uid){
+  let guestConnection=null;
+  try{guestConnection=normalizeConnection(JSON.parse(localStorage.getItem('speakmasri_guestConnection')));}catch(e){}
+  let guestProgress=null;
+  try{guestProgress=JSON.parse(localStorage.getItem('speakmasri_guestProgress'));}catch(e){}
+  const mergedData={
+    xp:(Number(guestProgress&&guestProgress.xp)||0)+(guestConnection&&guestConnection.total?guestConnection.total*10:0),
+    itemStats:guestProgress&&guestProgress.itemStats||{},
+    connection:guestConnection&&guestConnection.total?guestConnection:normalizeConnection()
+  };
+  if(guestConnection&&guestConnection.total)localStorage.removeItem('speakmasri_guestConnection');
+  try{
+    const progress=guestProgress&&guestProgress.progress&&typeof guestProgress.progress==='object'?guestProgress.progress:{};
+    const entries=Object.entries(progress);
+    if(entries.length){
+      const batch=firebase.firestore().batch();
+      entries.forEach(([lessonId,data])=>{
+        const ref=firebase.firestore().collection(`users/${uid}/progress`).doc(lessonId);
+        batch.set(ref,{done:!!data.done,score:Number(data.score)||0},{merge:true});
+      });
+      await batch.commit();
+    }
+    if(guestProgress)localStorage.removeItem('speakmasri_guestProgress');
+  }catch(e){console.error('Guest progress merge error',e);}
+  return mergedData;
+}
+
 async function signup(){
   const name=document.getElementById("name").value.trim();
   const email=document.getElementById("email").value.trim().toLowerCase();
@@ -2409,31 +2449,13 @@ async function signup(){
   if(!name||!email||!pass){err.textContent=t('ui.fill_in_all_fields_to_sign_up');return;}
   if(pass.length<8){err.textContent=t('ui.password_must_be_at_least_8_characters');return;}
   try{
-    let guestConnection=null;
-    try{guestConnection=normalizeConnection(JSON.parse(localStorage.getItem('speakmasri_guestConnection')));}catch(e){}
-    let guestProgress=null;
-    try{guestProgress=JSON.parse(localStorage.getItem('speakmasri_guestProgress'));}catch(e){}
     const cred=await firebase.auth().createUserWithEmailAndPassword(email,pass);
     cred.user.sendEmailVerification().catch(e=>console.error('Email verification error',e));
+    const guestData=await mergeGuestDataIntoNewAccount(cred.user.uid);
     await firebase.firestore().collection('users').doc(cred.user.uid).set({
       name,motivation,...(['partner','traveler','heritage'].includes(motivation)?{moment:normalizeMoment({type:motivation})}:{}),
-      xp:(Number(guestProgress&&guestProgress.xp)||0)+(guestConnection&&guestConnection.total?guestConnection.total*10:0),
-      itemStats:guestProgress&&guestProgress.itemStats||{},connection:guestConnection&&guestConnection.total?guestConnection:normalizeConnection(),createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      ...guestData,createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
-    if(guestConnection&&guestConnection.total)localStorage.removeItem('speakmasri_guestConnection');
-    try{
-      const progress=guestProgress&&guestProgress.progress&&typeof guestProgress.progress==='object'?guestProgress.progress:{};
-      const entries=Object.entries(progress);
-      if(entries.length){
-        const batch=firebase.firestore().batch();
-        entries.forEach(([lessonId,data])=>{
-          const ref=firebase.firestore().collection(`users/${cred.user.uid}/progress`).doc(lessonId);
-          batch.set(ref,{done:!!data.done,score:Number(data.score)||0},{merge:true});
-        });
-        await batch.commit();
-      }
-      if(guestProgress)localStorage.removeItem('speakmasri_guestProgress');
-    }catch(e){console.error('Guest progress merge error',e);}
     analytics.logEvent('sign_up');
     sessionStorage.setItem('speakmasri_justSignedUpMotivation',motivation);
     if(firebase.auth().currentUser){
@@ -2444,6 +2466,29 @@ async function signup(){
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
     console.error('Signup error',e);
+  }
+}
+
+async function signInWithGoogle(){
+  const err=document.getElementById('authErr');
+  err.textContent='';
+  document.getElementById('authMsg').textContent='';
+  const provider=new firebase.auth.GoogleAuthProvider();
+  try{
+    const cred=await firebase.auth().signInWithPopup(provider);
+    if(cred.additionalUserInfo&&cred.additionalUserInfo.isNewUser){
+      const guestData=await mergeGuestDataIntoNewAccount(cred.user.uid);
+      await firebase.firestore().collection('users').doc(cred.user.uid).set({
+        name:cred.user.displayName||'',motivation:'',...guestData,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+      analytics.logEvent('sign_up');
+    }
+    closeAuthSheet(true);
+  }catch(e){
+    if(e.code==='auth/popup-closed-by-user'||e.code==='auth/cancelled-popup-request')return;
+    err.textContent=getAuthErrorMessage(e.code);
+    console.error('Google sign-in error',e);
   }
 }
 
