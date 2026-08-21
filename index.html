@@ -306,6 +306,13 @@ input:focus, select:focus {
   font-weight: 700;
   text-decoration: underline;
 }
+.email-verification-reminder > .verification-resend-msg {
+  flex: 0 1 auto;
+  color: var(--error);
+}
+.email-verification-reminder > .verification-resend-msg:empty {
+  display: none;
+}
 .email-verification-reminder .dismiss-verification {
   padding: 0 2px;
   color: var(--ink-soft);
@@ -1433,6 +1440,7 @@ input:focus, select:focus {
     <div id="emailVerificationBanner" class="email-verification-reminder hidden" role="status">
       <span data-i18n="ui.verify_your_email_to_secure_your_account">Verify your email to secure your account</span>
       <button id="resendVerificationBtn" class="resend-verification" type="button" data-i18n="ui.resendverificationbtn" onclick="resendEmailVerification()">Resend</button>
+      <span id="verificationResendMsg" class="verification-resend-msg" role="alert"></span>
       <button class="dismiss-verification" type="button" onclick="dismissEmailVerificationBanner()" aria-label="Dismiss email verification reminder" data-i18n-aria-label="aria.dismiss_email_verification_reminder">&times;</button>
     </div>
     <!-- LEARN -->
@@ -1751,6 +1759,8 @@ let user=null;          // logged-in user object
 let baseLang='en';      // language the learner starts from
 let voicePref='female';
 let emailVerificationBannerDismissed=false;
+let emailVerificationResendPending=false;
+let emailVerificationCooldownTimer=null;
 let curLesson=null;     // lesson currently in progress
 let exList=[];          // built exercises for current lesson
 let exIdx=0;
@@ -1880,6 +1890,9 @@ const STRINGS={
   "ui.mira_home_greeting_no_name":{en:"Hey! Ready to practice?",ru:"Привет! Готовы позаниматься?"},
   "ui.verify_your_email_to_secure_your_account":{en:"Verify your email to secure your account",ru:"Подтвердите почту, чтобы защитить аккаунт"},
   "ui.resendverificationbtn":{en:"Resend",ru:"Отправить снова"},
+  "ui.verification_resend_countdown":{en:"Sent ✓ (resend in {seconds}s)",ru:"Отправлено ✓ (повторно через {seconds} с)"},
+  "ui.verification_too_many_requests":{en:"Too many requests — try again in a few minutes",ru:"Слишком много запросов — попробуйте снова через несколько минут"},
+  "ui.verification_resend_failed":{en:"Couldn't send that — try again",ru:"Не удалось отправить — попробуйте снова"},
   "aria.dismiss_email_verification_reminder":{en:"Dismiss email verification reminder",ru:"Скрыть напоминание о подтверждении почты"},
   "ui.phrasebook":{en:"📖 Phrasebook",ru:"📖 Разговорник"},
   "ui.everything_you_ve_unlocked_so_far_pull_this_up_mid_c":{en:"Everything you've unlocked so far — pull this up mid-conversation.",ru:"Всё, что вы уже открыли — подглядывайте прямо во время разговора."},
@@ -2875,13 +2888,40 @@ function dismissEmailVerificationBanner(){
   document.getElementById("emailVerificationBanner").classList.add("hidden");
 }
 
-function resendEmailVerification(){
+async function resendEmailVerification(){
   const fbUser=firebase.auth().currentUser;
-  if(!fbUser||!user||user.isGuest)return;
-  fbUser.sendEmailVerification().then(()=>{
-    const btn=document.getElementById("resendVerificationBtn");
-    if(btn){const orig=btn.textContent;btn.textContent=t('ui.sent');setTimeout(()=>{btn.textContent=orig;},2000);}
-  }).catch(e=>console.error('Email verification resend error',e));
+  const btn=document.getElementById("resendVerificationBtn");
+  const msg=document.getElementById("verificationResendMsg");
+  if(!fbUser||!user||user.isGuest||!btn||emailVerificationResendPending||btn.disabled)return;
+  emailVerificationResendPending=true;
+  btn.disabled=true;
+  if(msg)msg.textContent="";
+  try{
+    await fbUser.sendEmailVerification();
+    let seconds=60;
+    btn.textContent=t('ui.sent');
+    setTimeout(()=>{
+      if(!btn.disabled)return;
+      btn.textContent=t('ui.verification_resend_countdown').replace('{seconds}',seconds);
+      emailVerificationCooldownTimer=setInterval(()=>{
+        seconds--;
+        if(seconds<=0){
+          clearInterval(emailVerificationCooldownTimer);
+          emailVerificationCooldownTimer=null;
+          btn.textContent=t('ui.resendverificationbtn');
+          btn.disabled=false;
+          return;
+        }
+        btn.textContent=t('ui.verification_resend_countdown').replace('{seconds}',seconds);
+      },1000);
+    },2000);
+  }catch(e){
+    console.error('Email verification resend error',e);
+    btn.disabled=false;
+    if(msg)msg.textContent=t(e.code==='auth/too-many-requests'?'ui.verification_too_many_requests':'ui.verification_resend_failed');
+  }finally{
+    emailVerificationResendPending=false;
+  }
 }
 
 function refreshTopBar(){
@@ -3379,6 +3419,7 @@ function startReviewSession(){
 
 /* ---------- PROFILE ---------- */
 function renderProfile(){
+  checkEmailVerificationBanner();
   document.getElementById("pName").textContent=user.name;
   document.getElementById("pEmail").textContent=user.email;
   countUp(document.getElementById("pXp"),user.xp);
@@ -4848,6 +4889,12 @@ function initLandingAnimations(){
 
 /* ---------- BOOTSTRAP ---------- */
 window.addEventListener("resize",sizeLinearExerciseArea);
+document.addEventListener("visibilitychange",()=>{
+  const fbUser=firebase.auth().currentUser;
+  if(document.visibilityState==="visible"&&user&&!user.isGuest&&fbUser&&!fbUser.emailVerified){
+    checkEmailVerificationBanner();
+  }
+});
 if(window.visualViewport)window.visualViewport.addEventListener("resize",sizeLinearExerciseArea);
 if("ResizeObserver" in window){
   new ResizeObserver(sizeLinearExerciseArea).observe(document.getElementById("checkWrap"));
