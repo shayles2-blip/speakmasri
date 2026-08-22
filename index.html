@@ -1658,6 +1658,7 @@ input:focus, select:focus {
     <div class="confetti"><img src="mascot/mira_happy.webp" alt="Mira celebrating the completed lesson" style="display:block;width:112px;height:112px;object-fit:contain;margin:0 auto"></div>
     <h1 id="doneTitle" data-i18n="ui.donetitle">Lesson Complete!</h1>
     <h2 id="doneCompetence" class="done-competence hidden"><span class="done-competence-label" data-i18n="done.you_can_now_handle">You can now handle:</span><span id="doneLessonTitle"></span></h2>
+    <p id="doneNextPreview" class="hidden" style="color:var(--ink-soft);margin:0 16px 16px;font-size:14px"></p>
     <div id="doneUnlocked" class="done-unlocked hidden"></div>
     <div id="missionBox" style="background:var(--clay-soft);border:1.5px dashed var(--clay);border-radius:var(--r-lg);margin:16px;padding:16px;text-align:left"></div>
     <div style="display:flex;justify-content:space-around;margin:24px 0">
@@ -1967,6 +1968,7 @@ const STRINGS={
   "ui.rehearse_this_lesson":{en:"🎙️ Rehearse This Lesson",ru:"🎙️ Отрепетировать урок"},
   "btn.continue":{en:"Continue",ru:"Продолжить"},
   "ui.next_lesson_guest":{en:"Next Lesson →",ru:"Следующий урок →"},
+  "ui.guest_next_lesson_preview":{en:"Up next: the scenario SpeakMasri is really about — meeting the family for the first time.",ru:"Дальше: сценарий, ради которого создан SpeakMasri — знакомство с семьёй в первый раз."},
   "ui.name_can_t_be_empty":{en:"Name can't be empty.",ru:"Имя не может быть пустым."},
   "ui.saved":{en:"Saved ✓",ru:"Сохранено ✓"},
   "ui.couldn_t_save_try_again":{en:"Couldn't save. Try again.",ru:"Не удалось сохранить. Попробуйте ещё раз."},
@@ -4976,11 +4978,18 @@ async function finishAsSuccess(){
   const doneTitle=document.getElementById("doneTitle");
   const doneCompetence=document.getElementById("doneCompetence");
   const doneUnlocked=document.getElementById("doneUnlocked");
+  const doneNextPreview=document.getElementById("doneNextPreview");
+  doneNextPreview.classList.add("hidden");
+  doneNextPreview.textContent="";
   document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="l3-1"?'ui.next_lesson_guest':'btn.continue');
   document.getElementById("testMeBtn").classList.remove("hidden");
   if(user.isGuest){
     user.progress[curLesson.id]={done:true,score:acc};
     document.getElementById("doneTitle").textContent=t(curLesson.id==="l1-1"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
+    if(curLesson.id==="l3-1"){
+      doneNextPreview.textContent=t('ui.guest_next_lesson_preview');
+      doneNextPreview.classList.remove("hidden");
+    }
   } else {
     user.progress[curLesson.id]={done:true,score:acc};
     doneTitle.textContent=t('ui.donetitle');
