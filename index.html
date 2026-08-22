@@ -1934,6 +1934,7 @@ const STRINGS={
   "ui.template":{en:"⬇️ Template",ru:"⬇️ Шаблон"},
   "ui.import":{en:"⬆️ Import",ru:"⬆️ Импорт"},
   "ui.content_reports_heading":{en:"Content Reports",ru:"Жалобы на контент"},
+  "ui.load_more_reports":{en:"Load more",ru:"Показать ещё"},
   "ui.account":{en:"Account",ru:"Аккаунт"},
   "ui.editnamebtn":{en:"✏️ Edit name",ru:"✏️ Изменить имя"},
   "placeholder.your_name":{en:"Your name",ru:"Ваше имя"},
@@ -3531,7 +3532,9 @@ async function renderContentReports(){
   if(!visible){list.replaceChildren();return;}
   list.textContent="Loading reports…";
   try{
-    const snapshot=await firebase.firestore().collection("audioReports").orderBy("createdAt","desc").limit(100).get();
+    const pageSize=15;
+    const query=firebase.firestore().collection("audioReports").orderBy("createdAt","desc");
+    const snapshot=await query.limit(pageSize).get();
     if(snapshot.empty){
       list.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">No content reports yet.</p>`;
       return;
@@ -3547,12 +3550,12 @@ async function renderContentReports(){
       register_wrong:"Register/formality label is wrong",
       grammar_wrong:"Grammar or gender is wrong"
     };
-    list.replaceChildren();
-    snapshot.forEach(doc=>{
+    const buildReportRow=doc=>{
       const report=doc.data();
       const lesson=lessons.find(candidate=>candidate.id===report.lessonId);
       const item=lesson?.vocab?.[report.idx];
       const row=document.createElement("div");
+      row.className="content-report-row";
       row.style.cssText="padding:12px 0;border-bottom:1px solid var(--line)";
       const header=document.createElement("div");
       header.style.cssText="display:flex;justify-content:space-between;align-items:flex-start;gap:12px";
@@ -3584,7 +3587,7 @@ async function renderContentReports(){
         try{
           await firebase.firestore().collection("audioReports").doc(doc.id).delete();
           row.remove();
-          if(!list.children.length)list.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">No content reports yet.</p>`;
+          if(!list.querySelector(".content-report-row"))list.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">No content reports yet.</p>`;
         }catch(err){
           console.error("dismiss audio report error",err);
           dismiss.disabled=false;
@@ -3608,8 +3611,36 @@ async function renderContentReports(){
       const createdDate=report.createdAt?.toDate?.();
       meta.textContent=[report.lessonId,Number.isInteger(report.idx)?`#${report.idx}`:"",createdDate&&!Number.isNaN(createdDate.getTime())?createdDate.toISOString().slice(0,10):"Date unavailable"].filter(Boolean).join(" · ");
       row.appendChild(meta);
-      list.appendChild(row);
-    });
+      return row;
+    };
+    let lastVisibleDocSnapshot=snapshot.docs[snapshot.docs.length-1];
+    const appendReports=pageSnapshot=>{
+      pageSnapshot.forEach(doc=>list.appendChild(buildReportRow(doc)));
+    };
+    const addLoadMoreButton=()=>{
+      const loadMore=document.createElement("button");
+      loadMore.type="button";
+      loadMore.className="btn btn-ghost";
+      loadMore.style.cssText="display:block;margin:12px auto 0;padding:9px 14px;font-size:13px";
+      loadMore.textContent=t("ui.load_more_reports");
+      loadMore.onclick=async()=>{
+        loadMore.disabled=true;
+        try{
+          const nextSnapshot=await query.startAfter(lastVisibleDocSnapshot).limit(pageSize).get();
+          loadMore.remove();
+          appendReports(nextSnapshot);
+          if(!nextSnapshot.empty)lastVisibleDocSnapshot=nextSnapshot.docs[nextSnapshot.docs.length-1];
+          if(nextSnapshot.size===pageSize)addLoadMoreButton();
+        }catch(err){
+          console.error("content reports load more error",err);
+          loadMore.disabled=false;
+        }
+      };
+      list.appendChild(loadMore);
+    };
+    list.replaceChildren();
+    appendReports(snapshot);
+    if(snapshot.size===pageSize)addLoadMoreButton();
   }catch(err){
     console.error("content reports load error",err);
     list.textContent="Couldn't load content reports.";
