@@ -2736,7 +2736,7 @@ async function sharePartnerLink(){
 }
 
 async function shareCompletedLesson(){
-  if(!user||user.isGuest||!curLesson)return;
+  if(!user||!curLesson)return;
   const phrase=curLesson.vocab&&curLesson.vocab[0];
   const phraseText=phrase&&(phrase.franco||phrase.ar);
   const text=`I just learned ${curLesson.title} on SpeakMasri. Test me tonight!${phraseText?` Ask me about “${phraseText}”.`:''} 🇪🇬`;
@@ -3219,7 +3219,7 @@ function renderPath(){
       return correct>=3&&correct>=incorrect*3;
     }).length;
     const readinessPct=unitVocab.length?Math.round(ownedCount/unitVocab.length*100):0;
-    const readinessLabel=ownedCount>0&&!user.isGuest
+    const readinessLabel=ownedCount>0
       ?`<span class="scenario-readiness" title="${ownedCount} of ${unitVocab.length} phrases owned">${readinessPct}% ready</span>`
       :"";
     const pathLabel=u.id===preferredUnitId&&preferredUnitIndex>=0
@@ -4977,7 +4977,7 @@ async function finishAsSuccess(){
   const doneCompetence=document.getElementById("doneCompetence");
   const doneUnlocked=document.getElementById("doneUnlocked");
   document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="l3-1"?'ui.next_lesson_guest':'btn.continue');
-  document.getElementById("testMeBtn").classList.toggle("hidden",!!user.isGuest);
+  document.getElementById("testMeBtn").classList.remove("hidden");
   if(user.isGuest){
     user.progress[curLesson.id]={done:true,score:acc};
     document.getElementById("doneTitle").textContent=t(curLesson.id==="l1-1"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
