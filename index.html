@@ -620,6 +620,11 @@ input:focus, select:focus {
   margin: 24px 20px 10px;
   color: var(--text-main);
 }
+.exercise-scene-strip {
+  min-height: 116px;
+  background-size: cover;
+  background-position: center;
+}
 .opt {
   display: block;
   width: calc(100% - 32px);
@@ -635,6 +640,22 @@ input:focus, select:focus {
   text-align: center;
   transition: all 0.2s ease;
   box-shadow: var(--shadow-card);
+}
+.opt.opt-chip {
+  display: inline-flex;
+  width: auto;
+  margin: 6px;
+  padding: 12px 16px;
+}
+.build-bank,
+.build-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 10px;
+}
+.build-strip {
+  min-height: 76px;
 }
 .opt:active { transform: scale(0.98); }
 .opt.sel {
@@ -1982,6 +2003,7 @@ const STRINGS={
   "ui.sent":{en:"Sent! ✅",ru:"Отправлено! ✅"},
   "exercise.listen_prompt":{en:"Listen and choose the meaning",ru:"Послушайте и выберите значение"},
   "exercise.franco_prompt":{en:"Type it in Franco-Arabic",ru:"Напишите франко-арабицей"},
+  "exercise.build_prompt":{en:"Tap the words in order",ru:"Нажимайте слова по порядку"},
   "ui.e_g_shukran":{en:"e.g. Shukran",ru:"напр. Shukran"},
   "exercise.match_prompt":{en:"Match the pairs",ru:"Соедините пары"},
   "ui.recording":{en:"🔴 Recording...",ru:"🔴 Запись..."},
@@ -3927,14 +3949,25 @@ function buildExercises(lesson){
       opts:shuffle([item,...distractors]).map(v=>({value:v.en,label:vocabText(v)}))});
   });
 
-  vocab.forEach(item=>{
-    // fill in the blank: type the Franco transliteration
-    list.push({type:"fill",item,q:vocabText(item),ar:item.ar,answer:item.franco,register:item.register});
+  vocab.forEach((item,idx)=>{
+    if(lesson.id==='pyramids'){
+      const tokens=item.ar.trim().split(/\s+/);
+      list.push({type:"build",item,lessonId:lesson.id,idx,tokens,ar:item.ar,q:vocabText(item),franco:item.franco,register:item.register});
+    } else {
+      // fill in the blank: type the Franco transliteration
+      list.push({type:"fill",item,q:vocabText(item),ar:item.ar,answer:item.franco,register:item.register});
+    }
   });
 
   if(vocab.length>=2){
     const pairs=shuffle(vocab).slice(0,Math.min(4,vocab.length));
     list.push({type:"match",pairs,items:pairs});
+  }
+
+  if(lesson.id==='pyramids'){
+    list.forEach(ex=>{
+      if(ex.type==="mc"||ex.type==="listen"||ex.type==="build")ex.sceneImage='mascot/locations/pyramids.webp';
+    });
   }
 
   const shuffled=shuffle(list);
@@ -4005,10 +4038,16 @@ function sizeLinearExerciseArea(){
   area.style.minHeight=availableHeight+"px";
 }
 
-function setLinearExerciseLayout(area,prompt,answer){
+function setLinearExerciseLayout(area,prompt,answer,sceneImage){
   area.classList.add("linear-exercise");
   prompt.classList.add("exercise-prompt");
   answer.classList.add("exercise-answer");
+  if(sceneImage){
+    const strip=document.createElement("div");
+    strip.className="exercise-scene-strip";
+    strip.style.backgroundImage=`linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.55)), url("${sceneImage}")`;
+    prompt.insertBefore(strip,prompt.firstChild);
+  }
   area.append(prompt,answer);
   requestAnimationFrame(sizeLinearExerciseArea);
 }
@@ -4083,7 +4122,7 @@ function renderExercise(){
       b.onclick=()=>selectOpt(b,o);
       answer.appendChild(b);
     });
-    setLinearExerciseLayout(area,prompt,answer);
+    setLinearExerciseLayout(area,prompt,answer,ex.sceneImage);
   } else if(ex.type==="listen"){
     const prompt=document.createElement("div");
     const answer=document.createElement("div");
@@ -4106,7 +4145,7 @@ function renderExercise(){
       b.onclick=()=>selectOpt(b,o.value);
       answer.appendChild(b);
     });
-    setLinearExerciseLayout(area,prompt,answer);
+    setLinearExerciseLayout(area,prompt,answer,ex.sceneImage);
     playAudio(ex.q,ex.audio);
   } else if(ex.type==="fill"){
     const prompt=document.createElement("div");
@@ -4130,6 +4169,25 @@ function renderExercise(){
     fw.appendChild(inp);answer.appendChild(fw);
     setLinearExerciseLayout(area,prompt,answer);
     requestAnimationFrame(()=>inp.focus());
+  } else if(ex.type==="build"){
+    selection=[];
+    const prompt=document.createElement("div");
+    const answer=document.createElement("div");
+    const q=document.createElement("div");q.className="q";q.textContent=t('exercise.build_prompt');
+    q.insertAdjacentHTML("beforeend",registerBadge(ex));
+    prompt.appendChild(q);
+    const sub=document.createElement("div");sub.style.padding="0 16px";sub.style.color="var(--ink-soft)";sub.textContent=vocabText(ex.item);
+    prompt.appendChild(sub);
+    const bank=document.createElement("div");bank.id="buildBank";bank.className="build-bank";bank.dir="rtl";
+    const strip=document.createElement("div");strip.id="buildStrip";strip.className="build-strip";strip.dir="rtl";
+    shuffle(ex.tokens.map((_,origIndex)=>origIndex)).forEach(origIndex=>{
+      const b=document.createElement("button");
+      b.className="opt opt-chip ar";b.lang="ar";b.textContent=ex.tokens[origIndex];
+      b.onclick=()=>buildTapToken(b,origIndex);
+      bank.appendChild(b);
+    });
+    answer.append(bank,strip);
+    setLinearExerciseLayout(area,prompt,answer,ex.sceneImage);
   } else if(ex.type==="match"){
     const q=document.createElement("div");q.className="q";q.textContent=t('exercise.match_prompt');
     area.appendChild(q);
@@ -4165,6 +4223,22 @@ function selectOpt(btn,val){
   btn.classList.add("sel");
   selection=val;
   document.getElementById("checkBtn").disabled=false;
+}
+
+function buildTapToken(btn,origIndex){
+  const bank=document.getElementById("buildBank");
+  const strip=document.getElementById("buildStrip");
+  if(btn.parentElement===bank){
+    strip.appendChild(btn);
+    btn.classList.add("sel");
+    selection.push(origIndex);
+  } else {
+    bank.appendChild(btn);
+    btn.classList.remove("sel");
+    const selectionIndex=selection.indexOf(origIndex);
+    if(selectionIndex!==-1)selection.splice(selectionIndex,1);
+  }
+  document.getElementById("checkBtn").disabled=selection.length!==exList[exIdx].tokens.length;
 }
 
 function matchPick(side,val,btn){
@@ -4324,8 +4398,12 @@ function check(){
     ok = ex.answer.split("/").some(candidateAnswer=>francoAnswerMatches(selection,candidateAnswer));
     const fillInput=document.getElementById("fillInput");
     if(fillInput){fillInput.classList.add(ok?"correct":"wrong");targetEl=fillInput;}
+  } else if(ex.type==="build"){
+    ok = !!selection && selection.length===ex.tokens.length && selection.every((origIdx,i)=>origIdx===i);
+    document.querySelectorAll('#buildStrip .opt').forEach(o=>o.classList.add(ok?"correct":"wrong"));
+    targetEl=document.getElementById('buildStrip');
   }
-  if(user&&(ex.type==="mc"||ex.type==="listen"||ex.type==="fill")){
+  if(user&&(ex.type==="mc"||ex.type==="listen"||ex.type==="fill"||ex.type==="build")){
     const lessonId=ex.lessonId||(curLesson&&curLesson.id);
     const idx=ex.idx!==undefined?ex.idx:(curLesson&&curLesson.vocab.indexOf(ex.item));
     if(lessonId&&idx!==undefined&&idx!==null&&idx!==-1){
@@ -4351,6 +4429,7 @@ function showFeedback(ok,ex){
   const fb=document.getElementById("fbArea");
   document.getElementById("skipBtn").classList.add("hidden");
   const answerText = ex.type==="fill" ? `${ex.answer} (${ex.ar})` :
+                      ex.type==="build" ? `${ex.ar}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="mc" ? `${ex.answer}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="listen" ? ex.answer : "";
   fb.innerHTML=`<div class="feedback ${ok?"fb-ok":"fb-no"}">
