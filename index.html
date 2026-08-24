@@ -1397,7 +1397,8 @@ input:focus, select:focus {
         <input id="name" placeholder="Name (for signup)" data-i18n-placeholder="placeholder.name" autocomplete="name">
       </div>
       <input id="email" placeholder="Email" data-i18n-placeholder="placeholder.email" type="email" autocomplete="email">
-      <input id="pass" placeholder="Password (min 8 characters)" data-i18n-placeholder="placeholder.pass" type="password" autocomplete="current-password">
+      <input id="pass" placeholder="Password (min 8 characters)" data-i18n-placeholder="placeholder.pass" type="password" autocomplete="current-password" oninput="updatePasswordStrength()">
+      <div id="passStrength" class="hidden" aria-live="polite" style="font-size:13px;margin:-4px 0 4px;font-weight:600"></div>
       <div id="motivationField" class="hidden">
         <select id="motivation">
           <option value="" data-i18n="ui.what_s_your_learning_goal_optional">What's your learning goal? (optional)</option>
@@ -1845,6 +1846,9 @@ const STRINGS={
   "placeholder.name":{en:"Name (for signup)",ru:"Имя (для регистрации)"},
   "placeholder.email":{en:"Email",ru:"Электронная почта"},
   "placeholder.pass":{en:"Password (min 8 characters)",ru:"Пароль (мин. 8 символов)"},
+  "password_strength.short":{en:"Too short — needs at least 8 characters",ru:"Слишком короткий — минимум 8 символов"},
+  "password_strength.weak":{en:"Weak — add a number, symbol, or capital letter",ru:"Слабый — добавьте цифру, символ или заглавную букву"},
+  "password_strength.good":{en:"Good",ru:"Хороший"},
   "ui.what_s_your_learning_goal_optional":{en:"What's your learning goal? (optional)",ru:"Какая у вас цель? (необязательно)"},
   "ui.egyptian_partner_in_laws":{en:"Egyptian partner / in-laws",ru:"Египетский партнёр / его семья"},
   "ui.upcoming_trip_to_egypt":{en:"Upcoming trip to Egypt",ru:"Предстоящая поездка в Египет"},
@@ -2550,6 +2554,22 @@ function openAuthSheet(mode){
   requestAnimationFrame(()=>document.getElementById(mode==='signup'?'name':'email').focus());
 }
 
+function updatePasswordStrength(){
+  const pass=document.getElementById('pass').value;
+  const passStrength=document.getElementById('passStrength');
+  const signupMode=document.getElementById('signupTab').classList.contains('active');
+  if(!signupMode||!pass){
+    passStrength.classList.add('hidden');
+    return;
+  }
+  const characterClasses=[/[a-z]/,/[A-Z]/,/\d/,/[^A-Za-z0-9]/].filter(pattern=>pattern.test(pass)).length;
+  const tier=pass.length<8?'short':characterClasses<2?'weak':'good';
+  const colors={short:'var(--brick)',weak:'var(--gold)',good:'var(--primary)'};
+  passStrength.textContent=t('password_strength.'+tier);
+  passStrength.style.color=colors[tier];
+  passStrength.classList.remove('hidden');
+}
+
 function setAuthMode(mode){
   const signupMode=mode==='signup';
   document.getElementById('authSheetTitle').dataset.i18n=signupMode?'btn.signup':'btn.login';
@@ -2571,6 +2591,7 @@ function setAuthMode(mode){
     const active=tab===mode,el=document.getElementById(tab+'Tab');
     el.classList.toggle('active',active);el.setAttribute('aria-selected',active?'true':'false');el.tabIndex=active?0:-1;
   });
+  updatePasswordStrength();
   document.getElementById('authErr').textContent='';
   document.getElementById('authMsg').textContent='';
 }
