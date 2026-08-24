@@ -1363,9 +1363,9 @@ input:focus, select:focus {
       <button id="guestLessonCta" class="btn btn-sheen landing-in landing-in-5" onclick="startGuestLesson()" data-i18n="btn.try_lesson_free">Try a Lesson Free</button>
       <div class="landing-trust landing-in landing-in-5" data-i18n="landing.trust">No account · ~3 min · Egyptian Arabic</div>
       <div class="landing-in landing-in-5" style="margin-top:14px">
-        <button type="button" onclick="showLogin()" data-i18n="btn.login" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Log In</button>
+        <button type="button" onclick="showLogin()" data-i18n="btn.login" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:12px 4px">Log In</button>
         <span style="color:var(--ink-soft);margin:0 2px">&middot;</span>
-        <button type="button" onclick="showSignup()" data-i18n="btn.signup" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:4px">Sign Up</button>
+        <button type="button" onclick="showSignup()" data-i18n="btn.signup" style="background:none;border:none;color:var(--teal);font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:12px 4px">Sign Up</button>
       </div>
     </div>
 
@@ -1463,7 +1463,7 @@ input:focus, select:focus {
   <div id="main" class="hidden">
     <div class="top">
       <div class="stat">💬 <span id="milestoneCount">0</span> <span data-i18n="ui.said">said</span></div>
-      <div class="stat">⭐ <span id="xp" style="color:var(--gold-text)">0</span></div>
+      <div class="stat">✅ <span id="ownedTopCount">0</span> <span data-i18n="ui.owned_short">owned</span></div>
       <div class="connection-pill">🔗 <span id="cdCount">0</span> <span data-i18n="connection.days">Connection Days</span></div>
     </div>
     <div id="homeMiraGreeting" class="home-mira-greeting hidden">
@@ -1502,8 +1502,9 @@ input:focus, select:focus {
       <h2 id="pName"></h2>
       <p style="color:var(--ink-soft)" id="pEmail"></p>
       <div style="display:flex;justify-content:space-around;margin:24px 0">
-        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--gold-text)" id="pXp">0</div><span data-i18n="ui.total_xp">Total XP</span></div>
+        <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pOwned">0</div><span data-i18n="ui.owned_phrases_short">Phrases Owned</span></div>
         <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pMilestones">0</div><span data-i18n="ui.phrases_said">Phrases Said</span></div>
+        <div><div style="font-size:18px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink-soft)" id="pXp">0</div><span data-i18n="ui.total_xp">Total XP</span></div>
       </div>
       <div id="connectionRhythm"></div>
       <div style="text-align:left;padding:0 16px">
@@ -1943,6 +1944,8 @@ const STRINGS={
   "ui.formal_elders_in_laws_show_respect_casual_friends_pe":{en:"Formal = elders, in-laws, show respect · Casual = friends, peers · Intimate = partner only",ru:"Формально — со старшими и роднёй, с уважением · Неформально — с друзьями и ровесниками · Интимно — только с партнёром"},
   "ui.total_xp":{en:"Total XP",ru:"Всего XP"},
   "ui.phrases_said":{en:"Phrases Said",ru:"Фраз произнесено"},
+  "ui.owned_short":{en:"owned",ru:"освоено"},
+  "ui.owned_phrases_short":{en:"Phrases Owned",ru:"Фраз освоено"},
   "ui.your_moments":{en:"Your moments",ru:"Ваши моменты"},
   "ui.your_path":{en:"Your path",ru:"Ваш путь"},
   "ui.owned_phrases":{en:"Phrases You Own",ru:"Фразы, которыми вы владеете"},
@@ -3024,7 +3027,7 @@ async function resendEmailVerification(){
 
 function refreshTopBar(){
   document.getElementById("milestoneCount").textContent=(user.milestones||[]).length;
-  document.getElementById("xp").textContent=user.xp;
+  document.getElementById("ownedTopCount").textContent=computeOwnedPhrases().length;
   document.getElementById("cdCount").textContent=normalizeConnection(user.connection).current;
 }
 
@@ -3520,6 +3523,7 @@ function renderProfile(){
   checkEmailVerificationBanner();
   document.getElementById("pName").textContent=user.name;
   document.getElementById("pEmail").textContent=user.email;
+  countUp(document.getElementById("pOwned"),computeOwnedPhrases().length);
   countUp(document.getElementById("pXp"),user.xp);
   const milestones=user.milestones||[];
   countUp(document.getElementById("pMilestones"),milestones.length);
@@ -3692,17 +3696,7 @@ async function renderContentReports(){
   }
 }
 
-function renderOwnedPhrases(){
-  const section=document.getElementById("ownedPhrasesSection");
-  const spacer=document.getElementById("ownedPhrasesSpacer");
-  const list=document.getElementById("ownedPhrasesList");
-  const count=document.getElementById("ownedPhrasesCount");
-  if(!section||!spacer||!list||!count)return;
-  const hidden=!user||!!user.isGuest;
-  section.classList.toggle("hidden",hidden);
-  spacer.classList.toggle("hidden",hidden);
-  if(hidden)return;
-
+function computeOwnedPhrases(){
   const lessons=COURSE.units.flatMap(unit=>unit.lessons);
   const owned=Object.entries(user.itemStats||{}).flatMap(([key,stats])=>{
     const correct=Number(stats?.correct)||0;
@@ -3717,6 +3711,21 @@ function renderOwnedPhrases(){
     const item=lesson?.vocab[idx];
     return item?[{item,lastSeen:stats?.lastSeen||""}]:[];
   }).sort((a,b)=>b.lastSeen.localeCompare(a.lastSeen));
+  return owned;
+}
+
+function renderOwnedPhrases(){
+  const section=document.getElementById("ownedPhrasesSection");
+  const spacer=document.getElementById("ownedPhrasesSpacer");
+  const list=document.getElementById("ownedPhrasesList");
+  const count=document.getElementById("ownedPhrasesCount");
+  if(!section||!spacer||!list||!count)return;
+  const hidden=!user||!!user.isGuest;
+  section.classList.toggle("hidden",hidden);
+  spacer.classList.toggle("hidden",hidden);
+  if(hidden)return;
+
+  const owned=computeOwnedPhrases();
 
   count.textContent=t('ui.owned_count').replace('{n}',owned.length);
   if(!owned.length){
