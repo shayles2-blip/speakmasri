@@ -1037,6 +1037,35 @@ input:focus, select:focus {
   text-align: left;
 }
 .register-info-tooltip[hidden] { display: none; }
+.nav-coach-tip {
+  position: fixed;
+  z-index: 1000;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  border-top: 3px solid var(--primary);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  color: var(--text-main);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nav-coach-tip[hidden] { display: none; }
+.nav-coach-tip button {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
 
 /* ===== AUDIO BUTTON ===== */
 .audio-btn {
@@ -1940,6 +1969,7 @@ const STRINGS={
   "ui.verification_resend_failed":{en:"Couldn't send that — try again",ru:"Не удалось отправить — попробуйте снова"},
   "aria.dismiss_email_verification_reminder":{en:"Dismiss email verification reminder",ru:"Скрыть напоминание о подтверждении почты"},
   "ui.phrasebook":{en:"📖 Phrasebook",ru:"📖 Разговорник"},
+  "ui.phrasebook_coach_tip":{en:"Your saved phrases live here — check back anytime.",ru:"Здесь хранятся ваши сохранённые фразы — заглядывайте сюда в любое время."},
   "ui.everything_you_ve_unlocked_so_far_pull_this_up_mid_c":{en:"Everything you've unlocked so far — pull this up mid-conversation.",ru:"Всё, что вы уже открыли — подглядывайте прямо во время разговора."},
   "ui.formal_elders_in_laws_show_respect_casual_friends_pe":{en:"Formal = elders, in-laws, show respect · Casual = friends, peers · Intimate = partner only",ru:"Формально — со старшими и роднёй, с уважением · Неформально — с друзьями и ровесниками · Интимно — только с партнёром"},
   "ui.total_xp":{en:"Total XP",ru:"Всего XP"},
@@ -4656,6 +4686,37 @@ function registerBadge(v){
 
 let openRegisterBadge=null;
 
+function showPhrasebookCoachTip(){
+  if(localStorage.getItem('speakmasri_phrasebookTipShown'))return;
+  const navBtn=document.getElementById('nPhrasebook');
+  if(!navBtn)return;
+  localStorage.setItem('speakmasri_phrasebookTipShown','1');
+  const tip=document.createElement('div');
+  tip.className='nav-coach-tip';
+  tip.setAttribute('role','status');
+  const text=document.createElement('div');
+  text.textContent=t('ui.phrasebook_coach_tip');
+  const closeBtn=document.createElement('button');
+  closeBtn.type='button';
+  closeBtn.textContent=t('ui.got_it');
+  tip.append(text,closeBtn);
+  document.body.appendChild(tip);
+  const rect=navBtn.getBoundingClientRect();
+  requestAnimationFrame(()=>{
+    const tipRect=tip.getBoundingClientRect();
+    const edge=12;
+    let left=rect.left+(rect.width-tipRect.width)/2;
+    left=Math.max(edge,Math.min(left,window.innerWidth-tipRect.width-edge));
+    tip.style.left=left+'px';
+    tip.style.bottom=(window.innerHeight-rect.top+8)+'px';
+  });
+  const dismiss=()=>{tip.remove();document.removeEventListener('click',outsideClick,true);};
+  const outsideClick=e=>{if(!tip.contains(e.target))dismiss();};
+  closeBtn.onclick=dismiss;
+  setTimeout(()=>document.addEventListener('click',outsideClick,true),0);
+  setTimeout(dismiss,8000);
+}
+
 function getRegisterInfoTooltip(){
   let tooltip=document.getElementById("registerInfoTooltip");
   if(tooltip)return tooltip;
@@ -5140,6 +5201,7 @@ function finishLesson(){
     document.getElementById("main").classList.remove("hidden");
     refreshTopBar();
     tab("learn");
+    showPhrasebookCoachTip();
   }
 }
 
