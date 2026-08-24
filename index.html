@@ -102,6 +102,17 @@ body {
 
 .hidden { display: none !important; }
 
+.profile-section-eyebrow {
+  margin: 28px 16px 4px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
 .connection-pill{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:var(--r-pill);background:var(--teal-soft);color:var(--teal);font-size:12px;font-weight:800;white-space:nowrap}
 .connection-card{margin:14px 16px 18px;padding:16px;border:1.5px solid var(--teal);border-radius:var(--r-lg);background:linear-gradient(135deg,var(--teal-soft),var(--surface));box-shadow:var(--shadow-card)}
 .connection-card-head{display:flex;align-items:center;gap:12px}.connection-card-head img{width:64px;height:64px;object-fit:contain}.connection-card-copy{font-weight:800;line-height:1.35}
@@ -1577,7 +1588,7 @@ input:focus, select:focus {
         <div style="font-weight:800;margin-bottom:8px" data-i18n="ui.content_reports_heading">Content Reports</div>
         <div id="contentReportsList" style="color:var(--ink-soft);font-size:14px"></div>
       </div>
-      <div id="contentReportsSpacer" class="hidden" style="height:24px"></div>
+      <div class="profile-section-eyebrow" data-i18n="ui.account_settings_eyebrow">Account &amp; Settings</div>
       <div style="text-align:left;padding:0 16px">
         <div style="font-weight:800;margin-bottom:8px" data-i18n="ui.account">Account</div>
         <button type="button" id="editNameBtn" data-i18n="ui.editnamebtn" onclick="showNameEdit()" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer;display:block;margin-bottom:8px">✏️ Edit name</button>
@@ -1994,6 +2005,7 @@ const STRINGS={
   "ui.import":{en:"⬆️ Import",ru:"⬆️ Импорт"},
   "ui.content_reports_heading":{en:"Content Reports",ru:"Жалобы на контент"},
   "ui.load_more_reports":{en:"Load more",ru:"Показать ещё"},
+  "ui.account_settings_eyebrow":{en:"Account & Settings",ru:"Аккаунт и настройки"},
   "ui.account":{en:"Account",ru:"Аккаунт"},
   "ui.editnamebtn":{en:"✏️ Edit name",ru:"✏️ Изменить имя"},
   "placeholder.your_name":{en:"Your name",ru:"Ваше имя"},
@@ -3602,12 +3614,10 @@ function renderProfile(){
 
 async function renderContentReports(){
   const section=document.getElementById("contentReportsSection");
-  const spacer=document.getElementById("contentReportsSpacer");
   const list=document.getElementById("contentReportsList");
-  if(!section||!spacer||!list)return;
+  if(!section||!list)return;
   const visible=isAdminUser();
   section.classList.toggle("hidden",!visible);
-  spacer.classList.toggle("hidden",!visible);
   if(!visible){list.replaceChildren();return;}
   list.textContent="Loading reports…";
   try{
