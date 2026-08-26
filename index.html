@@ -1345,7 +1345,7 @@ input:focus, select:focus {
 @keyframes miraIdle{from{transform:translateY(0)}to{transform:translateY(-3px)}}
 .phrase-card{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border-light);border-radius:var(--r-md);padding:14px 16px;margin-bottom:20px;box-shadow:var(--shadow-card);cursor:pointer;text-align:left;transition:transform .15s ease,border-color .15s ease}
 .phrase-card:hover,.phrase-card:focus-visible{border-color:var(--accent-gold);transform:translateY(-1px)}
-.phrase-copy{display:flex;flex:1;min-width:0;flex-direction:column}.phrase-card .phrase-ar{font-size:32px;line-height:1.2;color:var(--gold-text)}
+.phrase-copy{display:flex;flex:1;min-width:0;flex-direction:column}.phrase-card .phrase-ar{font-size:32px;line-height:1.2;color:var(--gold-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .phrase-card .phrase-translation{font-size:14px;color:var(--ink-soft);text-align:right}
 .phrase-audio-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:50%;background:var(--teal-soft);color:var(--teal)}
 .phrase-fade{transition:opacity .4s ease,transform .4s ease}.phrase-fade.fading{opacity:0;transform:translateY(8px)}
