@@ -1491,7 +1491,7 @@ input:focus, select:focus {
       <button id="loginSubmit" class="btn btn-ghost hidden" onclick="login()" data-i18n="btn.login">Log In</button>
       <div style="display:flex;justify-content:flex-end;align-items:center;margin-top:8px">
         <div id="forgotLink" class="hidden">
-          <button type="button" onclick="resetPassword()" data-i18n="ui.forgot_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>
+          <button type="button" id="forgotPasswordBtn" onclick="resetPassword()" data-i18n="ui.forgot_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">Forgot password?</button>
         </div>
       </div>
       <button type="button" class="auth-dismiss-link" onclick="backToChoice()" data-i18n="landing.not_now">Not now — try a lesson free</button>
@@ -1628,7 +1628,7 @@ input:focus, select:focus {
           </div>
           <div id="nameEditMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
         </div>
-        <button type="button" onclick="changePasswordFromProfile()" data-i18n="ui.change_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">🔒 Change Password</button>
+        <button type="button" id="changePasswordBtn" onclick="changePasswordFromProfile()" data-i18n="ui.change_password" style="background:none;border:none;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer">🔒 Change Password</button>
         <div style="font-size:12px;color:var(--ink-soft);margin-top:2px" data-i18n="ui.change_password_hint">We'll email you a secure link to set a new password.</div>
         <div id="pwMsg" style="font-size:13px;min-height:16px;margin-top:4px"></div>
         <div id="accountDataActions">
@@ -2352,12 +2352,18 @@ async function saveConnection(){
 }
 
 async function saveMoment(){
+  const btn=document.activeElement instanceof HTMLButtonElement?document.activeElement:null;
+  if(btn){if(btn.dataset.busy)return;btn.dataset.busy='1';}
+  try{
   if(!user||user.isGuest)return;
   user.moment=normalizeMoment(user.moment);
   const fbUser=firebase.auth().currentUser;
   if(!fbUser)return;
   try{await firebase.firestore().collection('users').doc(fbUser.uid).set({moment:user.moment},{merge:true});}
   catch(e){console.error('saveMoment error',e);}
+  }finally{
+    if(btn)delete btn.dataset.busy;
+  }
 }
 
 function showNameEdit(){
@@ -2377,6 +2383,8 @@ function hideNameEdit(){
 async function saveDisplayName(newName){
   const msg=document.getElementById('nameEditMsg');
   const btn=document.getElementById('saveNameBtn');
+  if(btn){if(btn.dataset.busy)return;btn.dataset.busy='1';}
+  try{
   const name=(newName||'').trim();
   msg.style.color='var(--error)';
   if(!name){msg.textContent=t('ui.name_can_t_be_empty');return;}
@@ -2395,9 +2403,15 @@ async function saveDisplayName(newName){
     msg.textContent=t('ui.couldn_t_save_try_again');
     console.error('saveDisplayName error',e);
   }
+  }finally{
+    if(btn)delete btn.dataset.busy;
+  }
 }
 
 async function changePasswordFromProfile(){
+  const btn=document.getElementById('changePasswordBtn');
+  if(btn){if(btn.dataset.busy)return;btn.dataset.busy='1';}
+  try{
   const pwMsg=document.getElementById('pwMsg');
   pwMsg.textContent='';
   if(!user.email){pwMsg.style.color='var(--error)';pwMsg.textContent=t('ui.no_email_on_file');return;}
@@ -2411,6 +2425,9 @@ async function changePasswordFromProfile(){
     console.error('changePasswordFromProfile error',e);
   }
   setTimeout(()=>{pwMsg.textContent='';},5000);
+  }finally{
+    if(btn)delete btn.dataset.busy;
+  }
 }
 
 function downloadMyData(){
@@ -2492,18 +2509,30 @@ async function deleteMyAccount(){
 }
 
 async function saveCustomPhrase(en,ar,franco){
+  const btn=document.activeElement instanceof HTMLButtonElement?document.activeElement:null;
+  if(btn){if(btn.dataset.busy)return null;btn.dataset.busy='1';}
+  try{
   const uid=firebase.auth().currentUser.uid;
   try{
     const ref=await firebase.firestore().collection(`users/${uid}/customPhrases`).add({en,ar,franco,source:'partner'});
     return ref.id;
   }catch(e){console.error('saveCustomPhrase error',e);return null;}
+  }finally{
+    if(btn)delete btn.dataset.busy;
+  }
 }
 
 async function deleteCustomPhraseRemote(phraseId){
+  const list=document.getElementById('partnerPhrasesList');
+  if(list){if(list.dataset.busy)return;list.dataset.busy='1';}
+  try{
   const uid=firebase.auth().currentUser.uid;
   try{
     await firebase.firestore().collection(`users/${uid}/customPhrases`).doc(phraseId).delete();
   }catch(e){console.error('deleteCustomPhraseRemote error',e);}
+  }finally{
+    if(list)delete list.dataset.busy;
+  }
 }
 
 function allVocab(){
@@ -2723,6 +2752,9 @@ function showAuthScreen(){
 }
 
 async function resetPassword(){
+  const btn=document.getElementById('forgotPasswordBtn');
+  if(btn){if(btn.dataset.busy)return;btn.dataset.busy='1';}
+  try{
   const email=document.getElementById("email").value.trim().toLowerCase();
   const err=document.getElementById("authErr");
   const msg=document.getElementById("authMsg");
@@ -2734,6 +2766,9 @@ async function resetPassword(){
   }catch(e){
     err.textContent=getAuthErrorMessage(e.code);
     console.error('Reset password error',e);
+  }
+  }finally{
+    if(btn)delete btn.dataset.busy;
   }
 }
 
@@ -3971,12 +4006,18 @@ function importPartnerPhrases(fileInputEl){
 }
 
 async function deleteCustomPhrase(idx){
+  const btn=document.activeElement instanceof HTMLButtonElement?document.activeElement:null;
+  if(btn){if(btn.dataset.busy)return;btn.dataset.busy='1';}
+  try{
   if(!user.customPhrases)return;
   if(!confirm("Delete this phrase?"))return;
   const [removed]=user.customPhrases.splice(idx,1);
   renderPendingPartnerSubmissions();
   renderPartnerPhrases();
   if(removed&&removed._id)await deleteCustomPhraseRemote(removed._id);
+  }finally{
+    if(btn)delete btn.dataset.busy;
+  }
 }
 
 /* ---------- PHRASEBOOK ---------- */
