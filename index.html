@@ -1322,6 +1322,8 @@ input:focus, select:focus {
   100%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}
 }
 
+@keyframes tabFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
 .landing-in{opacity:0;animation:landingRise .45s cubic-bezier(.22,1,.36,1) forwards}
 .logo.landing-in{animation:logoPop .55s cubic-bezier(.22,1,.36,1) forwards}
 
@@ -3169,6 +3171,12 @@ function tab(name){
   if(name==="profile")renderProfile();
   if(name==="learn")renderPath();
   if(name==="phrasebook")renderPhrasebook();
+  if(!window.matchMedia||!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const activePanel=document.getElementById(name);
+    activePanel.style.animation="none";
+    void activePanel.offsetWidth;
+    activePanel.style.animation="tabFadeIn .22s cubic-bezier(.22,1,.36,1)";
+  }
 }
 
 /* ---------- LEARNING PATH ---------- */
