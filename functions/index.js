@@ -12,7 +12,7 @@ initializeApp();
 
 const db = getFirestore();
 const RESEND_API_KEY = defineSecret("RESEND_API_KEY");
-const FROM = "SpeakMasri <hello@speakmasri.com>";
+const FROM = "SpeakMasri <hello@updates.speakmasri.com>";
 const APP_URL = "https://speakmasri.com";
 const VALID_MOMENT_TYPES = new Set(["partner", "traveler", "heritage"]);
 
