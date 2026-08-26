@@ -201,6 +201,19 @@ body {
   box-shadow: 0 0 60px rgba(28, 32, 36, 0.04);
 }
 
+@media (min-width: 900px) {
+  body {
+    background: radial-gradient(ellipse at top, #eef8f1 0%, var(--bg-canvas) 55%);
+  }
+  .app {
+    max-width: 640px;
+    box-shadow: 0 0 0 1px var(--border-light), 0 24px 64px rgba(11, 61, 27, .08);
+  }
+  #checkWrap, .nav {
+    max-width: 640px;
+  }
+}
+
 /* ===== TYPOGRAPHY ===== */
 h1, h2, .serif, .brand, .scenario-title, .q, .fb-title {
   font-family: 'Plus Jakarta Sans', sans-serif;
