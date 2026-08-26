@@ -2030,6 +2030,8 @@ const STRINGS={
   "ui.change_password":{en:"🔒 Change Password",ru:"🔒 Сменить пароль"},
   "ui.change_password_hint":{en:"We'll email you a secure link to set a new password.",ru:"Мы вышлем вам ссылку на почту для установки нового пароля."},
   "ui.franco_hint":{en:"That's Franco — Arabic sounds spelled out in Latin letters. Say it like it reads.",ru:"Это франко — арабские звуки, записанные латинскими буквами. Читайте как есть."},
+  "ui.phrase_owned_singular":{en:"phrase owned",ru:"фраза освоена"},
+  "ui.phrases_owned_plural":{en:"phrases owned",ru:"фраз освоено"},
   "ui.download_my_data":{en:"⬇️ Download my data",ru:"⬇️ Скачать мои данные"},
   "ui.delete_my_account":{en:"Delete My Account",ru:"Удалить мой аккаунт"},
   "ui.delete_account_warning":{en:"This permanently deletes your account, learning progress, milestones, and saved partner phrases. It cannot be undone.",ru:"Это навсегда удалит ваш аккаунт, прогресс обучения, достижения и сохранённые фразы партнёра. Отменить это действие нельзя."},
@@ -3327,9 +3329,11 @@ function renderPath(){
       return correct>=3&&correct>=incorrect*3;
     }).length;
     const readinessPct=unitVocab.length?Math.round(ownedCount/unitVocab.length*100):0;
-    const readinessLabel=ownedCount>0
+    const readinessLabel=readinessPct>=25
       ?`<span class="scenario-readiness" title="${ownedCount} of ${unitVocab.length} phrases owned">${readinessPct}% ready</span>`
-      :"";
+      :ownedCount>0
+        ?`<span class="scenario-readiness" title="${ownedCount} of ${unitVocab.length} phrases owned">${ownedCount} ${ownedCount===1?t('ui.phrase_owned_singular'):t('ui.phrases_owned_plural')}</span>`
+        :"";
     const pathLabel=u.id===preferredUnitId&&preferredUnitIndex>=0
       ?`<span class="scenario-readiness">${t('ui.your_path')}</span>`
       :"";
