@@ -2029,6 +2029,7 @@ const STRINGS={
   "ui.cancel":{en:"Cancel",ru:"Отмена"},
   "ui.change_password":{en:"🔒 Change Password",ru:"🔒 Сменить пароль"},
   "ui.change_password_hint":{en:"We'll email you a secure link to set a new password.",ru:"Мы вышлем вам ссылку на почту для установки нового пароля."},
+  "ui.franco_hint":{en:"That's Franco — Arabic sounds spelled out in Latin letters. Say it like it reads.",ru:"Это франко — арабские звуки, записанные латинскими буквами. Читайте как есть."},
   "ui.download_my_data":{en:"⬇️ Download my data",ru:"⬇️ Скачать мои данные"},
   "ui.delete_my_account":{en:"Delete My Account",ru:"Удалить мой аккаунт"},
   "ui.delete_account_warning":{en:"This permanently deletes your account, learning progress, milestones, and saved partner phrases. It cannot be undone.",ru:"Это навсегда удалит ваш аккаунт, прогресс обучения, достижения и сохранённые фразы партнёра. Отменить это действие нельзя."},
@@ -4175,6 +4176,13 @@ function renderExercise(){
     meaning.style.cssText="color:var(--ink-soft);margin-top:8px";
     meaning.textContent=vocabText(ex.item);
     intro.append(ar,franco,meaning);
+    if(!localStorage.getItem('speakmasri_francoHintShown')){
+      localStorage.setItem('speakmasri_francoHintShown','1');
+      const francoHint=document.createElement("div");
+      francoHint.style.cssText="color:var(--ink-soft);font-size:12px;margin-top:6px";
+      francoHint.textContent=t('ui.franco_hint');
+      franco.insertAdjacentElement("afterend",francoHint);
+    }
     area.appendChild(intro);
     const audioBtn=document.createElement("button");
     audioBtn.className="audio-btn";
