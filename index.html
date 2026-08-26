@@ -1471,10 +1471,10 @@ input:focus, select:focus {
         <button id="signupTab" type="button" role="tab" onclick="showSignup()" data-i18n="btn.signup">Sign Up</button>
       </div>
       <div id="nameField" class="hidden">
-        <input id="name" placeholder="Name (for signup)" data-i18n-placeholder="placeholder.name" autocomplete="name">
+        <input id="name" placeholder="Name (for signup)" data-i18n-placeholder="placeholder.name" aria-label="Name (for signup)" data-i18n-aria-label="placeholder.name" autocomplete="name">
       </div>
-      <input id="email" placeholder="Email" data-i18n-placeholder="placeholder.email" type="email" autocomplete="email">
-      <input id="pass" placeholder="Password (min 8 characters)" data-i18n-placeholder="placeholder.pass" type="password" autocomplete="current-password" oninput="updatePasswordStrength()">
+      <input id="email" placeholder="Email" data-i18n-placeholder="placeholder.email" aria-label="Email" data-i18n-aria-label="placeholder.email" type="email" autocomplete="email">
+      <input id="pass" placeholder="Password (min 8 characters)" data-i18n-placeholder="placeholder.pass" aria-label="Password (min 8 characters)" data-i18n-aria-label="placeholder.pass" type="password" autocomplete="current-password" oninput="updatePasswordStrength()">
       <div id="passStrength" class="hidden" aria-live="polite" style="font-size:13px;margin:-4px 0 4px;font-weight:600"></div>
       <div id="motivationField" class="hidden">
         <select id="motivation">
@@ -3877,7 +3877,7 @@ function renderConnectionRhythm(){
   host.innerHTML=`<section class="connection-rhythm"><div style="font-weight:800;color:var(--teal)">${t('connection.rhythm')}</div>
     <div class="connection-stats"><div><div class="connection-stat-value">${c.current}</div><div class="connection-stat-label">${t('connection.current')}</div></div><div><div class="connection-stat-value">${c.longest}</div><div class="connection-stat-label">${t('connection.longest')}</div></div><div><div class="connection-stat-value">${c.total}</div><div class="connection-stat-label">${t('connection.total')}</div></div></div>
     <div class="connection-week">${cells}</div>${c.lastDate!==todayKey()?`<p style="font-size:12px;color:var(--ink-soft)">${t('connection.resume').replace('{total}',c.total)}</p>`:''}
-    <div style="font-size:11px;font-weight:800;margin:12px 0 5px">${t('connection.today_phrase')}</div><div class="connection-phrase-row"><div>${phrase?`<span class="ar" lang="ar">${phrase.ar}</span><br><span style="font-size:12px;color:var(--ink-soft)">${vocabText(phrase)}</span>`:'?'}</div>${phrase?'<button type="button" class="audio-btn" style="width:42px;height:42px;margin:0">🔊</button>':''}</div></section>`;
+    <div style="font-size:11px;font-weight:800;margin:12px 0 5px">${t('connection.today_phrase')}</div><div class="connection-phrase-row"><div>${phrase?`<span class="ar" lang="ar">${phrase.ar}</span><br><span style="font-size:12px;color:var(--ink-soft)">${vocabText(phrase)}</span>`:'?'}</div>${phrase?`<button type="button" class="audio-btn" aria-label="${t('aria.play_phrase_audio')}" style="width:42px;height:42px;margin:0">🔊</button>`:''}</div></section>`;
   const audio=host.querySelector('.audio-btn');if(audio)audio.onclick=()=>playAudio(phrase.ar,audioPath(phrase.lessonId,phrase.idx));
 }
 
@@ -5200,7 +5200,7 @@ async function finishConnectionDay(){
   isConnectionDay=false;
   const sheet=document.getElementById('connectionDone'),line=t('connection.line_'+(((c.total-1)%5)+1));
   sheet.innerHTML=`<img src="mascot/mira_encouraging.webp" alt=""><h1 style="font-size:23px">${line}</h1>
-    <div class="connection-final-phrase"><div class="ar" lang="ar" style="font-size:32px">${final.item.ar}</div><div>${vocabText(final.item)}</div><button type="button" class="audio-btn" id="connectionPhraseAudio" style="margin:12px auto 0">🔊</button></div>
+    <div class="connection-final-phrase"><div class="ar" lang="ar" style="font-size:32px">${final.item.ar}</div><div>${vocabText(final.item)}</div><button type="button" class="audio-btn" id="connectionPhraseAudio" aria-label="${t('aria.play_phrase_audio')}" style="margin:12px auto 0">🔊</button></div>
     <div class="connection-share"><div style="font-weight:800;color:var(--rose)">${t('connection.someone_hears')}</div><button type="button" id="connectionShareBtn" class="btn btn-ghost" style="margin-top:9px;color:var(--rose);border-color:var(--rose)">${t('connection.send_phrase').replace('{phrase}',final.item.ar)}</button><div id="connectionShareStatus" style="font-size:12px;margin-top:6px"></div></div>
     <div class="connection-xp">+<span id="connectionXpCount">0</span> XP</div><div style="font-size:13px;color:var(--teal);font-weight:800">${t('connection.stats').replace('{current}',c.current).replace('{total}',c.total)}</div>
     <div class="connection-actions" style="margin-top:18px"><button class="btn btn-ghost" id="connectionHearAgain">${t('connection.hear_again')}</button><button class="btn" id="connectionBack">${t('connection.back_path')}</button></div>
