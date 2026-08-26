@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="google-site-verification" content="qxxxhdqU72efDlvdtaW4QY1AJ1OjjTA8RAjmQvblLrY" />
 <title>SpeakMasri – Learn Egyptian Arabic (Masri)</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22%231DA14A%22/%3E%3Cpath%20d%3D%22M32%2028%20L68%2028%20Q70%2028%2069.5%2031%20L60%2064%20Q59%2066%2057%2066%20L43%2066%20Q41%2066%2040%2064%20L30.5%2031%20Q30%2028%2032%2028%20Z%22%20fill%3D%22%23FCFBFA%22/%3E%3Cpath%20d%3D%22M45%2066%20L50%2078%20L55%2066%20Z%22%20fill%3D%22%23C1652E%22/%3E%3Cline%20x1%3D%2234%22%20y1%3D%2238%22%20x2%3D%2266%22%20y2%3D%2238%22%20stroke%3D%22%23D4AF37%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <meta name="description" content="Learn Egyptian Arabic through short, scenario-based lessons. Try two free lessons – no account needed. Phrasebook, partner phrases & register-aware practice.">
 <meta property="og:title" content="SpeakMasri – Learn Egyptian Arabic (Masri)">
 <meta property="og:description" content="Short, scenario-based lessons in Egyptian Arabic. Try two free lessons – no account needed.">
@@ -362,7 +364,7 @@ input:focus, select:focus {
 /* ===== AUTH SCREEN ===== */
 .center { text-align: center; padding: 24px; }
 .logo { text-align: center; margin-top: 36px; }
-.logo svg { width: 56px; height: 56px; display: block; margin: 0 auto; }
+.logo svg, .logo img.logo-mark { width: 56px; height: 56px; display: block; margin: 0 auto; }
 .brand {
   color: var(--primary-hover);
   font-size: 34px;
@@ -1406,16 +1408,7 @@ input:focus, select:focus {
       </div>
     </div>
     <div class="logo landing-in landing-in-1" style="position:relative;width:56px;margin-left:auto;margin-right:auto">
-      <svg viewBox="0 0 100 100" role="img" aria-label="SpeakMasri">
-        <circle cx="41" cy="9"  r="3.2" style="fill:var(--gold)"/>
-        <circle cx="53" cy="5"  r="2.4" style="fill:var(--gold)"/>
-        <circle cx="48" cy="15" r="2"   style="fill:var(--gold)" opacity="0.8"/>
-        <path d="M27 22 L73 22 Q76 22 75 26 L63 68 Q62 71 59 71 L41 71 Q38 71 37 68 L25 26 Q24 22 27 22 Z"
-              style="fill:var(--surface);stroke:var(--primary)" stroke-width="5" stroke-linejoin="round"/>
-        <path d="M44 71 L50 85 L56 71 Z" style="fill:var(--clay)"/>
-        <line x1="30" y1="34" x2="70" y2="34" style="stroke:var(--gold)" stroke-width="4" stroke-linecap="round"/>
-        <path d="M31 37 L69 37 L61 66 Q60 68 58 68 L42 68 Q40 68 39 66 Z" style="fill:var(--teal)" opacity="0.15"/>
-      </svg>
+      <img class="logo-mark" src="logo-512.png" alt="SpeakMasri" width="56" height="56">
       <img class="landing-mira" src="mascot/mira_reference.webp" alt="Mira, the SpeakMasri guide" style="position:absolute;width:64px;height:64px;object-fit:contain;left:64px;top:-4px">
     </div>
     <h1 class="brand landing-in landing-in-2" style="margin:0">SpeakMasri</h1>
@@ -1559,16 +1552,7 @@ input:focus, select:focus {
     <!-- PROFILE -->
     <div id="profile" class="hidden center">
       <div class="logo">
-        <svg viewBox="0 0 100 100" role="img" aria-label="SpeakMasri">
-          <circle cx="41" cy="9"  r="3.2" style="fill:var(--gold)"/>
-          <circle cx="53" cy="5"  r="2.4" style="fill:var(--gold)"/>
-          <circle cx="48" cy="15" r="2"   style="fill:var(--gold)" opacity="0.8"/>
-          <path d="M27 22 L73 22 Q76 22 75 26 L63 68 Q62 71 59 71 L41 71 Q38 71 37 68 L25 26 Q24 22 27 22 Z"
-                style="fill:var(--surface);stroke:var(--primary)" stroke-width="5" stroke-linejoin="round"/>
-          <path d="M44 71 L50 85 L56 71 Z" style="fill:var(--clay)"/>
-          <line x1="30" y1="34" x2="70" y2="34" style="stroke:var(--gold)" stroke-width="4" stroke-linecap="round"/>
-          <path d="M31 37 L69 37 L61 66 Q60 68 58 68 L42 68 Q40 68 39 66 Z" style="fill:var(--teal)" opacity="0.15"/>
-        </svg>
+        <img class="logo-mark" src="logo-512.png" alt="SpeakMasri" width="56" height="56">
       </div>
       <h2 id="pName"></h2>
       <p style="color:var(--ink-soft)" id="pEmail"></p>
