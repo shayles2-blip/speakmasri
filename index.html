@@ -2121,7 +2121,7 @@ const STRINGS={
   "ui.rehearse_this_lesson":{en:"🎙️ Rehearse This Lesson",ru:"🎙️ Порепетировать этот урок",de:"🎙️ Diese Lektion proben",hu:"🎙️ Próbáld el ezt a leckét"},
   "btn.continue":{en:"Continue",ru:"Продолжить",de:"Weiter",hu:"Folytatás"},
   "ui.next_lesson_guest":{en:"Next Lesson →",ru:"Следующий урок →",de:"Nächste Lektion →",hu:"Következő lecke →"},
-  "ui.guest_next_lesson_preview":{en:"Up next: the scenario SpeakMasri is really about — meeting the family for the first time.",ru:"Дальше: сценарий, ради которого и создан SpeakMasri — первое знакомство с семьёй.",de:"Als Nächstes: die Situation, um die es bei SpeakMasri wirklich geht — das erste Kennenlernen der Familie.",hu:"Következik a helyzet, amiért a SpeakMasri igazán készült — az első találkozás a családdal."},
+  "ui.guest_next_lesson_preview":{en:"Up next: what to say when they ask how you're doing.",ru:"Дальше: что ответить, когда спросят, как у тебя дела.",de:"Als Nächstes: was du sagst, wenn sie fragen, wie es dir geht.",hu:"Következik: mit mondj, ha megkérdezik, hogy vagy."},
   "ui.name_can_t_be_empty":{en:"Name can't be empty.",ru:"Имя не может быть пустым.",de:"Der Name darf nicht leer sein.",hu:"A név nem lehet üres."},
   "ui.saved":{en:"Saved ✓",ru:"Сохранено ✓",de:"Gespeichert ✓",hu:"Mentve ✓"},
   "ui.couldn_t_save_try_again":{en:"Couldn't save. Try again.",ru:"Не удалось сохранить. Попробуйте ещё раз.",de:"Konnte nicht gespeichert werden. Versuch es noch einmal.",hu:"Nem sikerült menteni. Próbáld újra."},
@@ -3011,7 +3011,7 @@ function startGuestLesson(){
 }
 
 function openGuestArrival(){
-  const unit=COURSE.units[0];
+  const unit=COURSE.units.find(u=>u.id==="u1");
   const lesson=unit.lessons[0];
   const titleEl=document.getElementById("guestArrivalTitle");
   if(titleEl){
@@ -3048,11 +3048,11 @@ function startGuestLessonNow(){
     guestArrival.classList.add("hidden");
     guestArrival.setAttribute("aria-hidden","true");
   }
-  startLesson(COURSE.units[0].lessons[0]);
+  startLesson(COURSE.units.find(u=>u.id==="u1").lessons[0]);
 }
 
 function playGuestArrivalAudio(){
-  const lesson=COURSE.units[0].lessons[0];
+  const lesson=COURSE.units.find(u=>u.id==="u1").lessons[0];
   const item=lesson.vocab[0];
   playAudio(item.ar,audioPath(lesson.id,0));
 }
@@ -3567,6 +3567,8 @@ function todayKey(){return new Date().toISOString().slice(0,10);}
 function yesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
 
 function renderConnectionCard(el){
+  const hasCompletedAny=Object.values(user.progress||{}).some(p=>p&&p.done);
+  if(!hasCompletedAny)return;
   const c=normalizeConnection(user.connection),done=c.lastDate===todayKey();
   const card=document.createElement('section');card.className='connection-card';
   card.innerHTML=`<div class="connection-card-head"><img src="mascot/mira_happy.webp" alt=""><div class="connection-card-copy">${t('connection.home_copy')}</div></div>
@@ -5353,12 +5355,12 @@ async function finishAsSuccess(){
   const doneNextPreview=document.getElementById("doneNextPreview");
   doneNextPreview.classList.add("hidden");
   doneNextPreview.textContent="";
-  document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="l3-1"?'ui.next_lesson_guest':'btn.continue');
+  document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="l1-1"?'ui.next_lesson_guest':'btn.continue');
   document.getElementById("testMeBtn").classList.remove("hidden");
   if(user.isGuest){
     user.progress[curLesson.id]={done:true,score:acc};
-    document.getElementById("doneTitle").textContent=t(curLesson.id==="l1-1"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
-    if(curLesson.id==="l3-1"){
+    document.getElementById("doneTitle").textContent=t(curLesson.id==="l1-2"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
+    if(curLesson.id==="l1-1"){
       doneNextPreview.textContent=t('ui.guest_next_lesson_preview');
       doneNextPreview.classList.remove("hidden");
     }
@@ -5389,10 +5391,10 @@ function finishLesson(){
   document.getElementById("done").classList.add("hidden");
   if(user&&user.isGuest){
     persistGuestProgress();
-    if(curLesson&&curLesson.id==="l3-1"){
+    if(curLesson&&curLesson.id==="l1-1"){
       const familyUnit=COURSE.units.find(unit=>unit.id==="u1");
-      if(familyUnit&&familyUnit.lessons[0]){
-        startLesson(familyUnit.lessons[0]);
+      if(familyUnit&&familyUnit.lessons[1]){
+        startLesson(familyUnit.lessons[1]);
         return;
       }
     }
