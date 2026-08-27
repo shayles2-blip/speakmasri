@@ -1952,7 +1952,7 @@ const STRINGS={
   "ui.guest_welcome_desc":{en:"Learn the Arabic that matters for the people you love — starting today, no account needed.",ru:"Учите арабский для тех, кого любите, — начните прямо сегодня, регистрация не нужна.",de:"Lerne das Arabisch, das für deine Liebsten zählt – starte noch heute, ganz ohne Registrierung.",hu:"Tanuld azt az arabot, ami igazán számít a szeretteidnek – kezdd el még ma, regisztráció nélkül."},
   "btn.start_guest_lesson_cta":{en:"Start Lesson →",ru:"Начать урок →",de:"Lektion starten →",hu:"Lecke indítása →"},
   "ui.katya_welcome_bubble_en":{en:"Welcome to Egypt—and welcome to our home!",ru:"Добро пожаловать в Египет — и добро пожаловать в наш дом!",de:"Willkommen in Ägypten – und willkommen bei uns zu Hause!",hu:"Üdvözlünk Egyiptomban – és üdvözlünk az otthonunkban!"},
-  "ui.katya_welcome_context":{en:"Katya's here! Help Mira welcome her and show her around.",ru:"Катя приехала! Помогите Мире встретить её и всё показать.",de:"Katja ist da! Hilf Mira, sie willkommen zu heißen und ihr alles zu zeigen.",hu:"Katya megérkezett! Segíts Mirának köszönteni őt és körbevezetni."},
+  "ui.katya_welcome_context":{en:"Katya's just arrived to visit Mira's family — this time, you're the one doing the welcoming.",ru:"Катя только что приехала в гости к семье Миры — на этот раз встречать гостя будете вы.",de:"Katja ist gerade angekommen, um Miras Familie zu besuchen – diesmal heißt du sie willkommen.",hu:"Katya most érkezett meg Mira családjához – ezúttal te vagy az, aki köszönti őt."},
   "btn.start_katya_lesson_cta":{en:"Let's Welcome Her →",ru:"Встретим её →",de:"Begrüßen wir sie →",hu:"Köszöntsük őt! →"},
   "btn.login":{en:"Log In",ru:"Войти",de:"Anmelden",hu:"Bejelentkezés"},
   "btn.signup":{en:"Sign Up",ru:"Регистрация",de:"Registrieren",hu:"Regisztráció"},
@@ -2089,6 +2089,7 @@ const STRINGS={
   "ui.change_password":{en:"🔒 Change Password",ru:"🔒 Сменить пароль",de:"🔒 Passwort ändern",hu:"🔒 Jelszó módosítása"},
   "ui.change_password_hint":{en:"We'll email you a secure link to set a new password.",ru:"Мы отправим вам на почту безопасную ссылку для создания нового пароля.",de:"Wir schicken dir einen sicheren Link per E-Mail, um ein neues Passwort festzulegen.",hu:"E-mailben küldünk egy biztonságos linket az új jelszó beállításához."},
   "ui.franco_hint":{en:"That's Franco — Arabic sounds spelled out in Latin letters. Say it like it reads.",ru:"Это франко — арабские звуки, записанные латиницей. Читайте так, как написано.",de:"Das ist Franco – arabische Laute in lateinischen Buchstaben. Sprich es einfach so aus, wie es da steht.",hu:"Ez a Franco – arab hangok latin betűkkel leírva. Ejtsd úgy, ahogy olvasod!"},
+  "ui.register_hint":{en:"That colored tag shows how formal the phrase is — tap it to see what it means.",ru:"Этот цветной значок показывает, насколько формальна фраза — нажми на него, чтобы узнать значение.",de:"Das farbige Etikett zeigt, wie förmlich die Phrase ist – tippe darauf, um die Bedeutung zu sehen.",hu:"Ez a színes címke mutatja, mennyire hivatalos a kifejezés – koppints rá a jelentéséért."},
   "ui.phrase_owned_singular":{en:"phrase owned",ru:"фраза освоена",de:"Ausdruck gemeistert",hu:"kifejezés elsajátítva"},
   "ui.phrases_owned_plural":{en:"phrases owned",ru:"фраз освоено",de:"Ausdrücke gemeistert",hu:"kifejezés elsajátítva"},
   "ui.age_agree_prefix":{en:"I'm 13 or older and agree to the",ru:"Мне уже есть 13 лет, и я принимаю",de:"Ich bin mindestens 13 Jahre alt und akzeptiere die",hu:"Elmúltam 13 éves, és elfogadom a"},
@@ -4351,6 +4352,13 @@ function renderExercise(){
       francoHint.style.cssText="color:var(--ink-soft);font-size:12px;margin-top:6px";
       francoHint.textContent=t('ui.franco_hint');
       franco.insertAdjacentElement("afterend",francoHint);
+    }
+    if(ex.item.register&&ex.item.register!=="neutral"&&!localStorage.getItem('speakmasri_registerHintShown')){
+      localStorage.setItem('speakmasri_registerHintShown','1');
+      const registerHint=document.createElement("div");
+      registerHint.style.cssText="color:var(--ink-soft);font-size:12px;margin-top:6px";
+      registerHint.textContent=t('ui.register_hint');
+      meaning.insertAdjacentElement("afterend",registerHint);
     }
     area.appendChild(intro);
     const audioBtn=document.createElement("button");
