@@ -1378,6 +1378,12 @@ input:focus, select:focus {
 .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:16px;border-radius:var(--r-pill);background:var(--bg-canvas)}.auth-tabs button{min-height:42px;margin:0;padding:8px;border:0;border-radius:var(--r-pill);background:transparent;color:var(--ink-soft);font-weight:700;cursor:pointer;transition:background-color .15s ease,color .15s ease,box-shadow .15s ease}.auth-tabs button.active{background:var(--surface);color:var(--primary-hover);box-shadow:var(--shadow-card)}
 .auth-dismiss-link{display:block;width:100%;margin-top:14px;padding:8px;border:0;background:transparent;color:var(--teal);font-size:13px;text-decoration:underline;cursor:pointer}.landing-toast{position:fixed;z-index:1100;left:50%;bottom:24px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:10px 16px;border-radius:var(--r-pill);background:var(--text-main);color:var(--surface);font-size:13px;box-shadow:var(--shadow-float)}
 @media (min-width:768px){.auth-overlay{align-items:center;padding:24px}.auth-sheet{max-width:400px;border-radius:var(--r-lg);padding:20px 24px 24px;animation:modalIn .22s ease-out}.auth-grab{display:none}@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}}
+.confirm-overlay{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;background:rgba(20,16,12,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:24px}
+.confirm-sheet{width:100%;max-width:340px;background:var(--surface);border-radius:var(--r-lg);padding:22px 20px;box-shadow:0 -12px 40px rgba(20,16,12,.22);animation:modalIn .18s ease-out}
+.confirm-message{margin:0 0 18px;font-size:15px;font-weight:600;line-height:1.5;color:var(--text-main)}
+.confirm-actions{display:flex;gap:8px}
+.confirm-actions .btn,.confirm-actions .btn-ghost{flex:1;padding:11px;font-size:14px;margin:0}
+.confirm-actions:has(#confirmCancelBtn.hidden){justify-content:center}
 
 .btn-sheen{
   position:relative;
@@ -1544,6 +1550,17 @@ input:focus, select:focus {
       <div class="home-skeleton-scenario"><div class="skeleton-shape"></div></div>
       <div class="home-skeleton-scenario"><div class="skeleton-shape"></div></div>
       <div class="home-skeleton-scenario"><div class="skeleton-shape"></div></div>
+    </div>
+  </div>
+
+  <!-- CONFIRM / ALERT MODAL (replaces native confirm()/alert()) -->
+  <div id="confirmOverlay" class="confirm-overlay hidden" role="alertdialog" aria-modal="true" aria-labelledby="confirmMessage">
+    <div class="confirm-sheet">
+      <p id="confirmMessage" class="confirm-message"></p>
+      <div class="confirm-actions">
+        <button id="confirmCancelBtn" type="button" class="btn btn-ghost"></button>
+        <button id="confirmOkBtn" type="button" class="btn"></button>
+      </div>
     </div>
   </div>
 
@@ -2068,6 +2085,7 @@ const STRINGS={
   "placeholder.your_name":{en:"Your name",ru:"Ваше имя",de:"Dein Name",hu:"A neved"},
   "ui.savenamebtn":{en:"Save",ru:"Сохранить",de:"Speichern",hu:"Mentés"},
   "ui.cancel":{en:"Cancel",ru:"Отмена",de:"Abbrechen",hu:"Mégse"},
+  "ui.ok":{en:"OK",ru:"ОК",de:"OK",hu:"OK"},
   "ui.change_password":{en:"🔒 Change Password",ru:"🔒 Сменить пароль",de:"🔒 Passwort ändern",hu:"🔒 Jelszó módosítása"},
   "ui.change_password_hint":{en:"We'll email you a secure link to set a new password.",ru:"Мы отправим вам на почту безопасную ссылку для создания нового пароля.",de:"Wir schicken dir einen sicheren Link per E-Mail, um ein neues Passwort festzulegen.",hu:"E-mailben küldünk egy biztonságos linket az új jelszó beállításához."},
   "ui.franco_hint":{en:"That's Franco — Arabic sounds spelled out in Latin letters. Say it like it reads.",ru:"Это франко — арабские звуки, записанные латиницей. Читайте так, как написано.",de:"Das ist Franco – arabische Laute in lateinischen Buchstaben. Sprich es einfach so aus, wie es da steht.",hu:"Ez a Franco – arab hangok latin betűkkel leírva. Ejtsd úgy, ahogy olvasod!"},
@@ -2125,6 +2143,8 @@ const STRINGS={
   "ui.nice":{en:"Nice! 🎉",ru:"Отлично! 🎉",de:"Klasse! 🎉",hu:"Szép volt! 🎉"},
   "ui.nice_sign_up_to_save_this_progress":{en:"Nice! Sign up to save this progress",ru:"Отлично! Зарегистрируйтесь, чтобы сохранить прогресс",de:"Klasse! Registriere dich, um deinen Fortschritt zu speichern",hu:"Szép volt! Regisztrálj, hogy elmentsd a haladásodat!"},
   "msg.that_file_couldn_t_be_read_as_a_phrase_list_make_sur":{en:"That file couldn't be read as a phrase list. Make sure it's the JSON template with en/ar/franco fields.",ru:"Не удалось прочитать файл как список фраз. Убедитесь, что используете JSON-шаблон с полями en/ar/franco.",de:"Diese Datei konnte nicht als Phrasenliste gelesen werden. Bitte stelle sicher, dass es die JSON-Vorlage mit den Feldern en/ar/franco ist.",hu:"Nem sikerült kifejezéslistaként beolvasni a fájlt. Ellenőrizd, hogy a megadott JSON-sablont használod-e az en/ar/franco mezőkkel."},
+  "msg.some_phrases_couldnt_be_saved":{en:"Some phrases couldn't be saved ({n}). Please try importing again.",ru:"Некоторые фразы не удалось сохранить ({n}). Попробуйте импортировать снова.",de:"Einige Phrasen konnten nicht gespeichert werden ({n}). Bitte versuche den Import erneut.",hu:"Néhány kifejezést nem sikerült elmenteni ({n}). Kérjük, próbáld újra az importálást."},
+  "msg.delete_this_phrase":{en:"Delete this phrase?",ru:"Удалить эту фразу?",de:"Diesen Satz löschen?",hu:"Törlöd ezt a kifejezést?"},
   "msg.quit_this_lesson_you_ll_lose_your_progress_in_it":{en:"Quit this lesson? You'll lose your progress in it.",ru:"Выйти из урока? Прогресс в этом уроке не сохранится.",de:"Lektion abbrechen? Dein bisheriger Fortschritt geht verloren.",hu:"Kilépsz a leckéből? Az itt elért haladásod elveszik."},
   "register.formal":{en:"Formal",ru:"Формально",de:"Formell",hu:"Formális"},
   "register.casual":{en:"Casual",ru:"Неформально",de:"Locker",hu:"Közvetlen"},
@@ -2159,6 +2179,8 @@ const STRINGS={
   "aria.hear_native_pronunciation":{en:"Hear native pronunciation",ru:"Послушать носителя",de:"Aussprache von Muttersprachlern anhören",hu:"Hallgasd meg anyanyelvi kiejtéssel"},
   "aria.hold_to_record_yourself":{en:"Hold to record yourself",ru:"Удерживай, чтобы записать свой голос",de:"Gedrückt halten zum Aufnehmen",hu:"Tartsd nyomva a felvételhez"},
   "aria.what_does_x_mean":{en:"What does {label} mean?",ru:"Что значит «{label}»?",de:"Was bedeutet {label}?",hu:"Mit jelent: {label}?"},
+  "passport.visited":{en:"visited",ru:"посещено",de:"besucht",hu:"meglátogatva"},
+  "passport.not_yet_visited":{en:"not yet visited",ru:"ещё не посещено",de:"noch nicht besucht",hu:"még nem látogatott"},
   "ui.mic_access_not_available_just_practice_saying_it_out":{en:"Mic access not available — just practice saying it out loud",ru:"Нет доступа к микрофону — просто потренируйся вслух",de:"Kein Zugriff aufs Mikrofon — übe es einfach laut",hu:"Nincs hozzáférés a mikrofonhoz — egyszerűen gyakorold hangosan"},
   "ui.all_done":{en:"All done!",ru:"Всё готово!",de:"Geschafft!",hu:"Kész is!"},
   "msg.you_ve_practiced_the_whole_lesson":{en:"You've practiced the whole lesson.",ru:"Ты прошёл весь урок.",de:"Du hast die ganze Lektion geübt.",hu:"Végiggyakoroltad a teljes leckét."},
@@ -2179,6 +2201,28 @@ function applyStaticStrings(){
   document.querySelectorAll('[data-i18n-aria-label]').forEach(el=>{el.setAttribute('aria-label',t(el.dataset.i18nAriaLabel));});
 }
 
+function appConfirmDialog(message,{showCancel}){
+  return new Promise(resolve=>{
+    const overlay=document.getElementById('confirmOverlay');
+    const okBtn=document.getElementById('confirmOkBtn');
+    const cancelBtn=document.getElementById('confirmCancelBtn');
+    document.getElementById('confirmMessage').textContent=message;
+    okBtn.textContent=t('ui.ok');
+    cancelBtn.textContent=t('ui.cancel');
+    cancelBtn.classList.toggle('hidden',!showCancel);
+    const cleanup=(result)=>{
+      overlay.classList.add('hidden');
+      okBtn.onclick=null;cancelBtn.onclick=null;
+      resolve(result);
+    };
+    okBtn.onclick=()=>cleanup(true);
+    cancelBtn.onclick=()=>cleanup(false);
+    overlay.classList.remove('hidden');
+    okBtn.focus();
+  });
+}
+function appConfirm(message){return appConfirmDialog(message,{showCancel:true});}
+function appAlert(message){return appConfirmDialog(message,{showCancel:false});}
 function vocabText(item){return (baseLang!=='en'&&item[baseLang])?item[baseLang]:item.en;}
 function titleText(obj){return (baseLang!=='en'&&obj['title_'+baseLang])?obj['title_'+baseLang]:obj.title;}
 function audioPath(lessonId,idx){return (voicePref==='female'?'audio_female/':'audio/')+lessonId+'_'+idx+'.mp3';}
@@ -2648,7 +2692,7 @@ async function signInWithGoogle(){
   try{
     const cred=await firebase.auth().signInWithPopup(provider);
     if(cred.additionalUserInfo&&cred.additionalUserInfo.isNewUser){
-      if(!confirm(t('ui.google_signup_age_confirm'))){
+      if(!await appConfirm(t('ui.google_signup_age_confirm'))){
         await cred.user.delete().catch(()=>firebase.auth().signOut());
         return;
       }
@@ -2912,7 +2956,7 @@ async function discardPartnerSubmission(id){
 async function sharePartnerLink(){
   const fbUser=firebase.auth().currentUser;
   if(!fbUser){
-    alert(t('msg.partner_link_needs_signup'));
+    await appAlert(t('msg.partner_link_needs_signup'));
     showSignup();
     return;
   }
@@ -3053,7 +3097,7 @@ function playKatyaArrivalAudio(){
 }
 
 async function logout(){
-  if(!confirm(t('msg.confirm_logout')))return;
+  if(!await appConfirm(t('msg.confirm_logout')))return;
   try{await firebase.auth().signOut();}catch(e){console.error('Logout error',e);}
   user=null;
   showAuthScreen();
@@ -3230,18 +3274,36 @@ const LOCATION_NARRATIONS={
 let arrivalUnit=null;
 
 const EXPLORE_PLACES=[
-  {unitId:"u1",location:"doorstep",glyph:"🚪",label:"The Family's Doorstep"},
-  {unitId:"u2",location:"balcony",glyph:"🌇",label:"Nile Balcony"},
-  {unitId:"u3",location:"eid",glyph:"🏮",label:"Eid Street"},
-  {unitId:"u5",location:"koshary",glyph:"🍲",label:"The Koshary Stand"},
-  {unitId:"u4",location:"khan",glyph:"🛍️",label:"Khan el-Khalili"},
-  {unitId:"pyramids",location:"pyramids",glyph:"🏛️",label:"The Pyramids",arrival:true},
-  {unitId:"corniche",location:"corniche",glyph:"🌊",label:"Corniche",arrival:true}
+  {unitId:"u1",location:"doorstep",glyph:"🚪",label:"The Family's Doorstep",label_ru:"Порог семьи",label_de:"Vor der Haustür",label_hu:"A család küszöbén"},
+  {unitId:"u2",location:"balcony",glyph:"🌇",label:"Nile Balcony",label_ru:"Балкон над Нилом",label_de:"Balkon am Nil",label_hu:"Nílusi erkély"},
+  {unitId:"u3",location:"eid",glyph:"🏮",label:"Eid Street",label_ru:"Улица Ид",label_de:"Die Eid-Straße",label_hu:"Eid utca"},
+  {unitId:"u5",location:"koshary",glyph:"🍲",label:"The Koshary Stand",label_ru:"Ларёк с кошари",label_de:"Der Koshary-Stand",label_hu:"A koshary bódé"},
+  {unitId:"u4",location:"khan",glyph:"🛍️",label:"Khan el-Khalili",label_ru:"Хан-эль-Халили",label_de:"Khan el-Khalili",label_hu:"Khan el-Khalili"},
+  {unitId:"pyramids",location:"pyramids",glyph:"🏛️",label:"The Pyramids",label_ru:"Пирамиды",label_de:"Die Pyramiden",label_hu:"A piramisok",arrival:true},
+  {unitId:"corniche",location:"corniche",glyph:"🌊",label:"Corniche",label_ru:"Корниш",label_de:"Corniche",label_hu:"Corniche",arrival:true}
 ];
+function placeLabel(place){
+  return (baseLang!=='en'&&place['label_'+baseLang])?place['label_'+baseLang]:place.label;
+}
 const ARRIVAL_CULTURE={
-  pyramids:"Fun fact: plenty of Cairenes live ten minutes from here and have never gone inside one — locals just say مَعَدِّي عَ الهَرَم, swung by the Pyramid, like it's the corner shop.",
-  corniche:"Fun fact: Alexandrians don't really say 'let's go to the beach' — they say يلا نمشي على الكورنيش, let's walk the Corniche, since half the city shows up in the evening just to walk, not swim."
+  pyramids:{
+    en:"Fun fact: plenty of Cairenes live ten minutes from here and have never gone inside one — locals just say مَعَدِّي عَ الهَرَم, swung by the Pyramid, like it's the corner shop.",
+    ru:"Забавный факт: многие каирцы живут в десяти минутах отсюда и ни разу не были внутри — местные просто говорят مَعَدِّي عَ الهَرَم, «заехал мимо пирамиды», как будто это соседний ларёк.",
+    de:"Übrigens: Viele Kairoer wohnen nur zehn Minuten von hier entfernt und waren noch nie drin — Einheimische sagen einfach مَعَدِّي عَ الهَرَم, bin kurz bei der Pyramide vorbeigefahren, so beiläufig wie beim Kiosk um die Ecke.",
+    hu:"Érdekesség: sok kairói tíz percre lakik innen, mégis soha nem járt bent — a helyiek csak annyit mondanak: مَعَدِّي عَ الهَرَم, „beugrottam a piramishoz”, mintha csak a sarki boltba mennének."
+  },
+  corniche:{
+    en:"Fun fact: Alexandrians don't really say 'let's go to the beach' — they say يلا نمشي على الكورنيش, let's walk the Corniche, since half the city shows up in the evening just to walk, not swim.",
+    ru:"Забавный факт: александрийцы не говорят «пошли на пляж» — они говорят يلا نمشي على الكورنيش, «пошли пройдёмся по Корнишу», ведь вечером полгорода выходит именно гулять, а не купаться.",
+    de:"Übrigens: Alexandriner sagen nicht wirklich 'lass uns an den Strand gehen' — sie sagen يلا نمشي على الكورنيش, lass uns die Corniche entlanggehen, denn abends kommt halb die Stadt zusammen, nur zum Spazieren, nicht zum Schwimmen.",
+    hu:"Érdekesség: az alexandriaiak nem azt mondják, hogy „menjünk a strandra” — hanem azt: يلا نمشي على الكورنيش, „sétáljunk egyet a Corniche-on”, mert esténként a város fele csak sétálni jön ki, nem úszni."
+  }
 };
+function arrivalCultureText(unitId){
+  const entry=ARRIVAL_CULTURE[unitId];
+  if(!entry)return '';
+  return (baseLang!=='en'&&entry[baseLang])?entry[baseLang]:entry.en;
+}
 
 function findUnit(unitId){return COURSE.units.find(unit=>unit.id===unitId);}
 
@@ -3271,9 +3333,9 @@ function renderExploreRail(el){
     card.type="button";
     card.className="rail-card";
     card.style.backgroundImage=`url("mascot/locations/${place.location}.webp")`;
-    card.setAttribute("aria-label",place.label);
+    card.setAttribute("aria-label",placeLabel(place));
     const badge=explorePlaceBadge(place);
-    card.innerHTML=`<span class="glyph" aria-hidden="true">${place.glyph}</span><span class="label">${place.label}</span>${badge?`<span class="badge">${badge}</span>`:''}`;
+    card.innerHTML=`<span class="glyph" aria-hidden="true">${place.glyph}</span><span class="label">${placeLabel(place)}</span>${badge?`<span class="badge">${badge}</span>`:''}`;
     card.onclick=()=>activateExplorePlace(place,card);
     rail.appendChild(card);
   });
@@ -3305,7 +3367,7 @@ function renderExploreMap(el){
     pin.type="button";
     const isNext=place===nextPlace;
     pin.className=`explore-map-pin${isNext?' map-node--next':''}${isNext&&isNewSpotlight&&!reduceMotion?' is-newly-unlocked':''}`;
-    pin.setAttribute("aria-label",place.label);
+    pin.setAttribute("aria-label",placeLabel(place));
     pin.style.setProperty('--pin-left',position[0]+'%');
     pin.style.setProperty('--pin-top',position[1]+'%');
     pin.innerHTML=`<span class="glyph" aria-hidden="true">${place.glyph}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}`;
@@ -3363,7 +3425,7 @@ function openArrival(unitId){
   document.getElementById("arrivalHero").style.backgroundImage=`url("mascot/locations/${unitId}.webp")`;
   document.getElementById("arrivalAr").textContent=item.ar;
   document.getElementById("arrivalEn").textContent=item.en;
-  document.getElementById("arrivalCulture").textContent=ARRIVAL_CULTURE[unitId];
+  document.getElementById("arrivalCulture").textContent=arrivalCultureText(unitId);
   document.getElementById("arrivalPlayBtn").onclick=()=>playAudio(item.ar,phraseAudio);
   document.getElementById("arrivalCta").onclick=()=>{
     closeArrival();
@@ -3717,8 +3779,8 @@ function renderProfile(){
   const visitedPlaces=user.visitedPlaces||[];
   document.getElementById("passportStamps").innerHTML=EXPLORE_PLACES.map(place=>{
     const visited=visitedPlaces.includes(place.unitId);
-    const label=place.label.replace(/^The /,"");
-    return `<div class="passport-stamp${visited?' visited':''}" aria-label="${label}: ${visited?'visited':'not yet visited'}">
+    const label=placeLabel(place).replace(/^The /,"");
+    return `<div class="passport-stamp${visited?' visited':''}" aria-label="${label}: ${visited?t('passport.visited'):t('passport.not_yet_visited')}">
       <span aria-hidden="true" style="display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:${visited?'var(--sage)':'var(--border-light)'};${visited?'':'opacity:0.35;filter:grayscale(1)'}">${place.glyph}</span>
       <span>${label}</span>${visited?'<span aria-hidden="true" style="color:var(--sage);font-weight:900">✓</span>':''}
     </div>`;
@@ -4042,9 +4104,9 @@ function importPartnerPhrases(fileInputEl){
       user.customPhrases.push(...saved);
       renderPendingPartnerSubmissions();
       renderPartnerPhrases();
-      if(failed)alert(`${failed} phrase${failed===1?"":"s"} couldn't be saved. Please try importing again.`);
+      if(failed)await appAlert(t('msg.some_phrases_couldnt_be_saved').replace('{n}',failed));
     }catch(err){
-      alert(t('msg.that_file_couldn_t_be_read_as_a_phrase_list_make_sur'));
+      await appAlert(t('msg.that_file_couldn_t_be_read_as_a_phrase_list_make_sur'));
     }
     fileInputEl.value="";
   };
@@ -4056,7 +4118,7 @@ async function deleteCustomPhrase(idx){
   if(btn){if(btn.dataset.busy)return;btn.dataset.busy='1';}
   try{
   if(!user.customPhrases)return;
-  if(!confirm("Delete this phrase?"))return;
+  if(!await appConfirm(t('msg.delete_this_phrase')))return;
   const [removed]=user.customPhrases.splice(idx,1);
   renderPendingPartnerSubmissions();
   renderPartnerPhrases();
@@ -4197,8 +4259,8 @@ function startLesson(lesson){
   renderExercise();
 }
 
-function quitLesson(){
-  if((exIdx>0||correctCount>0)&&!confirm(t('msg.quit_this_lesson_you_ll_lose_your_progress_in_it')))return;
+async function quitLesson(){
+  if((exIdx>0||correctCount>0)&&!await appConfirm(t('msg.quit_this_lesson_you_ll_lose_your_progress_in_it')))return;
   document.getElementById("lesson").classList.add("hidden");
   const wasSpecial=isConnectionDay||isReviewSession;isConnectionDay=false;isReviewSession=false;
   if(user&&user.isGuest&&!wasSpecial){
