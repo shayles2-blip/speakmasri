@@ -2151,6 +2151,7 @@ const STRINGS={
   "ui.next":{en:"Next",ru:"Дальше",de:"Weiter",hu:"Tovább"},
   "aria.hear_native_pronunciation":{en:"Hear native pronunciation",ru:"Послушать носителя",de:"Aussprache von Muttersprachlern anhören",hu:"Hallgasd meg anyanyelvi kiejtéssel"},
   "aria.hold_to_record_yourself":{en:"Hold to record yourself",ru:"Удерживай, чтобы записать свой голос",de:"Gedrückt halten zum Aufnehmen",hu:"Tartsd nyomva a felvételhez"},
+  "aria.what_does_x_mean":{en:"What does {label} mean?",ru:"Что значит «{label}»?",de:"Was bedeutet {label}?",hu:"Mit jelent: {label}?"},
   "ui.mic_access_not_available_just_practice_saying_it_out":{en:"Mic access not available — just practice saying it out loud",ru:"Нет доступа к микрофону — просто потренируйся вслух",de:"Kein Zugriff aufs Mikrofon — übe es einfach laut",hu:"Nincs hozzáférés a mikrofonhoz — egyszerűen gyakorold hangosan"},
   "ui.all_done":{en:"All done!",ru:"Всё готово!",de:"Geschafft!",hu:"Kész is!"},
   "msg.you_ve_practiced_the_whole_lesson":{en:"You've practiced the whole lesson.",ru:"Ты прошёл весь урок.",de:"Du hast die ganze Lektion geübt.",hu:"Végiggyakoroltad a teljes leckét."},
@@ -5328,7 +5329,7 @@ function finishLesson(){
     }
     user=null;
     showAuthScreen();
-    backToChoice();
+    showSignup();
   } else {
     document.getElementById("main").classList.remove("hidden");
     refreshTopBar();
