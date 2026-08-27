@@ -210,9 +210,6 @@ body {
     max-width: 640px;
     box-shadow: 0 0 0 1px var(--border-light), 0 24px 64px rgba(11, 61, 27, .08);
   }
-  #checkWrap, .nav {
-    max-width: 640px;
-  }
 }
 
 /* ===== TYPOGRAPHY ===== */
@@ -677,6 +674,9 @@ input:focus, select:focus {
 .exercise-answer {
   margin-top: auto;
   padding-top: 28px;
+}
+.exercise-answer:has(.build-bank) {
+  margin-top: 0;
 }
 .q {
   font-size: 22px;
@@ -1256,6 +1256,11 @@ input:focus, select:focus {
   border-top: 1px solid var(--border-light);
   padding-bottom: env(safe-area-inset-bottom);
 }
+@media (min-width: 900px) {
+  #checkWrap, .nav {
+    max-width: 640px;
+  }
+}
 .nav button {
   flex: 1;
   background: none;
@@ -1671,6 +1676,8 @@ input:focus, select:focus {
             <div class="lang-toggle" role="group" aria-label="Base language" data-i18n-aria-label="settings.base_language">
               <button type="button" data-base-lang="en" onclick="setBaseLang('en')">EN</button>
               <button type="button" data-base-lang="ru" onclick="setBaseLang('ru')">RU</button>
+              <button type="button" data-base-lang="de" onclick="setBaseLang('de')">DE</button>
+              <button type="button" data-base-lang="hu" onclick="setBaseLang('hu')">HU</button>
             </div>
           </div>
           <div>
@@ -4306,7 +4313,7 @@ function renderExercise(){
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
     prompt.appendChild(q);
     if(isConnectionDay||isReviewSession){
-      const ar=document.createElement('div');ar.className='ar';ar.lang='ar';ar.style.cssText='font-size:26px;margin:6px 0 14px';ar.textContent=ex.q;prompt.appendChild(ar);
+      const ar=document.createElement('div');ar.className='ar';ar.lang='ar';ar.style.cssText='font-size:26px;margin:6px 20px 14px';ar.textContent=ex.q;prompt.appendChild(ar);
       const audioBtn=document.createElement('button');audioBtn.className='audio-btn';audioBtn.textContent='🔊';audioBtn.setAttribute('aria-label',t('aria.play_phrase_audio'));audioBtn.onclick=()=>playAudio(ex.item.ar,ex.audio);prompt.appendChild(audioBtn);playAudio(ex.item.ar,ex.audio);
     }
     ex.opts.forEach(o=>{
