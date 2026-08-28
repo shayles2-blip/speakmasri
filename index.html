@@ -477,6 +477,15 @@ input:focus, select:focus {
   color: #fff;
   text-shadow: 0 1px 3px rgba(0,0,0,0.65);
 }
+.scenario-head.foundation-head {
+  background: linear-gradient(135deg, var(--teal), var(--primary-hover));
+}
+.scenario-head.foundation-head .scenario-icon,
+.scenario-head.foundation-head .scenario-title,
+.scenario-head.foundation-head .scenario-progress {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.65);
+}
 .katya-scenario-figure {
   position: absolute;
   z-index: 1;
@@ -540,12 +549,19 @@ input:focus, select:focus {
   from { opacity:0; transform:scale(.4); }
   to { opacity:.55; transform:scale(1); }
 }
+.lesson-row.next .lesson-badge { isolation: isolate; }
+.lesson-row.next .lesson-badge::after {
+  content: ""; position: absolute; inset: -6px; z-index: -1; border-radius: 50%;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 70%); opacity: .55;
+  animation: nextNodeSpotlight 900ms ease-out 1;
+}
 .explore-map-pin:active { transform:translate(-50%,-50%) scale(0.94); }
 .explore-map-pin .glyph { position:absolute; inset:7px; z-index:1; display:grid; place-items:center; font-size:15px; line-height:1; }
 .explore-map-pin .badge { position:absolute; z-index:2; top:-2px; right:-5px; min-width:20px; padding:2px 4px; border:1px solid #fff; border-radius:999px; background:var(--text-main); color:#fff; font-size:12px; font-weight:900; line-height:1.2; }
 .explore-map-pin:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
 @media (prefers-reduced-motion: reduce) {
   .map-node--next.is-newly-unlocked::after { animation:none !important; }
+  .lesson-row.next .lesson-badge::after { animation: none !important; }
 }
 
 /* ===== AUTH → HOME LOADING SKELETON ===== */
@@ -669,6 +685,9 @@ input:focus, select:focus {
   font-weight: 600;
   color: var(--text-main);
 }
+.lesson-name-wrap { display: flex; flex-direction: column; gap: 2px; }
+.lesson-meta { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.lesson-row:disabled .lesson-meta { color: #c9beae; }
 .lesson-row:disabled .lesson-name { color: #b8ab9c; }
 
 /* ===== EXERCISE AREA ===== */
@@ -1918,6 +1937,38 @@ const COURSE={units:[
  ]}
 ]};
 
+const FOUNDATION_LESSONS=[
+  {id:"f1",title:"Yes, No, Let's Go",title_ru:"Да, нет, пошли",title_de:"Ja, nein, los geht's",title_hu:"Igen, nem, gyerünk",xp:10,vocab:[
+    {en:"Yes",ar:"أيوة",franco:"Aywa",register:"neutral",ru:"Да",de:"Ja",hu:"Igen",audioSrc:"l3-1_0"},
+    {en:"No",ar:"لأ",franco:"La'",register:"neutral",ru:"Нет",de:"Nein",hu:"Nem",audioSrc:"l3-1_1",note:"That apostrophe is a real stop in your throat, not decoration — say \"la\" and cut it off sharp."},
+    {en:"Let's go / Come on",ar:"يلا",franco:"Yalla",register:"neutral",ru:"Погнали / Давай",de:"Auf geht's / Los geht's",hu:"Gyerünk / Menjünk",audioSrc:"l3-1_2"}
+  ]},
+  {id:"f2",title:"The Two Words That Do Everything",title_ru:"Два слова на все случаи",title_de:"Die zwei Wörter für alles",title_hu:"A két szó, ami mindenre jó",xp:10,vocab:[
+    {en:"Finished / Enough / OK",ar:"خلاص",franco:"Khalas",register:"neutral",ru:"Всё / Хватит / Ладно",de:"Fertig / Genug / Alles klar",hu:"Kész / Elég / Rendben",audioSrc:"l3-1_3",note:"The \"kh\" is a scrape at the back of your throat, like clearing it gently — not a hard k."},
+    {en:"God willing",ar:"إن شاء الله",franco:"Inshallah",register:"neutral",ru:"Если Бог даст (дай Бог)",de:"So Gott will (hoffentlich)",hu:"Ha Isten is úgy akarja",audioSrc:"l3-1_4"}
+  ]},
+  {id:"f3",title:"Hello",title_ru:"Привет",title_de:"Hallo",title_hu:"Helló",xp:10,vocab:[
+    {en:"Welcome / Hey",ar:"أهلاً",franco:"Ahlan",register:"neutral",ru:"Добро пожаловать / Привет",de:"Willkommen / Hallo",hu:"Isten hozott / Szia",audioSrc:"l1-1_1"},
+    {en:"Good morning",ar:"صباح الخير",franco:"Sabah el kheir",register:"neutral",ru:"Доброе утро",de:"Guten Morgen",hu:"Jó reggelt",audioSrc:"l1-1_2",note:"Same throat-clearing \"kh\" as Khalas — you already know this sound."},
+    {en:"Good evening",ar:"مساء الخير",franco:"Masa el kheir",register:"neutral",ru:"Добрый вечер",de:"Guten Abend",hu:"Jó estét",audioSrc:"l1-1_3"}
+  ]},
+  {id:"f4",title:"Let's Lock That In",title_ru:"Закрепим это",title_de:"Das festigen wir",title_hu:"Rögzítsük ezt",xp:10,reviewOnly:true,vocab:[
+    {en:"Yes",ar:"أيوة",franco:"Aywa",register:"neutral",ru:"Да",de:"Ja",hu:"Igen",audioSrc:"l3-1_0"},{en:"No",ar:"لأ",franco:"La'",register:"neutral",ru:"Нет",de:"Nein",hu:"Nem",audioSrc:"l3-1_1"},{en:"Let's go / Come on",ar:"يلا",franco:"Yalla",register:"neutral",ru:"Погнали / Давай",de:"Auf geht's / Los geht's",hu:"Gyerünk / Menjünk",audioSrc:"l3-1_2"},{en:"Finished / Enough / OK",ar:"خلاص",franco:"Khalas",register:"neutral",ru:"Всё / Хватит / Ладно",de:"Fertig / Genug / Alles klar",hu:"Kész / Elég / Rendben",audioSrc:"l3-1_3"},{en:"God willing",ar:"إن شاء الله",franco:"Inshallah",register:"neutral",ru:"Если Бог даст (дай Бог)",de:"So Gott will (hoffentlich)",hu:"Ha Isten is úgy akarja",audioSrc:"l3-1_4"},{en:"Welcome / Hey",ar:"أهلاً",franco:"Ahlan",register:"neutral",ru:"Добро пожаловать / Привет",de:"Willkommen / Hallo",hu:"Isten hozott / Szia",audioSrc:"l1-1_1"},{en:"Good morning",ar:"صباح الخير",franco:"Sabah el kheir",register:"neutral",ru:"Доброе утро",de:"Guten Morgen",hu:"Jó reggelt",audioSrc:"l1-1_2"},{en:"Good evening",ar:"مساء الخير",franco:"Masa el kheir",register:"neutral",ru:"Добрый вечер",de:"Guten Abend",hu:"Jó estét",audioSrc:"l1-1_3"}
+  ]},
+  {id:"f5",title:"How Are You?",title_ru:"Как дела?",title_de:"Wie geht's?",title_hu:"Hogy vagy?",xp:10,vocab:[
+    {en:"Hi (informal)",ar:"إزيك",franco:"ezzayyak / ezzayyik",register:"casual",ru:"Привет (неформально)",de:"Hi (informell)",hu:"Szia (közvetlen)",audioSrc:"l1-1_0"},{en:"Fine / OK",ar:"تمام",franco:"Tamam",register:"neutral",ru:"Нормально / Всё в порядке",de:"Gut / Alles in Ordnung",hu:"Megvagyok / Minden rendben",audioSrc:"l1-2_2"},{en:"I'm good, thank God",ar:"كويس الحمد لله",franco:"Kwayyes el-hamdulillah",register:"neutral",ru:"Хорошо, слава Богу",de:"Mir geht's gut, Gott sei Dank",hu:"Jól vagyok, hála Istennek",audioSrc:"l1-2_1"}
+  ]},
+  {id:"f6",title:"Thank You and Sorry",title_ru:"Спасибо и извините",title_de:"Danke und Entschuldigung",title_hu:"Köszönöm és bocsánat",xp:10,vocab:[
+    {en:"Thank you",ar:"متشكر / متشكرة",franco:"motshakker / motshakkera",register:"neutral",ru:"Спасибо",de:"Danke",hu:"Köszönöm",audioSrc:"l2-1_0"},{en:"Please",ar:"لو سمحت / لو سمحتي",franco:"Law samaht / Law samahti",register:"neutral",ru:"Пожалуйста",de:"Bitte",hu:"Kérlek / Légy szíves",audioSrc:"l2-1_2"},{en:"Sorry / Never mind / It's OK",ar:"معلش",franco:"malesh",register:"neutral",ru:"Извините / Ничего страшного",de:"Entschuldigung / Macht nichts",hu:"Bocsánat / Semmi baj",audioSrc:"l2-1_3"}
+  ]},
+  {id:"f7",title:"Leaving Well",title_ru:"Как хорошо попрощаться",title_de:"Sich gut verabschieden",title_hu:"Szép búcsúzás",xp:10,vocab:[
+    {en:"Goodbye",ar:"مع السلامة",franco:"Ma'a el salama",register:"neutral",ru:"До свидания",de:"Auf Wiedersehen",hu:"Viszlát",audioSrc:"l1-1_4"},{en:"God keep you safe (response to 'welcome')",ar:"الله يسلمك",franco:"Allah yesallimak",register:"neutral",ru:"Да хранит вас Бог (ответ на «добро пожаловать»)",de:"Gott schütze dich (Antwort auf „Willkommen“)",hu:"Isten óvjon és áldjon meg! (válasz az üdvözlésre)",audioSrc:"l1-3_6"}
+  ]}
+];
+const FOUNDATION_COST_LABELS={
+  f1:{en:"40 sec · 3 words",ru:"40 сек · 3 слова",de:"40 Sek. · 3 Wörter",hu:"40 mp · 3 szó"},f2:{en:"30 sec · 2 words",ru:"30 сек · 2 слова",de:"30 Sek. · 2 Wörter",hu:"30 mp · 2 szó"},f3:{en:"40 sec · 3 words",ru:"40 сек · 3 слова",de:"40 Sek. · 3 Wörter",hu:"40 mp · 3 szó"},f4:{en:"1 min · lock it in",ru:"1 мин · закрепим",de:"1 Min. · festigen",hu:"1 perc · rögzítsük"},f5:{en:"1 min · your first exchange",ru:"1 мин · первый диалог",de:"1 Min. · dein erster Austausch",hu:"1 perc · az első párbeszéded"},f6:{en:"1 min · 3 words",ru:"1 мин · 3 слова",de:"1 Min. · 3 Wörter",hu:"1 perc · 3 szó"},f7:{en:"40 sec · say goodbye",ru:"40 сек · попрощаться",de:"40 Sek. · verabschieden",hu:"40 mp · elköszönés"}
+};
+
 /* ===== AGENT 6: APP STATE & LOGIC ===== */
 let user=null;          // logged-in user object
 let baseLang='en';      // language the learner starts from
@@ -2073,6 +2124,7 @@ const STRINGS={
   "ui.owned_phrases_short":{en:"Phrases Owned",ru:"Освоено фраз",de:"Verinnerlichte Redewendungen",hu:"Elsajátított kifejezések"},
   "ui.your_moments":{en:"Your moments",ru:"Ваши моменты",de:"Deine Momente",hu:"Pillanataid"},
   "ui.your_path":{en:"Your path",ru:"Ваш путь",de:"Dein Weg",hu:"Az utad"},
+  "ui.foundations_title":{en:"Foundations",ru:"Основы",de:"Grundlagen",hu:"Alapok"},
   "ui.your_path_soon":{en:"Coming up in your path",ru:"Скоро на вашем пути",de:"Kommt als Nächstes auf deinem Weg",hu:"Hamarosan következik az utadon"},
   "ui.unlocks_after_prefix":{en:"Unlocks after",ru:"Открывается после",de:"Wird freigeschaltet nach",hu:"Feloldódik ez után"},
   "ui.owned_phrases":{en:"Phrases You Own",ru:"Фразы, которые вы освоили",de:"Redewendungen, die du verinnerlicht hast",hu:"Kifejezések, amiket már elsajátítottál"},
@@ -2238,7 +2290,7 @@ function appConfirm(message){return appConfirmDialog(message,{showCancel:true});
 function appAlert(message){return appConfirmDialog(message,{showCancel:false});}
 function vocabText(item){return (baseLang!=='en'&&item[baseLang])?item[baseLang]:item.en;}
 function titleText(obj){return (baseLang!=='en'&&obj['title_'+baseLang])?obj['title_'+baseLang]:obj.title;}
-function audioPath(lessonId,idx){return (voicePref==='female'?'audio_female/':'audio/')+lessonId+'_'+idx+'.mp3';}
+function audioPath(lessonId,idx,audioSrc){return (voicePref==='female'?'audio_female/':'audio/')+(audioSrc||(lessonId+'_'+idx))+'.mp3';}
 function locationAudioPath(locationKey){return (voicePref==='female'?'audio_female/locations/':'audio/locations/')+locationKey+'.mp3';}
 
 function renderBaseLangToggles(){
@@ -3061,15 +3113,15 @@ function startGuestLessonNow(){
     guestArrival.classList.add("hidden");
     guestArrival.setAttribute("aria-hidden","true");
   }
-  const firstLesson=COURSE.units.find(u=>u.id==="u1").lessons[0];
+  const firstLesson=FOUNDATION_LESSONS[0];
   analytics.logEvent('guest_lesson_start',{lesson_id:firstLesson.id});
   startLesson(firstLesson);
 }
 
 function playGuestArrivalAudio(){
-  const lesson=COURSE.units.find(u=>u.id==="u1").lessons[0];
+  const lesson=FOUNDATION_LESSONS[0];
   const item=lesson.vocab[0];
-  playAudio(item.ar,audioPath(lesson.id,0));
+  playAudio(item.ar,audioPath(lesson.id,0,item.audioSrc));
 }
 
 function openKatyaArrival(){
@@ -3145,14 +3197,14 @@ function maybeShowPlanReveal(){
   const motivation=sessionStorage.getItem(storageKey);
   sessionStorage.removeItem(storageKey);
   const paths={
-    partner:{unitId:"u1",lessonId:"l1-1",label:"Warm greetings for meeting the family"},
-    traveler:{unitId:"u4",lessonId:"l4-1",label:"Numbers and getting around Egypt"},
-    heritage:{unitId:"u2",lessonId:"l2-2",label:"Family words the way Egyptians really say them"}
+    partner:{unitId:"u1",lessonId:"f1",label:"Warm greetings for meeting the family"},
+    traveler:{unitId:"u4",lessonId:"f1",label:"Numbers and getting around Egypt"},
+    heritage:{unitId:"u2",lessonId:"f1",label:"Family words the way Egyptians really say them"}
   };
   const path=paths[motivation];
   if(!path)return;
   const unit=COURSE.units.find(candidate=>candidate.id===path.unitId);
-  const lesson=unit&&unit.lessons.find(candidate=>candidate.id===path.lessonId);
+  const lesson=FOUNDATION_LESSONS.find(candidate=>candidate.id===path.lessonId)||(unit&&unit.lessons.find(candidate=>candidate.id===path.lessonId));
   if(!lesson)return;
   const overlay=document.getElementById("planRevealOverlay");
   const reveal=document.getElementById("planReveal");
@@ -3469,6 +3521,59 @@ function closeArrival(){
   arrivalUnit=null;
 }
 
+function foundationLessonUnlocked(li){
+  if(isAdminUser())return true;
+  if(li===0)return true;
+  return isLessonDone(FOUNDATION_LESSONS[li-1].id);
+}
+function foundationComplete(){
+  return FOUNDATION_LESSONS.every(l=>isLessonDone(l.id));
+}
+function hasNonFoundationProgress(){
+  const foundationIds=new Set(FOUNDATION_LESSONS.map(l=>l.id));
+  return Object.keys(user.progress||{}).some(id=>!foundationIds.has(id)&&isLessonDone(id));
+}
+function renderFoundationCard(el){
+  if(user.isGuest)return;
+  if(foundationComplete())return;
+  if(hasNonFoundationProgress())return;
+  const card=document.createElement("div");
+  card.className="scenario-card";
+  card.id="scenario-f0";
+  const doneCount=FOUNDATION_LESSONS.filter(l=>isLessonDone(l.id)).length;
+  const head=document.createElement("div");
+  head.className="scenario-head foundation-head";
+  head.innerHTML=`<span class="scenario-icon">🌱</span>
+    <span class="scenario-title">${t('ui.foundations_title')}</span>
+    <span class="scenario-progress">${doneCount}/${FOUNDATION_LESSONS.length}</span>`;
+  card.appendChild(head);
+  const progressBar=document.createElement("div");
+  progressBar.className="scenario-progress-bar";
+  progressBar.setAttribute("role","progressbar");
+  progressBar.setAttribute("aria-valuemin","0");
+  progressBar.setAttribute("aria-valuemax",String(FOUNDATION_LESSONS.length));
+  progressBar.setAttribute("aria-valuenow",String(doneCount));
+  progressBar.innerHTML=`<div class="scenario-progress-fill" style="width:${doneCount/FOUNDATION_LESSONS.length*100}%"></div>`;
+  card.appendChild(progressBar);
+  FOUNDATION_LESSONS.forEach((l,li)=>{
+    const unlocked=foundationLessonUnlocked(li);
+    const done=isLessonDone(l.id);
+    const isNext=!done&&unlocked;
+    const row=document.createElement("button");
+    row.className="lesson-row "+(done?"done":(unlocked?"unlocked":""))+(isNext?" next":"");
+    row.disabled=!unlocked;
+    if(!unlocked){
+      const prev=FOUNDATION_LESSONS[li-1];
+      row.setAttribute("aria-label",`Locked — complete ${prev?titleText(prev):"the previous step"} to unlock`);
+    }
+    row.innerHTML=`<span class="lesson-badge">${done?"✓":(unlocked?(li+1):"🔒")}</span>
+      <span class="lesson-name-wrap"><span class="lesson-name">${titleText(l)}</span><span class="lesson-meta">${(FOUNDATION_COST_LABELS[l.id]&&(baseLang!=="en"&&FOUNDATION_COST_LABELS[l.id][baseLang]?FOUNDATION_COST_LABELS[l.id][baseLang]:FOUNDATION_COST_LABELS[l.id].en))||""}</span></span>`;
+    row.onclick=()=>{ if(unlocked)startLesson(l); };
+    card.appendChild(row);
+  });
+  el.insertBefore(card,el.firstChild);
+}
+
 function renderPath(){
   const el=document.getElementById("learn");
   el.innerHTML="";
@@ -3481,6 +3586,7 @@ function renderPath(){
     if(unit&&unit.lessons.every(lesson=>isLessonDone(lesson.id)))saveVisitedPlace(place.unitId);
   });
   renderExplore(el);
+  renderFoundationCard(el);
   const motivationUnits={partner:"u1",traveler:"u4",heritage:"u2"};
   const preferredUnitId=!user.isGuest?motivationUnits[user.motivation]:null;
   const units=COURSE.units.map((unit,ui)=>({unit,ui}));
@@ -4213,9 +4319,16 @@ function renderPhrasebook(){
 function buildExercises(lesson){
   const vocab=lesson.vocab;
   const pool=allVocab();
+  const isFoundation=FOUNDATION_LESSONS.some(f=>f.id===lesson.id);
+  const isFoundationReview=lesson.reviewOnly===true;
+  if(isFoundationReview){
+    return vocab.map((item,idx)=>({type:"listen",item,q:item.ar,answer:item.en,franco:item.franco,register:item.register,
+      lessonId:lesson.id,idx,audio:audioPath(lesson.id,idx,item.audioSrc),
+      opts:shuffle([item,...shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3)]).map(v=>({value:v.en,label:vocabText(v)}))}));
+  }
   const list=[];
   const introList=vocab.map((item,idx)=>({
-    type:"intro",item,lessonId:lesson.id,idx,audio:audioPath(lesson.id,idx)
+    type:"intro",item,lessonId:lesson.id,idx,audio:audioPath(lesson.id,idx,item.audioSrc)
   }));
 
   vocab.forEach(item=>{
@@ -4230,7 +4343,7 @@ function buildExercises(lesson){
     const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
     list.push({type:"listen",item,q:item.ar,answer:item.en,franco:item.franco,register:item.register,
       lessonId:lesson.id,idx,
-      audio:audioPath(lesson.id,idx),
+      audio:audioPath(lesson.id,idx,item.audioSrc),
       opts:shuffle([item,...distractors]).map(v=>({value:v.en,label:vocabText(v)}))});
   });
 
@@ -4238,7 +4351,7 @@ function buildExercises(lesson){
     if(lesson.id==='pyramids'){
       const tokens=item.ar.trim().split(/\s+/);
       list.push({type:"build",item,lessonId:lesson.id,idx,tokens,ar:item.ar,q:vocabText(item),franco:item.franco,register:item.register});
-    } else {
+    } else if(lesson.id!=="f1"&&lesson.id!=="f2"&&lesson.id!=="f3") {
       // fill in the blank: type the Franco transliteration
       list.push({type:"fill",item,q:vocabText(item),ar:item.ar,answer:item.franco,register:item.register});
     }
@@ -4254,6 +4367,8 @@ function buildExercises(lesson){
       if(ex.type==="mc"||ex.type==="listen"||ex.type==="build")ex.sceneImage='mascot/locations/pyramids.webp';
     });
   }
+
+  if(isFoundation){ return [...introList,...list]; }
 
   const shuffled=shuffle(list);
   const introduced=new Set();
@@ -4373,6 +4488,12 @@ function renderExercise(){
     meaning.style.cssText="color:var(--ink-soft);margin-top:8px";
     meaning.textContent=vocabText(ex.item);
     intro.append(ar,franco,meaning);
+    if(ex.item.note){
+      const soundNote=document.createElement("div");
+      soundNote.style.cssText="color:var(--ink-soft);font-size:12px;margin-top:6px;font-style:italic";
+      soundNote.textContent=ex.item.note;
+      intro.appendChild(soundNote);
+    }
     if(!localStorage.getItem('speakmasri_francoHintShown')){
       localStorage.setItem('speakmasri_francoHintShown','1');
       const francoHint=document.createElement("div");
@@ -5394,12 +5515,12 @@ async function finishAsSuccess(){
   const doneNextPreview=document.getElementById("doneNextPreview");
   doneNextPreview.classList.add("hidden");
   doneNextPreview.textContent="";
-  document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="l1-1"?'ui.next_lesson_guest':'btn.continue');
+  document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="f1"?'ui.next_lesson_guest':'btn.continue');
   document.getElementById("testMeBtn").classList.remove("hidden");
   if(user.isGuest){
     user.progress[curLesson.id]={done:true,score:acc};
-    document.getElementById("doneTitle").textContent=t(curLesson.id==="l1-2"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
-    if(curLesson.id==="l1-1"){
+    document.getElementById("doneTitle").textContent=t(curLesson.id==="f3"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
+    if(curLesson.id==="f1"){
       doneNextPreview.textContent=t('ui.guest_next_lesson_preview');
       doneNextPreview.classList.remove("hidden");
     }
@@ -5431,10 +5552,10 @@ function finishLesson(){
   document.getElementById("done").classList.add("hidden");
   if(user&&user.isGuest){
     persistGuestProgress();
-    if(curLesson&&curLesson.id==="l1-1"){
-      const familyUnit=COURSE.units.find(unit=>unit.id==="u1");
-      if(familyUnit&&familyUnit.lessons[1]){
-        startLesson(familyUnit.lessons[1]);
+    if(curLesson){
+      const fIdx=FOUNDATION_LESSONS.findIndex(l=>l.id===curLesson.id);
+      if(fIdx>=0&&fIdx<2){
+        startLesson(FOUNDATION_LESSONS[fIdx+1]);
         return;
       }
     }
