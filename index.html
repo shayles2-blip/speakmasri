@@ -1937,6 +1937,51 @@ const COURSE={units:[
  ]}
 ]};
 
+const ALPHABET_LESSONS=[
+  {id:"a1",title:"The Alphabet: Part 1",title_ru:"Алфавит: часть 1",title_de:"Das Alphabet: Teil 1",title_hu:"Az ábécé: 1. rész",xp:10,vocab:[
+    {en:"Alif — a long \"aa\" sound, like in \"father\"",ar:"ا",franco:"Alif",register:"neutral",ru:"Алиф — долгий звук «а», как в слове father",de:"Alif — ein langes „aa“, wie in „Vater“",hu:"Alif — hosszú „á” hang, mint a „vár” szóban"},
+    {en:"Ba — like the English \"b\"",ar:"ب",franco:"Ba",register:"neutral",ru:"Ба — как английское «b»",de:"Ba — wie das deutsche „b“",hu:"Ba — mint a magyar „b”"},
+    {en:"Ta — like the English \"t\"",ar:"ت",franco:"Ta",register:"neutral",ru:"Та — как английское «t»",de:"Ta — wie das deutsche „t“",hu:"Ta — mint a magyar „t”"},
+    {en:"Tha — in Egyptian Arabic, usually sounds like \"s\"",ar:"ث",franco:"Tha",register:"neutral",ru:"Тха — в египетском диалекте обычно звучит как «s»",de:"Tha — im ägyptischen Dialekt klingt es meist wie „s“",hu:"Tha — az egyiptomi nyelvjárásban általában „sz”-nek hangzik"},
+    {en:"Gim — Egypt's famous hard \"g\", like in \"go\" (not \"j\" like in Standard Arabic)",ar:"ج",franco:"Gim",register:"neutral",ru:"Гим — знаменитое египетское твёрдое «г», как в слове «гол» (а не «дж», как в лит. арабском)",de:"Gim — Ägyptens berühmtes hartes „g“, wie in „gehen“ (nicht „dsch“ wie im Hocharabischen)",hu:"Gim — Egyiptom híres kemény „g” hangja, mint a „gól” szóban (nem „dzs”, mint az irodalmi arabban)"}
+  ]},
+  {id:"a2",title:"The Alphabet: Part 2",title_ru:"Алфавит: часть 2",title_de:"Das Alphabet: Teil 2",title_hu:"Az ábécé: 2. rész",xp:10,vocab:[
+    {en:"Ha — a breathy H from deep in the throat",ar:"ح",franco:"Ha",register:"neutral",ru:"Ха (гортанное) — придыхательное «h» из глубины горла",de:"Ha — ein gehauchtes H tief aus dem Rachen",hu:"Ha — mély torokból jövő, leheletes H hang"},
+    {en:"Kha — like the \"ch\" in Scottish \"loch\"",ar:"خ",franco:"Kha",register:"neutral",ru:"Кха — как «ch» в шотландском loch",de:"Kha — wie das „ch“ in „Bach“",hu:"Kha — mint a német „Bach” szó „ch” hangja"},
+    {en:"Dal — like the English \"d\"",ar:"د",franco:"Dal",register:"neutral",ru:"Даль — как английское «d»",de:"Dal — wie das deutsche „d“",hu:"Dal — mint a magyar „d”"},
+    {en:"Dhal — in Egyptian Arabic, usually sounds like \"d\"",ar:"ذ",franco:"Dhal",register:"neutral",ru:"Заль — в египетском диалекте обычно звучит как «d»",de:"Dhal — im ägyptischen Dialekt klingt es meist wie „d“",hu:"Dhal — az egyiptomi nyelvjárásban általában „d”-nek hangzik"},
+    {en:"Ra — a rolled \"r\"",ar:"ر",franco:"Ra",register:"neutral",ru:"Ра — раскатистое «r»",de:"Ra — ein gerolltes „r“",hu:"Ra — pergetett „r” hang"}
+  ]},
+  {id:"a3",title:"The Alphabet: Part 3",title_ru:"Алфавит: часть 3",title_de:"Das Alphabet: Teil 3",title_hu:"Az ábécé: 3. rész",xp:10,vocab:[
+    {en:"Zay — like the English \"z\"",ar:"ز",franco:"Zay",register:"neutral",ru:"Зай — как английское «z»",de:"Zay — wie das deutsche „s“ in „Sonne“",hu:"Zay — mint a magyar „z”"},
+    {en:"Sin — like the English \"s\"",ar:"س",franco:"Sin",register:"neutral",ru:"Син — как английское «s»",de:"Sin — wie das deutsche „s“ in „Haus“",hu:"Szin — mint a magyar „sz”"},
+    {en:"Shin — like \"sh\" in \"shoe\"",ar:"ش",franco:"Shin",register:"neutral",ru:"Шин — как «sh» в слове shoe",de:"Shin — wie „sch“ in „Schuh“",hu:"Sin — mint a magyar „s” hang"},
+    {en:"Sad — a heavier, deeper \"s\"",ar:"ص",franco:"Sad",register:"neutral",ru:"Сад — более тяжёлое, глубокое «s»",de:"Sad — ein schwereres, tieferes „s“",hu:"Szád — mélyebb, nyomatékosabb „sz” hang"},
+    {en:"Dad — a heavier, deeper \"d\"",ar:"ض",franco:"Dad",register:"neutral",ru:"Дад — более тяжёлое, глубокое «d»",de:"Dad — ein schwereres, tieferes „d“",hu:"Dád — mélyebb, nyomatékosabb „d” hang"}
+  ]},
+  {id:"a4",title:"The Alphabet: Part 4",title_ru:"Алфавит: часть 4",title_de:"Das Alphabet: Teil 4",title_hu:"Az ábécé: 4. rész",xp:10,vocab:[
+    {en:"Heavy Ta — a heavier, deeper \"t\"",ar:"ط",franco:"Taa",register:"neutral",ru:"Тяжёлая Та — более тяжёлое, глубокое «t»",de:"Schweres Ta — ein schwereres, tieferes „t“",hu:"Nehéz Ta — mélyebb, nyomatékosabb „t” hang"},
+    {en:"Heavy Za — a heavier, deeper \"z\"",ar:"ظ",franco:"Zaa",register:"neutral",ru:"Тяжёлая За — более тяжёлое, глубокое «z»",de:"Schweres Za — ein schwereres, tieferes „s“",hu:"Nehéz Za — mélyebb, nyomatékosabb „z” hang"},
+    {en:"Ayn — a deep throat sound with no English equivalent",ar:"ع",franco:"Ayn",register:"neutral",ru:"Айн — глубокий гортанный звук, аналога нет",de:"Ayn — ein tiefer Kehllaut ohne deutsche Entsprechung",hu:"Ajn — mély torokhang, nincs magyar megfelelője"},
+    {en:"Ghayn — a gargled sound, like a French \"r\"",ar:"غ",franco:"Ghayn",register:"neutral",ru:"Гайн — гортанный звук, похожий на французское «r»",de:"Ghayn — ein gurgelnder Laut, wie das französische „r“",hu:"Gajn — gargalizáló hang, mint a francia „r”"},
+    {en:"Fa — like the English \"f\"",ar:"ف",franco:"Fa",register:"neutral",ru:"Фа — как английское «f»",de:"Fa — wie das deutsche „f“",hu:"Fa — mint a magyar „f”"}
+  ]},
+  {id:"a5",title:"The Alphabet: Part 5",title_ru:"Алфавит: часть 5",title_de:"Das Alphabet: Teil 5",title_hu:"Az ábécé: 5. rész",xp:10,vocab:[
+    {en:"Qaf — in Cairo, this is a glottal stop, the same catch-in-your-throat sound as the apostrophe in La'",ar:"ق",franco:"Qaf",register:"neutral",ru:"Каф — в Каире произносится как гортанная смычка, тот же звук, что и апостроф в La'",de:"Qaf — in Kairo ein Knacklaut, derselbe Laut wie das Apostroph in La'",hu:"Qaf — Kairóban torokzárhang, ugyanaz, mint a La' szóban lévő aposztróf"},
+    {en:"Kaf — like the English \"k\"",ar:"ك",franco:"Kaf",register:"neutral",ru:"Каф — как английское «k»",de:"Kaf — wie das deutsche „k“",hu:"Kaf — mint a magyar „k”"},
+    {en:"Lam — like the English \"l\"",ar:"ل",franco:"Lam",register:"neutral",ru:"Лям — как английское «l»",de:"Lam — wie das deutsche „l“",hu:"Lám — mint a magyar „l”"},
+    {en:"Mim — like the English \"m\"",ar:"م",franco:"Mim",register:"neutral",ru:"Мим — как английское «m»",de:"Mim — wie das deutsche „m“",hu:"Mím — mint a magyar „m”"}
+  ]},
+  {id:"a6",title:"The Alphabet: Part 6",title_ru:"Алфавит: часть 6",title_de:"Das Alphabet: Teil 6",title_hu:"Az ábécé: 6. rész",xp:10,vocab:[
+    {en:"Nun — like the English \"n\"",ar:"ن",franco:"Nun",register:"neutral",ru:"Нун — как английское «n»",de:"Nun — wie das deutsche „n“",hu:"Nún — mint a magyar „n”"},
+    {en:"Light Ha — a soft H, like in \"hat\"",ar:"ه",franco:"Ha",register:"neutral",ru:"Лёгкая Ха — мягкое «h», как в слове hat",de:"Leichtes Ha — ein weiches H, wie in „Haus“",hu:"Könnyű Ha — lágy H hang, mint a „ház” szóban"},
+    {en:"Waw — like \"w\" in \"wow\", or a long \"oo\"",ar:"و",franco:"Waw",register:"neutral",ru:"Вав — как «w» в wow, или долгое «u»",de:"Waw — wie „w“ in „wow“, oder ein langes „u“",hu:"Vav — mint a „vau” szó „v” hangja, vagy hosszú „ú”"},
+    {en:"Ya — like \"y\" in \"yes\", or a long \"ee\"",ar:"ي",franco:"Ya",register:"neutral",ru:"Йа — как «y» в yes, или долгое «i»",de:"Ya — wie „j“ in „ja“, oder ein langes „i“",hu:"Já — mint a magyar „j”, vagy hosszú „í”"}
+  ]}
+];
+
+const ALPHABET_LESSON_IDS=new Set(["a1","a2","a3","a4","a5","a6"]);
+
 const FOUNDATION_LESSONS=[
   {id:"f1",title:"Yes, No, Let's Go",title_ru:"Да, нет, пошли",title_de:"Ja, nein, los geht's",title_hu:"Igen, nem, gyerünk",xp:10,vocab:[
     {en:"Yes",ar:"أيوة",franco:"Aywa",register:"neutral",ru:"Да",de:"Ja",hu:"Igen",audioSrc:"l3-1_0"},
@@ -2124,6 +2169,7 @@ const STRINGS={
   "ui.owned_phrases_short":{en:"Phrases Owned",ru:"Освоено фраз",de:"Verinnerlichte Redewendungen",hu:"Elsajátított kifejezések"},
   "ui.your_moments":{en:"Your moments",ru:"Ваши моменты",de:"Deine Momente",hu:"Pillanataid"},
   "ui.your_path":{en:"Your path",ru:"Ваш путь",de:"Dein Weg",hu:"Az utad"},
+  "ui.alphabet_title":{en:"The Alphabet",ru:"Алфавит",de:"Das Alphabet",hu:"Az ábécé"},
   "ui.foundations_title":{en:"Foundations",ru:"Основы",de:"Grundlagen",hu:"Alapok"},
   "ui.your_path_soon":{en:"Coming up in your path",ru:"Скоро на вашем пути",de:"Kommt als Nächstes auf deinem Weg",hu:"Hamarosan következik az utadon"},
   "ui.unlocks_after_prefix":{en:"Unlocks after",ru:"Открывается после",de:"Wird freigeschaltet nach",hu:"Feloldódik ez után"},
@@ -3113,13 +3159,13 @@ function startGuestLessonNow(){
     guestArrival.classList.add("hidden");
     guestArrival.setAttribute("aria-hidden","true");
   }
-  const firstLesson=FOUNDATION_LESSONS[0];
+  const firstLesson=ALPHABET_LESSONS[0];
   analytics.logEvent('guest_lesson_start',{lesson_id:firstLesson.id});
   startLesson(firstLesson);
 }
 
 function playGuestArrivalAudio(){
-  const lesson=FOUNDATION_LESSONS[0];
+  const lesson=ALPHABET_LESSONS[0];
   const item=lesson.vocab[0];
   playAudio(item.ar,audioPath(lesson.id,0,item.audioSrc));
 }
@@ -3197,14 +3243,14 @@ function maybeShowPlanReveal(){
   const motivation=sessionStorage.getItem(storageKey);
   sessionStorage.removeItem(storageKey);
   const paths={
-    partner:{unitId:"u1",lessonId:"f1",label:"Warm greetings for meeting the family"},
-    traveler:{unitId:"u4",lessonId:"f1",label:"Numbers and getting around Egypt"},
-    heritage:{unitId:"u2",lessonId:"f1",label:"Family words the way Egyptians really say them"}
+    partner:{unitId:"u1",lessonId:"a1",label:"Warm greetings for meeting the family"},
+    traveler:{unitId:"u4",lessonId:"a1",label:"Numbers and getting around Egypt"},
+    heritage:{unitId:"u2",lessonId:"a1",label:"Family words the way Egyptians really say them"}
   };
   const path=paths[motivation];
   if(!path)return;
   const unit=COURSE.units.find(candidate=>candidate.id===path.unitId);
-  const lesson=FOUNDATION_LESSONS.find(candidate=>candidate.id===path.lessonId)||(unit&&unit.lessons.find(candidate=>candidate.id===path.lessonId));
+  const lesson=ALPHABET_LESSONS.find(candidate=>candidate.id===path.lessonId)||FOUNDATION_LESSONS.find(candidate=>candidate.id===path.lessonId)||(unit&&unit.lessons.find(candidate=>candidate.id===path.lessonId));
   if(!lesson)return;
   const overlay=document.getElementById("planRevealOverlay");
   const reveal=document.getElementById("planReveal");
@@ -3523,15 +3569,63 @@ function closeArrival(){
 
 function foundationLessonUnlocked(li){
   if(isAdminUser())return true;
-  if(li===0)return true;
+  if(li===0)return alphabetComplete();
   return isLessonDone(FOUNDATION_LESSONS[li-1].id);
+}
+function alphabetLessonUnlocked(li){
+  if(isAdminUser())return true;
+  if(li===0)return true;
+  return isLessonDone(ALPHABET_LESSONS[li-1].id);
+}
+function alphabetComplete(){
+  return ALPHABET_LESSONS.every(l=>isLessonDone(l.id));
 }
 function foundationComplete(){
   return FOUNDATION_LESSONS.every(l=>isLessonDone(l.id));
 }
 function hasNonFoundationProgress(){
-  const foundationIds=new Set(FOUNDATION_LESSONS.map(l=>l.id));
-  return Object.keys(user.progress||{}).some(id=>!foundationIds.has(id)&&isLessonDone(id));
+  const onboardingIds=new Set([...FOUNDATION_LESSONS.map(l=>l.id),...ALPHABET_LESSONS.map(l=>l.id)]);
+  return Object.keys(user.progress||{}).some(id=>!onboardingIds.has(id)&&isLessonDone(id));
+}
+function renderAlphabetCard(el){
+  if(user.isGuest)return;
+  if(alphabetComplete())return;
+  if(hasNonFoundationProgress())return;
+  const card=document.createElement("div");
+  card.className="scenario-card";
+  card.id="scenario-alphabet";
+  const doneCount=ALPHABET_LESSONS.filter(l=>isLessonDone(l.id)).length;
+  const head=document.createElement("div");
+  head.className="scenario-head foundation-head";
+  head.innerHTML=`<span class="scenario-icon">🔤</span>
+    <span class="scenario-title">${t('ui.alphabet_title')}</span>
+    <span class="scenario-progress">${doneCount}/${ALPHABET_LESSONS.length}</span>`;
+  card.appendChild(head);
+  const progressBar=document.createElement("div");
+  progressBar.className="scenario-progress-bar";
+  progressBar.setAttribute("role","progressbar");
+  progressBar.setAttribute("aria-valuemin","0");
+  progressBar.setAttribute("aria-valuemax",String(ALPHABET_LESSONS.length));
+  progressBar.setAttribute("aria-valuenow",String(doneCount));
+  progressBar.innerHTML=`<div class="scenario-progress-fill" style="width:${doneCount/ALPHABET_LESSONS.length*100}%"></div>`;
+  card.appendChild(progressBar);
+  ALPHABET_LESSONS.forEach((l,li)=>{
+    const unlocked=alphabetLessonUnlocked(li);
+    const done=isLessonDone(l.id);
+    const isNext=!done&&unlocked;
+    const row=document.createElement("button");
+    row.className="lesson-row "+(done?"done":(unlocked?"unlocked":""))+(isNext?" next":"");
+    row.disabled=!unlocked;
+    if(!unlocked){
+      const prev=ALPHABET_LESSONS[li-1];
+      row.setAttribute("aria-label",`Locked — complete ${prev?titleText(prev):"the previous step"} to unlock`);
+    }
+    row.innerHTML=`<span class="lesson-badge">${done?"✓":(unlocked?(li+1):"🔒")}</span>
+      <span class="lesson-name-wrap"><span class="lesson-name">${titleText(l)}</span></span>`;
+    row.onclick=()=>{ if(unlocked)startLesson(l); };
+    card.appendChild(row);
+  });
+  el.insertBefore(card,el.firstChild);
 }
 function renderFoundationCard(el){
   if(user.isGuest)return;
@@ -3587,6 +3681,7 @@ function renderPath(){
   });
   renderExplore(el);
   renderFoundationCard(el);
+  renderAlphabetCard(el);
   const motivationUnits={partner:"u1",traveler:"u4",heritage:"u2"};
   const preferredUnitId=!user.isGuest?motivationUnits[user.motivation]:null;
   const units=COURSE.units.map((unit,ui)=>({unit,ui}));
@@ -4318,7 +4413,8 @@ function renderPhrasebook(){
 /* ---------- EXERCISE BUILDING ---------- */
 function buildExercises(lesson){
   const vocab=lesson.vocab;
-  const pool=allVocab();
+  const isAlphabet=ALPHABET_LESSON_IDS.has(lesson.id);
+  const pool=isAlphabet?ALPHABET_LESSONS.flatMap(a=>a.vocab):allVocab();
   const isFoundation=FOUNDATION_LESSONS.some(f=>f.id===lesson.id);
   const isFoundationReview=lesson.reviewOnly===true;
   if(isFoundationReview){
@@ -4351,7 +4447,7 @@ function buildExercises(lesson){
     if(lesson.id==='pyramids'){
       const tokens=item.ar.trim().split(/\s+/);
       list.push({type:"build",item,lessonId:lesson.id,idx,tokens,ar:item.ar,q:vocabText(item),franco:item.franco,register:item.register});
-    } else if(lesson.id!=="f1"&&lesson.id!=="f2"&&lesson.id!=="f3") {
+    } else if(!isAlphabet&&lesson.id!=="f1"&&lesson.id!=="f2"&&lesson.id!=="f3"){
       // fill in the blank: type the Franco transliteration
       list.push({type:"fill",item,q:vocabText(item),ar:item.ar,answer:item.franco,register:item.register});
     }
@@ -4368,7 +4464,7 @@ function buildExercises(lesson){
     });
   }
 
-  if(isFoundation){ return [...introList,...list]; }
+  if(isFoundation||isAlphabet){ return [...introList,...list]; }
 
   const shuffled=shuffle(list);
   const introduced=new Set();
@@ -5515,12 +5611,12 @@ async function finishAsSuccess(){
   const doneNextPreview=document.getElementById("doneNextPreview");
   doneNextPreview.classList.add("hidden");
   doneNextPreview.textContent="";
-  document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="f1"?'ui.next_lesson_guest':'btn.continue');
+  document.getElementById("doneContinueBtn").textContent=t(user.isGuest&&curLesson.id==="a1"?'ui.next_lesson_guest':'btn.continue');
   document.getElementById("testMeBtn").classList.remove("hidden");
   if(user.isGuest){
     user.progress[curLesson.id]={done:true,score:acc};
-    document.getElementById("doneTitle").textContent=t(curLesson.id==="f3"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
-    if(curLesson.id==="f1"){
+    document.getElementById("doneTitle").textContent=t(curLesson.id==="a3"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
+    if(curLesson.id==="a1"){
       doneNextPreview.textContent=t('ui.guest_next_lesson_preview');
       doneNextPreview.classList.remove("hidden");
     }
@@ -5553,9 +5649,9 @@ function finishLesson(){
   if(user&&user.isGuest){
     persistGuestProgress();
     if(curLesson){
-      const fIdx=FOUNDATION_LESSONS.findIndex(l=>l.id===curLesson.id);
-      if(fIdx>=0&&fIdx<2){
-        startLesson(FOUNDATION_LESSONS[fIdx+1]);
+      const aIdx=ALPHABET_LESSONS.findIndex(l=>l.id===curLesson.id);
+      if(aIdx>=0&&aIdx<2){
+        startLesson(ALPHABET_LESSONS[aIdx+1]);
         return;
       }
     }
