@@ -1673,8 +1673,8 @@ input:focus, select:focus {
         <details style="margin-bottom:10px">
           <summary style="color:var(--ink-soft);font-size:13px;cursor:pointer" data-i18n="ui.advanced_options">Advanced options</summary>
           <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn btn-ghost" style="font-size:13px;padding:10px" onclick="downloadPhraseTemplate()" data-i18n="ui.template">⬇️ Template</button>
-            <label class="btn btn-ghost" style="font-size:13px;padding:10px;text-align:center;cursor:pointer">
+            <button class="btn btn-ghost" style="flex:1;font-size:13px;padding:10px" onclick="downloadPhraseTemplate()" data-i18n="ui.template">⬇️ Template</button>
+            <label class="btn btn-ghost" style="flex:1;font-size:13px;padding:10px;text-align:center;cursor:pointer">
               <span data-i18n="ui.import">⬆️ Import</span>
               <input type="file" id="partnerFileInput" accept=".json" style="display:none" onchange="importPartnerPhrases(this)">
             </label>
@@ -1939,44 +1939,44 @@ const COURSE={units:[
 
 const ALPHABET_LESSONS=[
   {id:"a1",title:"The Alphabet: Part 1",title_ru:"Алфавит: часть 1",title_de:"Das Alphabet: Teil 1",title_hu:"Az ábécé: 1. rész",xp:10,vocab:[
-    {en:"Alif — a long \"aa\" sound, like in \"father\"",ar:"ا",franco:"Alif",register:"neutral",ru:"Алиф — долгий звук «а», как в слове father",de:"Alif — ein langes „aa“, wie in „Vater“",hu:"Alif — hosszú „á” hang, mint a „vár” szóban"},
-    {en:"Ba — like the English \"b\"",ar:"ب",franco:"Ba",register:"neutral",ru:"Ба — как английское «b»",de:"Ba — wie das deutsche „b“",hu:"Ba — mint a magyar „b”"},
-    {en:"Ta — like the English \"t\"",ar:"ت",franco:"Ta",register:"neutral",ru:"Та — как английское «t»",de:"Ta — wie das deutsche „t“",hu:"Ta — mint a magyar „t”"},
-    {en:"Tha — in Egyptian Arabic, usually sounds like \"t\" (as in talata, \"three\"), though some words borrowed from formal Arabic use \"s\"",ar:"ث",franco:"Tha",register:"neutral",ru:"Тха — в египетском диалекте обычно звучит как «t» (как в talata, «три»), хотя в некоторых словах, заимствованных из литературного арабского, звучит как «s»",de:"Tha — im ägyptischen Dialekt klingt es meist wie „t“ (wie in talata, „drei“), in manchen aus dem Hocharabischen entlehnten Wörtern aber wie „s“",hu:"Tha — az egyiptomi nyelvjárásban általában „t”-nek hangzik (mint a talata, „három” szóban), néhány irodalmi arabból átvett szóban viszont „sz”-nek"},
-    {en:"Gim — Egypt's famous hard \"g\", like in \"go\" (not \"j\" like in Standard Arabic)",ar:"ج",franco:"Gim",register:"neutral",ru:"Гим — знаменитое египетское твёрдое «г», как в слове «гол» (а не «дж», как в лит. арабском)",de:"Gim — Ägyptens berühmtes hartes „g“, wie in „gehen“ (nicht „dsch“ wie im Hocharabischen)",hu:"Gim — Egyiptom híres kemény „g” hangja, mint a „gól” szóban (nem „dzs”, mint az irodalmi arabban)"}
+    {en:"The letter Alif",ar:"ا",franco:"Alif",register:"neutral",ru:"Буква Alif",de:"Der Buchstabe Alif",hu:"Az Alif betű",note:"A long \"aa\" sound, like in \"father\""},
+    {en:"The letter Ba",ar:"ب",franco:"Ba",register:"neutral",ru:"Буква Ba",de:"Der Buchstabe Ba",hu:"A Ba betű",note:"Like the English \"b\""},
+    {en:"The letter Ta",ar:"ت",franco:"Ta",register:"neutral",ru:"Буква Ta",de:"Der Buchstabe Ta",hu:"A Ta betű",note:"Like the English \"t\""},
+    {en:"The letter Tha",ar:"ث",franco:"Tha",register:"neutral",ru:"Буква Tha",de:"Der Buchstabe Tha",hu:"A Tha betű",note:"In Egyptian Arabic, usually sounds like \"t\" (as in talata, \"three\"), though some words borrowed from formal Arabic use \"s\""},
+    {en:"The letter Gim",ar:"ج",franco:"Gim",register:"neutral",ru:"Буква Gim",de:"Der Buchstabe Gim",hu:"A Gim betű",note:"Egypt's famous hard \"g\", like in \"go\" (not \"j\" like in Standard Arabic)"}
   ]},
   {id:"a2",title:"The Alphabet: Part 2",title_ru:"Алфавит: часть 2",title_de:"Das Alphabet: Teil 2",title_hu:"Az ábécé: 2. rész",xp:10,vocab:[
-    {en:"Heavy Ha — a breathy H from deep in the throat (distinct from the lighter ه later on)",ar:"ح",franco:"Ha",register:"neutral",ru:"Тяжёлая Ха — придыхательное «h» из глубины горла (не путать с более лёгкой ه позже)",de:"Schweres Ha — ein gehauchtes H tief aus dem Rachen (nicht zu verwechseln mit dem leichteren ه später)",hu:"Nehéz Ha — mély torokból jövő, leheletes H hang (nem keverendő a később következő könnyebb ه hanggal)"},
-    {en:"Kha — like the \"ch\" in Scottish \"loch\"",ar:"خ",franco:"Kha",register:"neutral",ru:"Кха — как «ch» в шотландском loch",de:"Kha — wie das „ch“ in „Bach“",hu:"Kha — mint a német „Bach” szó „ch” hangja"},
-    {en:"Dal — like the English \"d\"",ar:"د",franco:"Dal",register:"neutral",ru:"Даль — как английское «d»",de:"Dal — wie das deutsche „d“",hu:"Dal — mint a magyar „d”"},
-    {en:"Dhal — in Egyptian Arabic, usually sounds like \"d\"",ar:"ذ",franco:"Dhal",register:"neutral",ru:"Заль — в египетском диалекте обычно звучит как «d»",de:"Dhal — im ägyptischen Dialekt klingt es meist wie „d“",hu:"Dhal — az egyiptomi nyelvjárásban általában „d”-nek hangzik"},
-    {en:"Ra — a rolled \"r\"",ar:"ر",franco:"Ra",register:"neutral",ru:"Ра — раскатистое «r»",de:"Ra — ein gerolltes „r“",hu:"Ra — pergetett „r” hang"}
+    {en:"The letter Ha (heavy)",ar:"ح",franco:"Ha",register:"neutral",ru:"Буква Ha (тяжёлая)",de:"Der Buchstabe Ha (schwer)",hu:"A Ha betű (nehéz)",note:"A breathy H from deep in the throat (distinct from the lighter ه later on)"},
+    {en:"The letter Kha",ar:"خ",franco:"Kha",register:"neutral",ru:"Буква Kha",de:"Der Buchstabe Kha",hu:"A Kha betű",note:"Like the \"ch\" in Scottish \"loch\""},
+    {en:"The letter Dal",ar:"د",franco:"Dal",register:"neutral",ru:"Буква Dal",de:"Der Buchstabe Dal",hu:"A Dal betű",note:"Like the English \"d\""},
+    {en:"The letter Dhal",ar:"ذ",franco:"Dhal",register:"neutral",ru:"Буква Dhal",de:"Der Buchstabe Dhal",hu:"A Dhal betű",note:"In Egyptian Arabic, usually sounds like \"d\""},
+    {en:"The letter Ra",ar:"ر",franco:"Ra",register:"neutral",ru:"Буква Ra",de:"Der Buchstabe Ra",hu:"A Ra betű",note:"A rolled \"r\""}
   ]},
   {id:"a3",title:"The Alphabet: Part 3",title_ru:"Алфавит: часть 3",title_de:"Das Alphabet: Teil 3",title_hu:"Az ábécé: 3. rész",xp:10,vocab:[
-    {en:"Zay — like the English \"z\"",ar:"ز",franco:"Zay",register:"neutral",ru:"Зай — как английское «z»",de:"Zay — wie das deutsche „s“ in „Sonne“",hu:"Zay — mint a magyar „z”"},
-    {en:"Sin — like the English \"s\"",ar:"س",franco:"Sin",register:"neutral",ru:"Син — как английское «s»",de:"Sin — wie das deutsche „s“ in „Haus“",hu:"Szin — mint a magyar „sz”"},
-    {en:"Shin — like \"sh\" in \"shoe\"",ar:"ش",franco:"Shin",register:"neutral",ru:"Шин — как «sh» в слове shoe",de:"Shin — wie „sch“ in „Schuh“",hu:"Sin — mint a magyar „s” hang"},
-    {en:"Sad — a heavier, deeper \"s\"",ar:"ص",franco:"Sad",register:"neutral",ru:"Сад — более тяжёлое, глубокое «s»",de:"Sad — ein schwereres, tieferes „s“",hu:"Szád — mélyebb, nyomatékosabb „sz” hang"},
-    {en:"Dad — a heavier, deeper \"d\"",ar:"ض",franco:"Dad",register:"neutral",ru:"Дад — более тяжёлое, глубокое «d»",de:"Dad — ein schwereres, tieferes „d“",hu:"Dád — mélyebb, nyomatékosabb „d” hang"}
+    {en:"The letter Zay",ar:"ز",franco:"Zay",register:"neutral",ru:"Буква Zay",de:"Der Buchstabe Zay",hu:"A Zay betű",note:"Like the English \"z\""},
+    {en:"The letter Sin",ar:"س",franco:"Sin",register:"neutral",ru:"Буква Sin",de:"Der Buchstabe Sin",hu:"A Sin betű",note:"Like the English \"s\""},
+    {en:"The letter Shin",ar:"ش",franco:"Shin",register:"neutral",ru:"Буква Shin",de:"Der Buchstabe Shin",hu:"A Shin betű",note:"Like \"sh\" in \"shoe\""},
+    {en:"The letter Sad",ar:"ص",franco:"Sad",register:"neutral",ru:"Буква Sad",de:"Der Buchstabe Sad",hu:"A Sad betű",note:"A heavier, deeper \"s\""},
+    {en:"The letter Dad",ar:"ض",franco:"Dad",register:"neutral",ru:"Буква Dad",de:"Der Buchstabe Dad",hu:"A Dad betű",note:"A heavier, deeper \"d\""}
   ]},
   {id:"a4",title:"The Alphabet: Part 4",title_ru:"Алфавит: часть 4",title_de:"Das Alphabet: Teil 4",title_hu:"Az ábécé: 4. rész",xp:10,vocab:[
-    {en:"Heavy Ta — a heavier, deeper \"t\"",ar:"ط",franco:"Taa",register:"neutral",ru:"Тяжёлая Та — более тяжёлое, глубокое «t»",de:"Schweres Ta — ein schwereres, tieferes „t“",hu:"Nehéz Ta — mélyebb, nyomatékosabb „t” hang"},
-    {en:"Heavy Za — usually a heavier, deeper \"d\" (it merges with ض, as in naddara, \"glasses\"), though some words use a heavier \"z\"",ar:"ظ",franco:"Zaa",register:"neutral",ru:"Тяжёлая За — обычно более тяжёлое, глубокое «d» (сливается с ض, как в naddara, «очки»), хотя в некоторых словах звучит как тяжёлое «z»",de:"Schweres Za — meist ein schwereres, tieferes „d“ (verschmilzt mit ض, wie in naddara, „Brille“), in manchen Wörtern aber ein schwereres „s“",hu:"Nehéz Za — általában mélyebb, nyomatékosabb „d” (egybeolvad a ض hanggal, mint a naddara, „szemüveg” szóban), néhány szóban viszont nyomatékos „z”"},
-    {en:"Ayn — a deep throat sound with no English equivalent",ar:"ع",franco:"Ayn",register:"neutral",ru:"Айн — глубокий гортанный звук, аналога нет",de:"Ayn — ein tiefer Kehllaut ohne deutsche Entsprechung",hu:"Ajn — mély torokhang, nincs magyar megfelelője"},
-    {en:"Ghayn — a gargled sound, like a French \"r\"",ar:"غ",franco:"Ghayn",register:"neutral",ru:"Гайн — гортанный звук, похожий на французское «r»",de:"Ghayn — ein gurgelnder Laut, wie das französische „r“",hu:"Gajn — gargalizáló hang, mint a francia „r”"},
-    {en:"Fa — like the English \"f\"",ar:"ف",franco:"Fa",register:"neutral",ru:"Фа — как английское «f»",de:"Fa — wie das deutsche „f“",hu:"Fa — mint a magyar „f”"}
+    {en:"The letter Taa (heavy)",ar:"ط",franco:"Taa",register:"neutral",ru:"Буква Taa (тяжёлая)",de:"Der Buchstabe Taa (schwer)",hu:"A Taa betű (nehéz)",note:"A heavier, deeper \"t\""},
+    {en:"The letter Zaa (heavy)",ar:"ظ",franco:"Zaa",register:"neutral",ru:"Буква Zaa (тяжёлая)",de:"Der Buchstabe Zaa (schwer)",hu:"A Zaa betű (nehéz)",note:"Usually a heavier, deeper \"d\" (it merges with ض, as in naddara, \"glasses\"), though some words use a heavier \"z\""},
+    {en:"The letter Ayn",ar:"ع",franco:"Ayn",register:"neutral",ru:"Буква Ayn",de:"Der Buchstabe Ayn",hu:"Az Ayn betű",note:"A deep throat sound with no English equivalent"},
+    {en:"The letter Ghayn",ar:"غ",franco:"Ghayn",register:"neutral",ru:"Буква Ghayn",de:"Der Buchstabe Ghayn",hu:"A Ghayn betű",note:"A gargled sound, like a French \"r\""},
+    {en:"The letter Fa",ar:"ف",franco:"Fa",register:"neutral",ru:"Буква Fa",de:"Der Buchstabe Fa",hu:"A Fa betű",note:"Like the English \"f\""}
   ]},
   {id:"a5",title:"The Alphabet: Part 5",title_ru:"Алфавит: часть 5",title_de:"Das Alphabet: Teil 5",title_hu:"Az ábécé: 5. rész",xp:10,vocab:[
-    {en:"Qaf — in Cairo, this is a glottal stop, the same catch-in-your-throat sound as the apostrophe in La'",ar:"ق",franco:"Qaf",register:"neutral",ru:"Каф — в Каире произносится как гортанная смычка, тот же звук, что и апостроф в La'",de:"Qaf — in Kairo ein Knacklaut, derselbe Laut wie das Apostroph in La'",hu:"Qaf — Kairóban torokzárhang, ugyanaz, mint a La' szóban lévő aposztróf"},
-    {en:"Kaf — like the English \"k\"",ar:"ك",franco:"Kaf",register:"neutral",ru:"Каф — как английское «k»",de:"Kaf — wie das deutsche „k“",hu:"Kaf — mint a magyar „k”"},
-    {en:"Lam — like the English \"l\"",ar:"ل",franco:"Lam",register:"neutral",ru:"Лям — как английское «l»",de:"Lam — wie das deutsche „l“",hu:"Lám — mint a magyar „l”"},
-    {en:"Mim — like the English \"m\"",ar:"م",franco:"Mim",register:"neutral",ru:"Мим — как английское «m»",de:"Mim — wie das deutsche „m“",hu:"Mím — mint a magyar „m”"}
+    {en:"The letter Qaf",ar:"ق",franco:"Qaf",register:"neutral",ru:"Буква Qaf",de:"Der Buchstabe Qaf",hu:"A Qaf betű",note:"In Cairo, this is a glottal stop, the same catch-in-your-throat sound as the apostrophe in La'"},
+    {en:"The letter Kaf",ar:"ك",franco:"Kaf",register:"neutral",ru:"Буква Kaf",de:"Der Buchstabe Kaf",hu:"A Kaf betű",note:"Like the English \"k\""},
+    {en:"The letter Lam",ar:"ل",franco:"Lam",register:"neutral",ru:"Буква Lam",de:"Der Buchstabe Lam",hu:"A Lam betű",note:"Like the English \"l\""},
+    {en:"The letter Mim",ar:"م",franco:"Mim",register:"neutral",ru:"Буква Mim",de:"Der Buchstabe Mim",hu:"A Mim betű",note:"Like the English \"m\""}
   ]},
   {id:"a6",title:"The Alphabet: Part 6",title_ru:"Алфавит: часть 6",title_de:"Das Alphabet: Teil 6",title_hu:"Az ábécé: 6. rész",xp:10,vocab:[
-    {en:"Nun — like the English \"n\"",ar:"ن",franco:"Nun",register:"neutral",ru:"Нун — как английское «n»",de:"Nun — wie das deutsche „n“",hu:"Nún — mint a magyar „n”"},
-    {en:"Light Ha — a soft H, like in \"hat\"",ar:"ه",franco:"Ha",register:"neutral",ru:"Лёгкая Ха — мягкое «h», как в слове hat",de:"Leichtes Ha — ein weiches H, wie in „Haus“",hu:"Könnyű Ha — lágy H hang, mint a „ház” szóban"},
-    {en:"Waw — like \"w\" in \"wow\", or a long \"oo\"",ar:"و",franco:"Waw",register:"neutral",ru:"Вав — как «w» в wow, или долгое «u»",de:"Waw — wie „w“ in „wow“, oder ein langes „u“",hu:"Vav — mint a „vau” szó „v” hangja, vagy hosszú „ú”"},
-    {en:"Ya — like \"y\" in \"yes\", or a long \"ee\"",ar:"ي",franco:"Ya",register:"neutral",ru:"Йа — как «y» в yes, или долгое «i»",de:"Ya — wie „j“ in „ja“, oder ein langes „i“",hu:"Já — mint a magyar „j”, vagy hosszú „í”"}
+    {en:"The letter Nun",ar:"ن",franco:"Nun",register:"neutral",ru:"Буква Nun",de:"Der Buchstabe Nun",hu:"A Nun betű",note:"Like the English \"n\""},
+    {en:"The letter Ha (light)",ar:"ه",franco:"Ha",register:"neutral",ru:"Буква Ha (лёгкая)",de:"Der Buchstabe Ha (leicht)",hu:"A Ha betű (könnyű)",note:"A soft H, like in \"hat\""},
+    {en:"The letter Waw",ar:"و",franco:"Waw",register:"neutral",ru:"Буква Waw",de:"Der Buchstabe Waw",hu:"A Waw betű",note:"Like \"w\" in \"wow\", or a long \"oo\""},
+    {en:"The letter Ya",ar:"ي",franco:"Ya",register:"neutral",ru:"Буква Ya",de:"Der Buchstabe Ya",hu:"A Ya betű",note:"Like \"y\" in \"yes\", or a long \"ee\""}
   ]}
 ];
 
@@ -4575,7 +4575,7 @@ function renderExercise(){
     const ar=document.createElement("div");
     ar.className="ar";
     ar.lang="ar";
-    ar.style.fontSize="26px";
+    ar.style.fontSize=ALPHABET_LESSON_IDS.has(ex.lessonId)?"96px":"26px";
     ar.innerHTML=`${ex.item.ar}${registerBadge(ex.item)}`;
     const franco=document.createElement("div");
     franco.className="franco";
