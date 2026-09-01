@@ -3122,11 +3122,10 @@ function startGuestLesson(){
 }
 
 function openGuestArrival(){
-  const unit=COURSE.units.find(u=>u.id==="u1");
-  const lesson=unit.lessons[0];
+  const lesson=ALPHABET_LESSONS[0];
   const titleEl=document.getElementById("guestArrivalTitle");
   if(titleEl){
-    titleEl.textContent=titleText(unit)+" • "+titleText(lesson);
+    titleEl.textContent=titleText(lesson);
   }
   document.getElementById("auth").classList.add("hidden");
   const guestArrival=document.getElementById("guestArrival");
@@ -5429,6 +5428,13 @@ let curMission=null;
 
 function renderMission(){
   const box=document.getElementById("missionBox");
+  if(ALPHABET_LESSON_IDS.has(curLesson.id)){
+    curMission=null;
+    box.innerHTML="";
+    box.classList.add("hidden");
+    return;
+  }
+  box.classList.remove("hidden");
   curMission=curLesson.vocab[Math.floor(Math.random()*curLesson.vocab.length)];
   box.innerHTML=`<div style="font-weight:800;margin-bottom:8px">🎯 ${t('ui.tonight_s_mission')}</div>
     <div style="display:flex;align-items:center;gap:10px">
