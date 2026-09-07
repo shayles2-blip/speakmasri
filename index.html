@@ -3893,7 +3893,7 @@ function renderMomentCardState(card,editing){
   }
 }
 
-function flattenedLessons(){const out=[];COURSE.units.forEach(u=>u.lessons.forEach(l=>out.push(l)));return out;}
+function flattenedLessons(){const out=[];COURSE.units.forEach(u=>u.lessons.forEach(l=>out.push(l)));FOUNDATION_LESSONS.forEach(l=>out.push(l));ALPHABET_LESSONS.forEach(l=>out.push(l));return out;}
 function pickConnectionPrompts(){
   const lessons=flattenedLessons();
   let completed=lessons.filter(l=>isLessonDone(l.id));
@@ -4148,7 +4148,7 @@ async function renderContentReports(){
 }
 
 function computeOwnedPhrases(){
-  const lessons=COURSE.units.flatMap(unit=>unit.lessons);
+  const lessons=flattenedLessons();
   const owned=Object.entries(user.itemStats||{}).flatMap(([key,stats])=>{
     const correct=Number(stats?.correct)||0;
     const incorrect=Number(stats?.incorrect)||0;
@@ -4452,6 +4452,10 @@ function buildExercises(lesson){
     } else if(!isAlphabet&&lesson.id!=="f1"&&lesson.id!=="f2"&&lesson.id!=="f3"){
       // fill in the blank: type the Franco transliteration
       list.push({type:"fill",item,q:vocabText(item),ar:item.ar,answer:item.franco,register:item.register});
+    } else if(isAlphabet||lesson.id==="f1"||lesson.id==="f2"||lesson.id==="f3"){
+      const distractors=shuffle(pool.filter(v=>v.en!==item.en)).slice(0,3);
+      list.push({type:"mc",item,q:item.ar,answer:item.en,franco:item.franco,register:item.register,
+        opts:shuffle([item,...distractors]).map(v=>({label:vocabText(v),value:v.en}))});
     }
   });
 
@@ -4626,13 +4630,19 @@ function renderExercise(){
   } else if(ex.type==="mc"){
     const prompt=document.createElement("div");
     const answer=document.createElement("div");
+    const isArabicPrompt=/[؀-ۿ]/.test(ex.q);
     const q=document.createElement("div");q.className="q";
-    q.textContent=isConnectionDay?t('connection.prompt_header').replace('{n}',exIdx+1):isReviewSession?t('review.prompt_header').replace('{n}',exIdx+1).replace('{total}',exList.length):t('exercise.translate_prompt')+' \"'+ex.q+'\"';
+    q.textContent=isConnectionDay?t('connection.prompt_header').replace('{n}',exIdx+1):isReviewSession?t('review.prompt_header').replace('{n}',exIdx+1).replace('{total}',exList.length):isArabicPrompt?t('exercise.translate_prompt'):t('exercise.translate_prompt')+' \"'+ex.q+'\"';
     q.insertAdjacentHTML("beforeend",registerBadge(ex));
     prompt.appendChild(q);
-    if(isConnectionDay||isReviewSession){
-      const ar=document.createElement('div');ar.className='ar';ar.lang='ar';ar.style.cssText='font-size:26px;margin:6px 20px 14px';ar.textContent=ex.q;prompt.appendChild(ar);
-      const audioBtn=document.createElement('button');audioBtn.className='audio-btn';audioBtn.textContent='🔊';audioBtn.setAttribute('aria-label',t('aria.play_phrase_audio'));audioBtn.onclick=()=>playAudio(ex.item.ar,ex.audio);prompt.appendChild(audioBtn);playAudio(ex.item.ar,ex.audio);
+    if(isConnectionDay||isReviewSession||isArabicPrompt){
+      const ar=document.createElement('div');ar.className='ar';ar.lang='ar';
+      const isAlphabetPrompt=isArabicPrompt&&ALPHABET_LESSON_IDS.has(ex.lessonId||(curLesson&&curLesson.id));
+      ar.style.cssText=isAlphabetPrompt?'font-size:96px;margin:10px 20px 14px;text-align:center':'font-size:26px;margin:6px 20px 14px';
+      ar.textContent=ex.q;prompt.appendChild(ar);
+      if(isConnectionDay||isReviewSession){
+        const audioBtn=document.createElement('button');audioBtn.className='audio-btn';audioBtn.textContent='🔊';audioBtn.setAttribute('aria-label',t('aria.play_phrase_audio'));audioBtn.onclick=()=>playAudio(ex.item.ar,ex.audio);prompt.appendChild(audioBtn);playAudio(ex.item.ar,ex.audio);
+      }
     }
     ex.opts.forEach(o=>{
       const isPlainString=typeof o==="string";
