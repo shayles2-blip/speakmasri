@@ -298,6 +298,10 @@ input:focus, select:focus {
   outline: none;
   border-color: var(--primary);
 }
+input:focus-visible, select:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
 
 /* ===== TOP BAR ===== */
 .top {
@@ -1106,6 +1110,55 @@ input:focus, select:focus {
   line-height: 1;
   cursor: pointer;
 }
+.save-error-toast {
+  position: fixed;
+  top: calc(20px + env(safe-area-inset-top));
+  left: 50%;
+  z-index: 20;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  transform: translateX(-50%);
+}
+.save-error-toast-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 16px;
+  border: 1px solid var(--error);
+  border-radius: var(--r-pill);
+  background: var(--error-surface);
+  box-shadow: var(--shadow-float);
+  color: var(--error);
+  font-size: 14px;
+  font-weight: 800;
+}
+.save-error-toast-retry,
+.save-error-toast-dismiss {
+  flex: 0 0 auto;
+  border: 1px solid var(--error);
+  background: var(--surface);
+  color: var(--error);
+  font: inherit;
+  cursor: pointer;
+}
+.save-error-toast-retry {
+  padding: 7px 12px;
+  border-radius: var(--r-pill);
+}
+.save-error-toast-dismiss {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+}
+.save-error-toast-retry:disabled {
+  opacity: .55;
+  cursor: wait;
+}
 
 /* ===== FEEDBACK SLIDE ===== */
 @keyframes fbBlurIn {
@@ -1509,9 +1562,9 @@ input:focus, select:focus {
         <button type="button" data-base-lang="de" onclick="setBaseLang('de')">DE</button>
         <button type="button" data-base-lang="hu" onclick="setBaseLang('hu')">HU</button>
       </div>
-      <div class="lang-toggle hidden" role="group" aria-label="Voice preference">
-        <button type="button" class="hidden" data-voice-pref="male" onclick="setVoicePref('male')">Male</button>
-        <button type="button" data-voice-pref="female" onclick="setVoicePref('female')">Female</button>
+      <div class="lang-toggle hidden" role="group" aria-label="Voice preference" data-i18n-aria-label="settings.voice_preference">
+        <button type="button" class="hidden" data-voice-pref="male" onclick="setVoicePref('male')" data-i18n="ui.voice_male">Male</button>
+        <button type="button" data-voice-pref="female" onclick="setVoicePref('female')" data-i18n="ui.voice_female">Female</button>
       </div>
     </div>
     <div class="logo landing-in landing-in-1" style="position:relative;width:56px;margin-left:auto;margin-right:auto">
@@ -1635,13 +1688,13 @@ input:focus, select:focus {
   <div id="planRevealOverlay" class="plan-reveal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="planRevealTitle">
     <div id="planReveal" class="plan-reveal">
       <div class="plan-reveal-copy">
-        <button id="planRevealClose" class="plan-reveal-close" type="button" aria-label="Dismiss your first path">&times;</button>
-        <div class="plan-reveal-eyebrow">Your first path</div>
+        <button id="planRevealClose" class="plan-reveal-close" type="button" aria-label="Dismiss your first path" data-i18n-aria-label="aria.dismiss_first_path">&times;</button>
+        <div class="plan-reveal-eyebrow" data-i18n="ui.plan_reveal_eyebrow">Your first path</div>
         <h2 id="planRevealTitle" class="plan-reveal-title"></h2>
       </div>
       <div class="plan-reveal-actions">
-        <button id="planRevealStart" class="btn" type="button">Start</button>
-        <button id="planRevealLater" class="plan-reveal-later" type="button">Maybe later</button>
+        <button id="planRevealStart" class="btn" type="button" data-i18n="btn.start">Start</button>
+        <button id="planRevealLater" class="plan-reveal-later" type="button" data-i18n="ui.plan_reveal_later">Maybe later</button>
       </div>
     </div>
   </div>
@@ -1766,9 +1819,9 @@ input:focus, select:focus {
           </div>
           <div>
             <div class="hidden" style="font-weight:800;margin-bottom:8px">Voice</div>
-            <div class="lang-toggle hidden" role="group" aria-label="Voice preference">
-              <button type="button" class="hidden" data-voice-pref="male" onclick="setVoicePref('male')">Male</button>
-              <button type="button" data-voice-pref="female" onclick="setVoicePref('female')">Female</button>
+            <div class="lang-toggle hidden" role="group" aria-label="Voice preference" data-i18n-aria-label="settings.voice_preference">
+              <button type="button" class="hidden" data-voice-pref="male" onclick="setVoicePref('male')" data-i18n="ui.voice_male">Male</button>
+              <button type="button" data-voice-pref="female" onclick="setVoicePref('female')" data-i18n="ui.voice_female">Female</button>
             </div>
           </div>
         </div>
@@ -2086,12 +2139,19 @@ const STRINGS={
   "aria.play_phrase_audio":{en:"Play phrase audio",ru:"Прослушать фразу",de:"Phrase anhören",hu:"Kifejezés meghallgatása"},
   "aria.close_auth":{en:"Close",ru:"Закрыть",de:"Schließen",hu:"Bezárás"},
   "aria.account_access":{en:"Account access",ru:"Вход в аккаунт",de:"Account-Zugang",hu:"Fiókhozzáférés"},
+  "aria.dismiss_first_path":{en:"Dismiss your first path",ru:"Закрыть ваш первый путь",de:"Deinen ersten Lernpfad schließen",hu:"Az első tanulási útvonal bezárása"},
   "settings.base_language":{en:"Base language",ru:"Основной язык",de:"Ausgangssprache",hu:"Alapnyelv"},
+  "settings.voice_preference":{en:"Voice preference",ru:"Предпочтение голоса",de:"Stimmpräferenz",hu:"Hangbeállítás"},
   "nav.learn":{en:"Learn",ru:"Учите",de:"Lerne",hu:"Tanulj"},
   "ui.egyptian_arabic_masri":{en:"Egyptian Arabic (Masri)",ru:"египетский арабский (масри)",de:"Ägyptisch-Arabisch (Masri)",hu:"egyiptomi arabul (masri)"},
   "ui.through_short_practical_lessons_built_around_real_li":{en:"through short, practical lessons built around real-life situations.",ru:"на коротких практических уроках, основанных на реальных жизненных ситуациях.",de:"mit kurzen, praktischen Lektionen für echte Alltagssituationen.",hu:"rövid, gyakorlatias leckékkel, valódi élethelyzetekre építve."},
   "ui.try_a_lesson_free_no_account_needed":{en:"Try a lesson free — no account needed.",ru:"Попробуйте урок бесплатно — регистрация не нужна.",de:"Probiere eine Lektion kostenlos aus – ganz ohne Registrierung.",hu:"Próbálj ki egy leckét ingyen – regisztráció nélkül."},
   "btn.try_lesson_free":{en:"Try a Lesson Free",ru:"Попробовать урок бесплатно",de:"Lektion kostenlos ausprobieren",hu:"Próbálj ki egy leckét ingyen"},
+  "ui.plan_reveal_eyebrow":{en:"Your first path",ru:"Ваш первый путь",de:"Dein erster Lernpfad",hu:"Az első tanulási útvonalad"},
+  "btn.start":{en:"Start",ru:"Начать",de:"Starten",hu:"Kezdés"},
+  "ui.plan_reveal_later":{en:"Maybe later",ru:"Может быть, позже",de:"Vielleicht später",hu:"Talán később"},
+  "ui.voice_male":{en:"Male",ru:"Мужской",de:"Männlich",hu:"Férfi"},
+  "ui.voice_female":{en:"Female",ru:"Женский",de:"Weiblich",hu:"Női"},
   "ui.guest_welcome_badge":{en:"First Lesson • ~2 Min",ru:"Первый урок • ~2 мин",de:"Erste Lektion • ~2 Min.",hu:"Első lecke • ~2 perc"},
   "ui.guest_welcome_bubble_en":{en:"Ahlan! Ready to try your first lesson?",ru:"Ахлан! Готовы к первому уроку?",de:"Ahlan! Bereit für deine erste Lektion?",hu:"Ahlan! Készen állsz az első leckére?"},
   "ui.guest_welcome_desc":{en:"Learn the Arabic that matters for the people you love — starting today, no account needed.",ru:"Учите арабский для тех, кого любите, — начните прямо сегодня, регистрация не нужна.",de:"Lerne das Arabisch, das für deine Liebsten zählt – starte noch heute, ganz ohne Registrierung.",hu:"Tanuld azt az arabot, ami igazán számít a szeretteidnek – kezdd el még ma, regisztráció nélkül."},
@@ -2220,6 +2280,9 @@ const STRINGS={
   "ui.owned_count":{en:"{n} owned",ru:"Освоено: {n}",de:"{n} verinnerlicht",hu:"{n} elsajátítva"},
   "msg.no_owned_phrases_yet":{en:"Your first owned phrase is taking shape — keep practicing and it will appear here.",ru:"Ваша первая освоенная фраза уже на подходе — продолжайте практиковаться, и она появится здесь.",de:"Deine erste verinnerlichte Redewendung nimmt schon Form an – übe einfach weiter, dann taucht sie hier auf.",hu:"Már alakul az első elsajátított kifejezésed — gyakorolj tovább, és hamarosan itt fog megjelenni."},
   "ui.owned_milestone_toast":{en:"🎉 {n} phrases owned!",ru:"🎉 Освоено фраз: {n}!",de:"🎉 {n} Redewendungen verinnerlicht!",hu:"🎉 {n} kifejezés elsajátítva!"},
+  "ui.save_error_message":{en:"Couldn't save your progress — check your connection",ru:"Не удалось сохранить прогресс — проверьте подключение к интернету",de:"Dein Fortschritt konnte nicht gespeichert werden – überprüfe deine Verbindung",hu:"Nem sikerült menteni a haladásodat — ellenőrizd az internetkapcsolatot"},
+  "ui.save_error_retry":{en:"Retry",ru:"Повторить",de:"Erneut versuchen",hu:"Újrapróbálkozás"},
+  "aria.dismiss_save_error":{en:"Dismiss",ru:"Закрыть",de:"Schließen",hu:"Bezárás"},
   "ui.owned_milestone_share_text":{en:"{n} phrases owned on SpeakMasri! 🎉",ru:"{n} освоенных фраз в SpeakMasri! 🎉",de:"{n} verinnerlichte Redewendungen bei SpeakMasri! 🎉",hu:"{n} elsajátított kifejezés a SpeakMasri-n! 🎉"},
   "ui.badge_lesson_complete":{en:"lesson complete",ru:"урок пройден",de:"Lektion abgeschlossen",hu:"lecke teljesítve"},
   "ui.badge_day_streak":{en:"day streak",ru:"дней подряд",de:"Tage-Serie",hu:"napos sorozat"},
@@ -2499,19 +2562,78 @@ async function loadUserData(){
   applyStaticStrings();
 }
 
+function showSaveErrorToast(message,onRetry){
+  const el=document.createElement("div");
+  el.className="save-error-toast";
+  el.setAttribute("role","status");
+  const inner=document.createElement("div");
+  inner.className="save-error-toast-inner stat-pop";
+  const text=document.createElement("span");
+  text.textContent=t(message);
+  const retryBtn=document.createElement("button");
+  retryBtn.type="button";
+  retryBtn.className="save-error-toast-retry";
+  retryBtn.textContent=t('ui.save_error_retry');
+  const dismissBtn=document.createElement("button");
+  dismissBtn.type="button";
+  dismissBtn.className="save-error-toast-dismiss";
+  dismissBtn.setAttribute("aria-label",t("aria.dismiss_save_error"));
+  dismissBtn.textContent="×";
+  inner.append(text,retryBtn,dismissBtn);
+  el.appendChild(inner);
+  document.body.appendChild(el);
+  dismissBtn.onclick=()=>el.remove();
+  retryBtn.onclick=async()=>{
+    retryBtn.disabled=true;
+    try{
+      await onRetry();
+      el.remove();
+    }catch(e){
+      console.error('save retry error',e);
+      retryBtn.disabled=false;
+    }
+  };
+}
+
+async function saveWithRetry(writeFn,{retries=3,errorMessage}){
+  let lastError;
+  for(let attempt=0;attempt<=retries;attempt++){
+    try{
+      return await writeFn();
+    }catch(e){
+      lastError=e;
+      if(attempt<retries){
+        const delays=[500,1500,4000];
+        const delay=delays[attempt]??4000*Math.pow(2,attempt-delays.length+1);
+        console.error(`saveWithRetry retry ${attempt+1}/${retries} in ${delay}ms`,e);
+        await new Promise(resolve=>setTimeout(resolve,delay));
+      }
+    }
+  }
+  console.error('saveWithRetry final failure',lastError);
+  showSaveErrorToast(errorMessage,writeFn);
+  throw lastError;
+}
+
 async function saveProgress(lessonId,done,score){
   const uid=firebase.auth().currentUser.uid;
-  try{
-    await firebase.firestore().collection(`users/${uid}/progress`).doc(lessonId).set({done,score},{merge:true});
-  }catch(e){console.error('saveProgress error',e);}
+  const write=async()=>{
+    try{
+      await firebase.firestore().collection(`users/${uid}/progress`).doc(lessonId).set({done,score},{merge:true});
+    }catch(e){console.error('saveProgress error',e);throw e;}
+  };
+  return saveWithRetry(write,{errorMessage:'ui.save_error_message'});
 }
 
 async function saveMilestone(milestone){
   const uid=firebase.auth().currentUser.uid;
   const today=new Date().toISOString().slice(0,10);
-  try{
-    await firebase.firestore().collection(`users/${uid}/milestones`).add({...milestone,date:today});
-  }catch(e){console.error('saveMilestone error',e);}
+  const write=async()=>{
+    try{
+      await firebase.firestore().collection(`users/${uid}/milestones`).add({...milestone,date:today});
+    }catch(e){console.error('saveMilestone error',e);throw e;}
+  };
+  return saveWithRetry(write,{errorMessage:'ui.save_error_message'});
 }
 
 async function saveVisitedPlace(placeId){
@@ -2530,16 +2652,22 @@ async function saveVisitedPlace(placeId){
 
 async function saveXp(newXpTotal){
   const uid=firebase.auth().currentUser.uid;
-  try{
-    await firebase.firestore().collection('users').doc(uid).update({xp:newXpTotal});
-  }catch(e){console.error('saveXp error',e);}
+  const write=async()=>{
+    try{
+      await firebase.firestore().collection('users').doc(uid).update({xp:newXpTotal});
+    }catch(e){console.error('saveXp error',e);throw e;}
+  };
+  return saveWithRetry(write,{errorMessage:'ui.save_error_message'});
 }
 
 async function saveMilestoneCount(count){
   const uid=firebase.auth().currentUser.uid;
-  try{
-    await firebase.firestore().collection('users').doc(uid).update({lastMilestoneCount:count});
-  }catch(e){console.error('saveMilestoneCount error',e);}
+  const write=async()=>{
+    try{
+      await firebase.firestore().collection('users').doc(uid).update({lastMilestoneCount:count});
+    }catch(e){console.error('saveMilestoneCount error',e);throw e;}
+  };
+  return saveWithRetry(write,{errorMessage:'ui.save_error_message'});
 }
 
 function normalizeConnection(value){
