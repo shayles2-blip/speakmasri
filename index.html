@@ -1072,7 +1072,7 @@ input:focus, select:focus {
 }
 .owned-milestone-toast {
   position: fixed;
-  bottom: calc(20px + env(safe-area-inset-bottom));
+  top: calc(20px + env(safe-area-inset-top));
   left: 50%;
   z-index: 20;
   width: max-content;
@@ -1875,7 +1875,7 @@ input:focus, select:focus {
     </div>
     <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px">
       <button class="btn btn-ghost" onclick="startRehearsal()" data-i18n="ui.rehearse_this_lesson">🎙️ Rehearse This Lesson</button>
-      <button class="btn btn-ghost hidden" id="testMeBtn" onclick="shareCompletedLesson()">📤 Test Me</button>
+      <button class="btn btn-ghost hidden" id="testMeBtn" onclick="shareCompletedLesson()" data-i18n="ui.test_me">📤 Test Me</button>
       <button id="doneContinueBtn" class="btn" onclick="finishLesson()" data-i18n="btn.continue">Continue</button>
     </div>
   </div>
@@ -2221,6 +2221,11 @@ const STRINGS={
   "msg.no_owned_phrases_yet":{en:"Your first owned phrase is taking shape — keep practicing and it will appear here.",ru:"Ваша первая освоенная фраза уже на подходе — продолжайте практиковаться, и она появится здесь.",de:"Deine erste verinnerlichte Redewendung nimmt schon Form an – übe einfach weiter, dann taucht sie hier auf.",hu:"Már alakul az első elsajátított kifejezésed — gyakorolj tovább, és hamarosan itt fog megjelenni."},
   "ui.owned_milestone_toast":{en:"🎉 {n} phrases owned!",ru:"🎉 Освоено фраз: {n}!",de:"🎉 {n} Redewendungen verinnerlicht!",hu:"🎉 {n} kifejezés elsajátítva!"},
   "ui.owned_milestone_share_text":{en:"{n} phrases owned on SpeakMasri! 🎉",ru:"{n} освоенных фраз в SpeakMasri! 🎉",de:"{n} verinnerlichte Redewendungen bei SpeakMasri! 🎉",hu:"{n} elsajátított kifejezés a SpeakMasri-n! 🎉"},
+  "ui.badge_lesson_complete":{en:"lesson complete",ru:"урок пройден",de:"Lektion abgeschlossen",hu:"lecke teljesítve"},
+  "ui.badge_day_streak":{en:"day streak",ru:"дней подряд",de:"Tage-Serie",hu:"napos sorozat"},
+  "ui.badge_phrases_owned":{en:"phrases owned",ru:"фраз освоено",de:"Redewendungen",hu:"kifejezés elsajátítva"},
+  "ui.share_lesson_text":{en:"I just learned {title} on SpeakMasri. Test me tonight! 🇪🇬",ru:"Я только что выучил(а) «{title}» в SpeakMasri. Проверь меня вечером! 🇪🇬",de:"Ich habe gerade „{title}“ bei SpeakMasri gelernt. Frag mich heute Abend ab! 🇪🇬",hu:"Most tanultam meg: {title} a SpeakMasri-n. Kérdezz ki ma este! 🇪🇬"},
+  "ui.ask_me_about":{en:"Ask me about \"{phrase}\".",ru:"Спроси меня про «{phrase}».",de:"Frag mich nach „{phrase}“.",hu:"Kérdezz a következőről: {phrase}."},
   "ui.your_passport":{en:"Your Passport",ru:"Ваш паспорт",de:"Dein Pass",hu:"Az útleveled"},
   "ui.partner_phrases":{en:"Partner Phrases",ru:"Фразы от партнёра",de:"Phrasen von deinem Partner",hu:"Kifejezések a párodtól"},
   "ui.pending_partner_submissions_heading":{en:"New from your partner — review before adding",ru:"Новое от партнёра — проверьте перед добавлением",de:"Neu von deinem Partner – sieh es dir vor dem Hinzufügen an",hu:"Újdonság a párodtól — nézd át a hozzáadás előtt"},
@@ -2274,6 +2279,7 @@ const STRINGS={
   "ui.xp_earned":{en:"XP Earned",ru:"Получено XP",de:"XP gesammelt",hu:"Szerzett XP"},
   "ui.accuracy":{en:"Accuracy",ru:"Точность",de:"Genauigkeit",hu:"Pontosság"},
   "ui.rehearse_this_lesson":{en:"🎙️ Rehearse This Lesson",ru:"🎙️ Порепетировать этот урок",de:"🎙️ Diese Lektion proben",hu:"🎙️ Próbáld el ezt a leckét"},
+  "ui.test_me":{en:"📤 Test Me",ru:"📤 Проверь меня",de:"📤 Frag mich ab",hu:"📤 Kérdezz ki"},
   "btn.continue":{en:"Continue",ru:"Продолжить",de:"Weiter",hu:"Folytatás"},
   "ui.next_lesson_guest":{en:"Next Lesson →",ru:"Следующий урок →",de:"Nächste Lektion →",hu:"Következő lecke →"},
   "ui.guest_next_lesson_preview":{en:"Up next: what to say when they ask how you're doing.",ru:"Дальше: что ответить, когда спросят, как у тебя дела.",de:"Als Nächstes: was du sagst, wenn sie fragen, wie es dir geht.",hu:"Következik: mit mondj, ha megkérdezik, hogy vagy."},
@@ -3144,7 +3150,7 @@ async function shareCompletedLesson(){
   if(!user||!curLesson)return;
   const phrase=curLesson.vocab&&curLesson.vocab[0];
   const phraseText=phrase&&(phrase.franco||phrase.ar);
-  const text=`I just learned ${curLesson.title} on SpeakMasri. Test me tonight!${phraseText?` Ask me about “${phraseText}”.`:''} 🇪🇬`;
+  const text=`${t('ui.share_lesson_text').replace('{title}',curLesson.title)}${phraseText?` ${t('ui.ask_me_about').replace('{phrase}',phraseText)}`:''}`;
   const url='https://speakmasri.com';
   const btn=document.getElementById('testMeBtn');
   if(!phrase){
@@ -3163,7 +3169,7 @@ async function shareCompletedLesson(){
     });
     return;
   }
-  const blob=await buildMilestoneCard({badgeValue:'✓',badgeLabel:'lesson complete',item:phrase,lessonId:curLesson.id});
+  const blob=await buildMilestoneCard({badgeValue:'✓',badgeLabel:t('ui.badge_lesson_complete'),item:phrase,lessonId:curLesson.id});
   await shareMilestoneCard(blob,text);
   if(btn){const orig=btn.textContent;btn.textContent=t('ui.saved');setTimeout(()=>{btn.textContent=orig;},2000);}
 }
@@ -5655,7 +5661,7 @@ async function finishConnectionDay(){
     const btn=document.getElementById('connectionShareStreakBtn'),original=btn.textContent;
     btn.disabled=true;btn.textContent=original+'…';
     try{
-      const blob=await buildMilestoneCard({badgeValue:String(c.current),badgeLabel:'day streak',item:final.item,lessonId:final.lessonId});
+      const blob=await buildMilestoneCard({badgeValue:String(c.current),badgeLabel:t('ui.badge_day_streak'),item:final.item,lessonId:final.lessonId});
       await shareMilestoneCard(blob,t('connection.share_streak_text').replace('{n}',c.current));
     }finally{
       btn.disabled=false;btn.textContent=original;
@@ -5809,7 +5815,7 @@ function showOwnedMilestoneCelebration(threshold,ownedEntry){
     clearTimeout(timer);
     shareBtn.disabled=true;
     try{
-      const blob=await buildMilestoneCard({badgeValue:String(threshold),badgeLabel:'phrases owned',item:ownedEntry.item,lessonId:ownedEntry.lessonId});
+      const blob=await buildMilestoneCard({badgeValue:String(threshold),badgeLabel:t('ui.badge_phrases_owned'),item:ownedEntry.item,lessonId:ownedEntry.lessonId});
       await shareMilestoneCard(blob,t('ui.owned_milestone_share_text').replace('{n}',threshold));
     }catch(e){
       console.error('showOwnedMilestoneCelebration share error',e);
