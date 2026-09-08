@@ -1070,6 +1070,42 @@ input:focus, select:focus {
   font-size: 14px;
   font-weight: 800;
 }
+.owned-milestone-toast {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 20;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  transform: translateX(-50%);
+}
+.owned-milestone-toast-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 800;
+}
+.owned-milestone-toast-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--teal-soft);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
 
 /* ===== FEEDBACK SLIDE ===== */
 @keyframes fbBlurIn {
@@ -2183,6 +2219,8 @@ const STRINGS={
   "ui.owned_phrases_explainer":{en:"Phrases you can count on — reliably remembered, not just seen.",ru:"Фразы, на которые можно положиться — вы уверенно их помните, а не просто видели.",de:"Redewendungen, auf die du zählen kannst – sicher im Kopf, nicht nur flüchtig gesehen.",hu:"Kifejezések, amikre bátran támaszkodhatsz — biztosan emlékszel rájuk, nem csak futólag láttad őket."},
   "ui.owned_count":{en:"{n} owned",ru:"Освоено: {n}",de:"{n} verinnerlicht",hu:"{n} elsajátítva"},
   "msg.no_owned_phrases_yet":{en:"Your first owned phrase is taking shape — keep practicing and it will appear here.",ru:"Ваша первая освоенная фраза уже на подходе — продолжайте практиковаться, и она появится здесь.",de:"Deine erste verinnerlichte Redewendung nimmt schon Form an – übe einfach weiter, dann taucht sie hier auf.",hu:"Már alakul az első elsajátított kifejezésed — gyakorolj tovább, és hamarosan itt fog megjelenni."},
+  "ui.owned_milestone_toast":{en:"🎉 {n} phrases owned!",ru:"🎉 Освоено фраз: {n}!",de:"🎉 {n} Redewendungen verinnerlicht!",hu:"🎉 {n} kifejezés elsajátítva!"},
+  "ui.owned_milestone_share_text":{en:"{n} phrases owned on SpeakMasri! 🎉",ru:"{n} освоенных фраз в SpeakMasri! 🎉",de:"{n} verinnerlichte Redewendungen bei SpeakMasri! 🎉",hu:"{n} elsajátított kifejezés a SpeakMasri-n! 🎉"},
   "ui.your_passport":{en:"Your Passport",ru:"Ваш паспорт",de:"Dein Pass",hu:"Az útleveled"},
   "ui.partner_phrases":{en:"Partner Phrases",ru:"Фразы от партнёра",de:"Phrasen von deinem Partner",hu:"Kifejezések a párodtól"},
   "ui.pending_partner_submissions_heading":{en:"New from your partner — review before adding",ru:"Новое от партнёра — проверьте перед добавлением",de:"Neu von deinem Partner – sieh es dir vor dem Hinzufügen an",hu:"Újdonság a párodtól — nézd át a hozzáadás előtt"},
@@ -2224,6 +2262,7 @@ const STRINGS={
   "nav.phrasebook":{en:"Phrasebook",ru:"Разговорник",de:"Phrasenbuch",hu:"Kifejezéstár"},
   "nav.profile":{en:"Profile",ru:"Профиль",de:"Profil",hu:"Profil"},
   "aria.quit_lesson":{en:"Quit lesson",ru:"Выйти из урока",de:"Lektion verlassen",hu:"Kilépés a leckéből"},
+  "aria.share_milestone_card":{en:"Share this milestone",ru:"Поделиться достижением",de:"Diesen Meilenstein teilen",hu:"Mérföldkő megosztása"},
   "btn.check":{en:"Check",ru:"Проверить",de:"Überprüfen",hu:"Ellenőrzés"},
   "ui.got_it":{en:"Got it",ru:"Понятно",de:"Verstanden",hu:"Értem"},
   "ui.skip":{en:"Skip this one",ru:"Пропустить это задание",de:"Diese Aufgabe überspringen",hu:"Ezt most kihagyom"},
@@ -2444,7 +2483,8 @@ async function loadUserData(){
     customPhrases,
     connection:normalizeConnection(userData.connection),
     moment:normalizeMoment(userData.moment),
-    itemStats:normalizeItemStats(userData.itemStats)
+    itemStats:normalizeItemStats(userData.itemStats),
+    lastMilestoneCount:userData.lastMilestoneCount||0
   };
   if(user.baseLang)baseLang=user.baseLang;
   if(user.voicePref)voicePref=user.voicePref==='male'?'female':user.voicePref;
@@ -2487,6 +2527,13 @@ async function saveXp(newXpTotal){
   try{
     await firebase.firestore().collection('users').doc(uid).update({xp:newXpTotal});
   }catch(e){console.error('saveXp error',e);}
+}
+
+async function saveMilestoneCount(count){
+  const uid=firebase.auth().currentUser.uid;
+  try{
+    await firebase.firestore().collection('users').doc(uid).update({lastMilestoneCount:count});
+  }catch(e){console.error('saveMilestoneCount error',e);}
 }
 
 function normalizeConnection(value){
@@ -4168,9 +4215,25 @@ function computeOwnedPhrases(){
     if(!Number.isInteger(idx))return [];
     const lesson=lessons.find(item=>item.id===lessonId);
     const item=lesson?.vocab[idx];
-    return item?[{item,lastSeen:stats?.lastSeen||""}]:[];
+    return item?[{item,lastSeen:stats?.lastSeen||"",lessonId}]:[];
   }).sort((a,b)=>b.lastSeen.localeCompare(a.lastSeen));
   return owned;
+}
+
+const MILESTONE_THRESHOLDS=[5,10,25,50,100,150];
+async function checkOwnedMilestone(){
+  if(!user||user.isGuest)return;
+  const owned=computeOwnedPhrases();
+  const total=owned.length;
+  const prev=user.lastMilestoneCount||0;
+  let threshold=0;
+  for(const m of MILESTONE_THRESHOLDS){
+    if(m<=total&&m>prev)threshold=m;
+  }
+  if(!threshold)return;
+  user.lastMilestoneCount=total;
+  await saveMilestoneCount(total);
+  showOwnedMilestoneCelebration(threshold,owned[0]);
 }
 
 function renderOwnedPhrases(){
@@ -5734,6 +5797,27 @@ async function shareMilestoneCard(blob,shareText){
   URL.revokeObjectURL(url);
 }
 
+function showOwnedMilestoneCelebration(threshold,ownedEntry){
+  const el=document.createElement("div");
+  el.className="owned-milestone-toast";
+  el.setAttribute("role","status");
+  el.innerHTML=`<div class="owned-milestone-toast-inner stat-pop"><span>${t('ui.owned_milestone_toast').replace('{n}',threshold)}</span><button type="button" class="owned-milestone-toast-share" aria-label="${t('aria.share_milestone_card')}">📤</button></div>`;
+  document.body.appendChild(el);
+  const timer=setTimeout(()=>el.remove(),6000);
+  const shareBtn=el.querySelector(".owned-milestone-toast-share");
+  shareBtn.onclick=async()=>{
+    clearTimeout(timer);
+    shareBtn.disabled=true;
+    try{
+      const blob=await buildMilestoneCard({badgeValue:String(threshold),badgeLabel:'phrases owned',item:ownedEntry.item,lessonId:ownedEntry.lessonId});
+      await shareMilestoneCard(blob,t('ui.owned_milestone_share_text').replace('{n}',threshold));
+    }catch(e){
+      console.error('showOwnedMilestoneCelebration share error',e);
+    }
+    el.remove();
+  };
+}
+
 async function handleReminderChoice(choice){
   const box=document.getElementById('connectionReminder');if(!box)return;
   if(choice==='choose'){
@@ -5799,6 +5883,7 @@ async function finishAsSuccess(){
     }
     await Promise.all([saveProgress(curLesson.id,true,acc),saveXp(user.xp)]);
     analytics.logEvent('lesson_complete',{lesson_id:curLesson.id});
+    checkOwnedMilestone().catch(e=>console.error('checkOwnedMilestone error',e));
   }
   renderMission();
   document.getElementById("lesson").classList.add("hidden");
