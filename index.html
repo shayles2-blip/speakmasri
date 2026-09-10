@@ -2132,6 +2132,12 @@ const STRINGS={
   "ui.speakmasri_learn_egyptian_arabic_masri":{en:"SpeakMasri – Learn Egyptian Arabic (Masri)",ru:"SpeakMasri – Учите египетский арабский (масри)",de:"SpeakMasri – Lerne Ägyptisch-Arabisch (Masri)",hu:"SpeakMasri – Tanulj egyiptomi arabul (Masri)"},
   "landing.headline":{en:"Speak the Arabic they actually use at home.",ru:"Говорите на том арабском, на котором действительно говорят дома.",de:"Sprich das Arabisch, das zu Hause wirklich gesprochen wird.",hu:"Beszéld azt az arabot, amit otthon valóban használnak."},
   "landing.support":{en:"Egyptian Arabic (Masri) for partners, in-laws, and family — not textbooks, not tourists.",ru:"Египетский арабский (масри) для партнёров, родных и семьи — не для учебников и не для туристов.",de:"Ägyptisch-Arabisch (Masri) für Partner, Schwiegereltern und Familie – nicht für Lehrbücher, nicht für Touristen.",hu:"Egyiptomi arab (masri) a párodnak, a rokonoknak és a családnak – nem tankönyveknek, nem turistáknak."},
+  "landing.headline_traveler":{en:"Order, haggle, and connect — in the Arabic Egyptians actually speak."},
+  "landing.support_traveler":{en:"Egyptian Arabic (Masri) for your trip — not textbook Arabic no one in Cairo actually uses."},
+  "landing.headline_heritage":{en:"Reconnect with the Arabic your family actually speaks."},
+  "landing.support_heritage":{en:"Egyptian Arabic (Masri) — the dialect spoken at home, not the Modern Standard Arabic taught in school."},
+  "landing.headline_msa":{en:"You learned the Arabic in books. This is the Arabic in the room."},
+  "landing.support_msa":{en:"Modern Standard Arabic and Egyptian Arabic (Masri) are different in practice — this is the one Egyptians actually speak."},
   "landing.trust":{en:"No account · ~3 min · Egyptian Arabic",ru:"Без регистрации · ~3 мин · египетский арабский",de:"Ohne Registrierung · ~3 Min. · Ägyptisch-Arabisch",hu:"Regisztráció nélkül · ~3 perc · Egyiptomi arab"},
   "landing.not_now":{en:"Not now — try a lesson free",ru:"Не сейчас — попробовать урок бесплатно",de:"Nicht jetzt – Lektion kostenlos ausprobieren",hu:"Most nem – próbálj ki egy leckét ingyen"},
   "landing.progress_saves":{en:"You're signed in — your progress will save.",ru:"Вы вошли — ваш прогресс сохранится.",de:"Du bist angemeldet – dein Fortschritt wird gespeichert.",hu:"Be vagy jelentkezve – a haladásod elmentődik."},
@@ -2423,6 +2429,15 @@ function applyStaticStrings(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n);});
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder);});
   document.querySelectorAll('[data-i18n-aria-label]').forEach(el=>{el.setAttribute('aria-label',t(el.dataset.i18nAriaLabel));});
+}
+function applyPersonaLanding(){
+  const persona=new URLSearchParams(location.search).get('for');
+  if(!['traveler','heritage','msa'].includes(persona))return;
+  const h=document.querySelector('.landing-headline');
+  const s=document.querySelector('.landing-support');
+  if(h)h.textContent=t('landing.headline_'+persona);
+  if(s)s.textContent=t('landing.support_'+persona);
+  analytics.logEvent('persona_landing_view',{persona:persona});
 }
 
 function appConfirmDialog(message,{showCancel}){
@@ -6176,6 +6191,7 @@ if(storedVoicePref)voicePref=storedVoicePref==='male'?'female':storedVoicePref;
 renderBaseLangToggles();
 renderVoicePrefToggles();
 applyStaticStrings();
+applyPersonaLanding();
 if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
 initLandingAnimations();
 let homeLoadingSkeletonTimer=null;
