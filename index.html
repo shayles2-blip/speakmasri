@@ -3299,6 +3299,7 @@ async function shareCompletedLesson(){
   }
   const blob=await buildMilestoneCard({badgeValue:'✓',badgeLabel:t('ui.badge_lesson_complete'),item:phrase,lessonId:curLesson.id});
   await shareMilestoneCard(blob,text);
+  analytics.logEvent('milestone_card_shared',{type:'lesson_complete'});
   if(btn){const orig=btn.textContent;btn.textContent=t('ui.saved');setTimeout(()=>{btn.textContent=orig;},2000);}
 }
 
@@ -4368,6 +4369,7 @@ async function checkOwnedMilestone(){
   user.lastMilestoneCount=total;
   await saveMilestoneCount(total);
   showOwnedMilestoneCelebration(threshold,owned[0]);
+  analytics.logEvent('owned_milestone_reached',{threshold:threshold});
 }
 
 function renderOwnedPhrases(){
@@ -4697,6 +4699,7 @@ function buildExercises(lesson){
 
 /* ---------- LESSON RUNTIME ---------- */
 function startLesson(lesson){
+  analytics.logEvent('lesson_start',{lesson_id:lesson.id,guest:!!(user&&user.isGuest)});
   isConnectionDay=false;
   isReviewSession=false;
   curLesson=lesson;
@@ -5139,6 +5142,9 @@ function check(){
     ok = !!selection && selection.length===ex.tokens.length && selection.every((origIdx,i)=>origIdx===i);
     document.querySelectorAll('#buildStrip .opt').forEach(o=>o.classList.add(ok?"correct":"wrong"));
     targetEl=document.getElementById('buildStrip');
+  }
+  if(ex.type==="mc"||ex.type==="listen"||ex.type==="fill"||ex.type==="build"){
+    analytics.logEvent('exercise_answered',{lesson_id:ex.lessonId||(curLesson&&curLesson.id),exercise_type:ex.type,correct:ok});
   }
   if(user&&(ex.type==="mc"||ex.type==="listen"||ex.type==="fill"||ex.type==="build")){
     const lessonId=ex.lessonId||(curLesson&&curLesson.id);
@@ -5771,6 +5777,7 @@ async function finishConnectionDay(){
     c.history=Array.from(new Set([...(c.history||[]),today])).slice(-35);
     c.lastPhrase={...final.item,lessonId:final.lessonId,idx:final.idx};user.connection=c;user.xp+=10;
     await Promise.all([saveConnection(),user.isGuest?Promise.resolve():saveXp(user.xp)]);
+    analytics.logEvent('connection_day_complete',{streak:c.current});
   }
   document.getElementById('lesson').classList.add('hidden');document.getElementById('checkWrap').classList.remove('hidden');
   isConnectionDay=false;
@@ -5791,6 +5798,7 @@ async function finishConnectionDay(){
     try{
       const blob=await buildMilestoneCard({badgeValue:String(c.current),badgeLabel:t('ui.badge_day_streak'),item:final.item,lessonId:final.lessonId});
       await shareMilestoneCard(blob,t('connection.share_streak_text').replace('{n}',c.current));
+      analytics.logEvent('milestone_card_shared',{type:'connection_streak'});
     }finally{
       btn.disabled=false;btn.textContent=original;
     }
@@ -5945,6 +5953,7 @@ function showOwnedMilestoneCelebration(threshold,ownedEntry){
     try{
       const blob=await buildMilestoneCard({badgeValue:String(threshold),badgeLabel:t('ui.badge_phrases_owned'),item:ownedEntry.item,lessonId:ownedEntry.lessonId});
       await shareMilestoneCard(blob,t('ui.owned_milestone_share_text').replace('{n}',threshold));
+      analytics.logEvent('milestone_card_shared',{type:'owned_milestone'});
     }catch(e){
       console.error('showOwnedMilestoneCelebration share error',e);
     }
