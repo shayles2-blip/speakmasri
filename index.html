@@ -1024,6 +1024,8 @@ input:focus-visible, select:focus-visible {
   border-radius: 8px;
   transition: width 0.3s;
 }
+.phrase-tier-badge{display:inline-block;padding:2px 8px;border-radius:var(--r-pill);font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.phrase-tier-bar{height:6px;margin-top:6px}
 
 /* ===== CHECK BAR ===== */
 #lesson { padding-bottom: 96px; }
@@ -2286,6 +2288,9 @@ const STRINGS={
   "ui.phrases_owned_this_lesson":{en:"Phrases Owned",ru:"Освоено фраз",de:"Verinnerlichte Redewendungen",hu:"Elsajátított kifejezések"},
   "ui.owned_phrases_explainer":{en:"Phrases you can count on — reliably remembered, not just seen.",ru:"Фразы, на которые можно положиться — вы уверенно их помните, а не просто видели.",de:"Redewendungen, auf die du zählen kannst – sicher im Kopf, nicht nur flüchtig gesehen.",hu:"Kifejezések, amikre bátran támaszkodhatsz — biztosan emlékszel rájuk, nem csak futólag láttad őket."},
   "ui.owned_count":{en:"{n} owned",ru:"Освоено: {n}",de:"{n} verinnerlicht",hu:"{n} elsajátítva"},
+  "tier.new":{en:"New",ru:"Новое",de:"Neu",hu:"Új"},
+  "tier.getting_there":{en:"Getting there",ru:"В процессе",de:"Auf dem Weg",hu:"Fejlődőben"},
+  "tier.owned":{en:"Owned",ru:"Освоено",de:"Verinnerlicht",hu:"Elsajátítva"},
   "msg.no_owned_phrases_yet":{en:"Your first owned phrase is taking shape — keep practicing and it will appear here.",ru:"Ваша первая освоенная фраза уже на подходе — продолжайте практиковаться, и она появится здесь.",de:"Deine erste verinnerlichte Redewendung nimmt schon Form an – übe einfach weiter, dann taucht sie hier auf.",hu:"Már alakul az első elsajátított kifejezésed — gyakorolj tovább, és hamarosan itt fog megjelenni."},
   "ui.owned_milestone_toast":{en:"🎉 {n} phrases owned!",ru:"🎉 Освоено фраз: {n}!",de:"🎉 {n} Redewendungen verinnerlicht!",hu:"🎉 {n} kifejezés elsajátítva!"},
   "ui.save_error_message":{en:"Couldn't save your progress — check your connection",ru:"Не удалось сохранить прогресс — проверьте подключение к интернету",de:"Dein Fortschritt konnte nicht gespeichert werden – überprüfe deine Verbindung",hu:"Nem sikerült menteni a haladásodat — ellenőrizd az internetkapcsolatot"},
@@ -4372,6 +4377,32 @@ function computeOwnedPhrases(){
   return owned;
 }
 
+// Same underlying itemStats used by computeOwnedPhrases(), but instead of only
+// surfacing phrases that already cleared the "owned" bar, this classifies every
+// attempted phrase into one of three tiers using that same bar as the top cutoff:
+//   new           – attempted, but no correct answers landed yet
+//   getting_there – some correct answers, but not yet reliable (owned bar not met)
+//   owned         – meets the existing owned bar (correct>=3 && correct>=incorrect*3)
+function computePhraseProgress(){
+  const lessons=flattenedLessons();
+  return Object.entries(user.itemStats||{}).flatMap(([key,stats])=>{
+    const correct=Number(stats?.correct)||0;
+    const incorrect=Number(stats?.incorrect)||0;
+    if(correct===0&&incorrect===0)return [];
+    const separator=key.lastIndexOf("_");
+    if(separator<1)return [];
+    const lessonId=key.slice(0,separator);
+    const idx=Number(key.slice(separator+1));
+    if(!Number.isInteger(idx))return [];
+    const lesson=lessons.find(item=>item.id===lessonId);
+    const item=lesson?.vocab[idx];
+    if(!item)return [];
+    const tier=(correct>=3&&correct>=incorrect*3)?'owned':(correct>0?'getting_there':'new');
+    const pct=tier==='owned'?100:Math.max(10,Math.min(90,Math.round((correct/3)*100)));
+    return [{item,lastSeen:stats?.lastSeen||"",lessonId,tier,pct}];
+  }).sort((a,b)=>b.lastSeen.localeCompare(a.lastSeen));
+}
+
 const MILESTONE_THRESHOLDS=[5,10,25,50,100,150];
 async function checkOwnedMilestone(){
   if(!user||user.isGuest)return;
@@ -4401,19 +4432,34 @@ function renderOwnedPhrases(){
   if(hidden)return;
 
   const owned=computeOwnedPhrases();
+  const progress=computePhraseProgress();
 
   count.textContent=t('ui.owned_count').replace('{n}',owned.length);
-  if(!owned.length){
+  if(!progress.length){
     list.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;gap:10px;color:var(--ink-soft)">
       <img src="mascot/mira_encouraging.webp" alt="" style="width:48px;height:48px;object-fit:contain;flex:0 0 auto">
       <p style="margin:0;text-align:left">${t('msg.no_owned_phrases_yet')}</p>
     </div>`;
     return;
   }
-  list.innerHTML=owned.map(({item})=>`<div style="padding:9px 0;border-bottom:1px solid var(--line)">
-    <div><span class="ar" lang="ar">${item.ar}</span> <span class="franco">(${item.franco})</span>${registerBadge(item)}</div>
+  const TIER_META={
+    owned:{label:t('tier.owned'),color:'var(--sage)',bg:'var(--primary-surface)'},
+    getting_there:{label:t('tier.getting_there'),color:'var(--clay-text)',bg:'var(--clay-soft)'},
+    new:{label:t('tier.new'),color:'var(--ink-soft)',bg:'var(--border-light)'}
+  };
+  list.innerHTML=progress.map(({item,tier,pct})=>{
+    const meta=TIER_META[tier]||TIER_META.new;
+    return `<div style="padding:9px 0;border-bottom:1px solid var(--line)">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+      <div><span class="ar" lang="ar">${item.ar}</span> <span class="franco">(${item.franco})</span>${registerBadge(item)}</div>
+      <span class="phrase-tier-badge" style="color:${meta.color};background:${meta.bg}">${meta.label}</span>
+    </div>
     <div style="margin-top:2px;font-size:13px">${vocabText(item)}</div>
-  </div>`).join("");
+    <div class="progbar phrase-tier-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="${vocabText(item)}: ${meta.label}">
+      <div class="progfill" style="width:${pct}%;background:${meta.color}"></div>
+    </div>
+  </div>`;
+  }).join("");
 }
 
 function renderConnectionRhythm(){
