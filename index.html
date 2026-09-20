@@ -997,6 +997,9 @@ input:focus-visible, select:focus-visible {
   font-size: 14px;
   font-weight: 500;
 }
+.reveal-meaning-btn{display:inline-block;margin-top:4px;padding:3px 10px;border-radius:var(--r-pill);border:1.5px solid var(--border-light);background:var(--surface);color:var(--teal);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.reveal-meaning-btn:hover{background:var(--teal-soft)}
+.reveal-meaning-btn[aria-expanded="true"]{background:var(--teal-soft);border-color:var(--teal)}
 .progbar {
   height: 8px;
   background: var(--border-light);
@@ -2272,6 +2275,8 @@ const STRINGS={
   "aria.dismiss_email_verification_reminder":{en:"Dismiss email verification reminder",ru:"Скрыть напоминание о подтверждении почты",de:"Erinnerung zur E-Mail-Bestätigung ausblenden",hu:"E-mail-megerősítési emlékeztető elrejtése"},
   "ui.phrasebook":{en:"📖 Phrasebook",ru:"📖 Разговорник",de:"📖 Sprachführer",hu:"📖 Kifejezéstár"},
   "ui.phrasebook_coach_tip":{en:"Your saved phrases live here — check back anytime.",ru:"Здесь собраны ваши сохранённые фразы — заглядывайте в любое время.",de:"Hier findest du deine gespeicherten Redewendungen – schau jederzeit vorbei.",hu:"Itt találod az elmentett kifejezéseidet — nézz vissza bármikor."},
+  "ui.show_meaning":{en:"Show meaning",ru:"Показать перевод",de:"Bedeutung zeigen",hu:"Jelentés mutatása"},
+  "ui.hide_meaning":{en:"Hide meaning",ru:"Скрыть перевод",de:"Bedeutung ausblenden",hu:"Jelentés elrejtése"},
   "ui.everything_you_ve_unlocked_so_far_pull_this_up_mid_c":{en:"Everything you've unlocked so far — pull this up mid-conversation.",ru:"Всё, что вы уже открыли — подглядывайте прямо во время разговора.",de:"Alles, was du bisher freigeschaltet hast – schau einfach mitten im Gespräch kurz nach.",hu:"Minden, amit eddig feloldottál — less bele bátran beszélgetés közben is."},
   "ui.formal_elders_in_laws_show_respect_casual_friends_pe":{en:"Formal = elders, in-laws, show respect · Casual = friends, peers · Intimate = partner only",ru:"Формально — со старшими и роднёй, с уважением · Неформально — с друзьями и ровесниками · Интимно — только с партнёром",de:"Formell = Ältere, Schwiegereltern, Respekt zeigen · Locker = Freunde, Gleichaltrige · Intim = nur für deinen Partner",hu:"Hivatalos = idősebbek, após-anyós, tiszteletadás · Közvetlen = barátok, egykorúak · Intim = kizárólag a pároddal"},
   "ui.total_xp":{en:"Total XP",ru:"Всего XP",de:"Gesamt-XP",hu:"Összes XP"},
@@ -4644,7 +4649,7 @@ function renderPhrasebook(){
     list.innerHTML=`<p style="padding:16px;color:var(--ink-soft)">${t('msg.nothing_unlocked_yet_finish_your_first_lesson')}</p>`;
     return;
   }
-  learned.forEach(v=>{
+  learned.forEach((v,vi)=>{
     const row=document.createElement("div");
     row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)";
     const text=document.createElement("div");
@@ -4658,11 +4663,25 @@ function renderPhrasebook(){
     franco.className="franco";
     franco.textContent=v.franco;
     const en=document.createElement("div");
+    en.id=`pbMeaning${vi}`;
     en.style.cssText="color:var(--ink-soft);font-size:14px";
     en.textContent=vocabText(v);
+    en.hidden=true;
+    const revealBtn=document.createElement("button");
+    revealBtn.type="button";
+    revealBtn.className="reveal-meaning-btn";
+    revealBtn.setAttribute("aria-expanded","false");
+    revealBtn.setAttribute("aria-controls",en.id);
+    revealBtn.textContent=t('ui.show_meaning');
+    revealBtn.onclick=()=>{
+      const nowHidden=!en.hidden;
+      en.hidden=nowHidden;
+      revealBtn.setAttribute("aria-expanded",String(!nowHidden));
+      revealBtn.textContent=t(nowHidden?'ui.show_meaning':'ui.hide_meaning');
+    };
     text.append(ar);
     ar.insertAdjacentHTML("afterend",registerBadge(v));
-    text.append(franco,en);
+    text.append(franco,revealBtn,en);
     row.appendChild(text);
     const btn=document.createElement("button");
     btn.className="audio-btn";
