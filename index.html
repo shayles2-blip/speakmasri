@@ -151,6 +151,11 @@ body {
 .connection-card .btn{background:var(--teal);box-shadow:0 8px 24px rgba(11,114,133,.16)}
 .review-card{margin:0 16px 18px;padding:16px;border:1.5px dashed var(--clay);border-radius:var(--r-lg);background:var(--clay-soft);box-shadow:var(--shadow-card)}
 .review-card-title{font-weight:800;font-size:18px}.review-card-copy{margin:6px 0 12px;color:var(--ink-soft)}
+.review-card-items{display:grid;gap:8px;margin-bottom:12px}
+.review-item-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:9px 12px;border:1px solid var(--border-light);border-radius:var(--r-md);background:var(--surface);color:var(--text-main);font:inherit;text-align:left;cursor:pointer}
+.review-item-row:hover{border-color:var(--clay)}
+.review-item-text{min-width:0;flex:1}
+.review-item-bar{width:46px;flex:0 0 auto;height:6px}
 .moment-card{margin:0 16px 18px;padding:16px;border:1px solid var(--border-light);border-radius:var(--r-lg);background:linear-gradient(135deg,var(--gold-soft),var(--surface));box-shadow:var(--shadow-card)}
 .moment-card-title{font-size:18px;font-weight:800;line-height:1.3}.moment-card-copy{margin:6px 0 14px;color:var(--ink-soft);font-size:13px;line-height:1.5}
 .moment-partner-phrases{display:block;margin-top:9px;padding:0;border:0;background:transparent;color:var(--teal);font:inherit;font-size:12px;font-weight:700;text-align:left;text-decoration:underline;cursor:pointer}
@@ -2230,6 +2235,7 @@ const STRINGS={
   "review.header":{en:"Quick Refresh",ru:"Быстрое повторение",de:"Kurze Auffrischung",hu:"Gyors ismétlés"},
   "review.prompt_header":{en:"Quick Refresh {n}/{total} · what does this mean?",ru:"Быстрое повторение {n}/{total} · что это значит?",de:"Kurze Auffrischung {n}/{total} · Was bedeutet das?",hu:"Gyors ismétlés {n}/{total} · Mit jelent ez?"},
   "review.complete":{en:"Refreshed — these are ready when you need them.",ru:"Освежили в памяти — эти фразы будут наготове, когда понадобятся.",de:"Aufgefrischt – bereit, wenn du sie brauchst.",hu:"Átismételve – készen állnak, amikor csak szükséged lesz rájuk."},
+  "review.jump_to_phrase":{en:"Review \"{phrase}\" now",ru:"Повторить «{phrase}» сейчас",de:"„{phrase}“ jetzt wiederholen",hu:"„{phrase}” ismétlése most"},
   "connection.reminder":{en:"Want a quiet reminder for tomorrow?",ru:"Хотите ненавязчивое напоминание на завтра?",de:"Möchtest du eine sanfte Erinnerung für morgen?",hu:"Kérsz egy diszkrét emlékeztetőt holnapra?"},
   "connection.choose_time":{en:"Choose a time",ru:"Выберите время",de:"Uhrzeit wählen",hu:"Válassz időpontot"},
   "connection.not_now":{en:"Not now",ru:"Не сейчас",de:"Nicht jetzt",hu:"Most nem"},
@@ -4160,13 +4166,48 @@ function pickReviewItems(){
     });
 }
 
+// Weakness fill for a review row, derived only from the same correct/incorrect
+// counts pickReviewItems() already uses to rank items — no new stats invented.
+function reviewWeaknessPct(stats){
+  const correct=Number(stats?.correct)||0;
+  const incorrect=Number(stats?.incorrect)||0;
+  const total=correct+incorrect;
+  if(total<=0)return 50;
+  return Math.max(10,Math.min(100,Math.round((incorrect/total)*100)));
+}
+
 function renderReviewCard(el){
   const items=pickReviewItems();
   if(!items.length)return;
   const card=document.createElement('section');card.className='review-card';
   const countText=t(items.length===1?'review.phrase_count_one':'review.phrase_count_many').replace('{n}',items.length);
-  card.innerHTML=`<div class="review-card-title">${t('review.needs_refresh')}</div><div class="review-card-copy">${countText}</div><button class="btn">${t('review.start')}</button>`;
-  card.querySelector('button').onclick=startReviewSession;el.appendChild(card);
+  card.innerHTML=`<div class="review-card-title">${t('review.needs_refresh')}</div><div class="review-card-copy">${countText}</div>`;
+  const itemsWrap=document.createElement('div');
+  itemsWrap.className='review-card-items';
+  items.forEach(entry=>{
+    const stats=user.itemStats?.[`${entry.lessonId}_${entry.idx}`];
+    const pct=reviewWeaknessPct(stats);
+    const row=document.createElement('button');
+    row.type='button';
+    row.className='review-item-row';
+    row.setAttribute('aria-label',t('review.jump_to_phrase').replace('{phrase}',vocabText(entry.item)));
+    row.innerHTML=`<div class="review-item-text">
+        <div><span class="ar" lang="ar">${entry.item.ar}</span> <span class="franco">(${entry.item.franco})</span></div>
+        <div style="font-size:13px;color:var(--ink-soft)">${vocabText(entry.item)}</div>
+      </div>
+      <div class="progbar review-item-bar" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}">
+        <div class="progfill" style="width:${pct}%;background:var(--clay)"></div>
+      </div>`;
+    row.onclick=()=>startReviewSession({lessonId:entry.lessonId,idx:entry.idx});
+    itemsWrap.appendChild(row);
+  });
+  card.appendChild(itemsWrap);
+  const startBtn=document.createElement('button');
+  startBtn.className='btn';
+  startBtn.textContent=t('review.start');
+  startBtn.onclick=()=>startReviewSession();
+  card.appendChild(startBtn);
+  el.appendChild(card);
 }
 
 function startConnectionDay(){
@@ -4178,9 +4219,13 @@ function startConnectionDay(){
   document.getElementById('main').classList.add('hidden');document.getElementById('lesson').classList.remove('hidden');renderExercise();
 }
 
-function startReviewSession(){
+function startReviewSession(only){
   if(!user||user.isGuest)return;
-  const reviewItems=pickReviewItems();if(!reviewItems.length)return;
+  let reviewItems=pickReviewItems();if(!reviewItems.length)return;
+  if(only&&only.lessonId!=null&&only.idx!=null){
+    const single=reviewItems.find(p=>p.lessonId===only.lessonId&&p.idx===only.idx);
+    if(single)reviewItems=[single];
+  }
   isConnectionDay=false;isReviewSession=true;
   curLesson={id:'quick-refresh',title:t('review.header'),xp:0,vocab:reviewItems.map(p=>p.item)};
   exList=reviewItems.map(p=>({type:'mc',item:p.item,q:p.item.ar,answer:vocabText(p.item),franco:p.item.franco,register:p.item.register,opts:p.opts,lessonId:p.lessonId,idx:p.idx,audio:audioPath(p.lessonId,p.idx)}));
