@@ -1193,6 +1193,12 @@ input:focus-visible, select:focus-visible {
   font-size: 19px;
   margin-bottom: 6px;
 }
+.fb-note {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
 
 /* ===== MATCHING COLUMNS ===== */
 .match-cols {
@@ -5322,6 +5328,16 @@ function check(){
   showFeedback(ok,ex);
 }
 
+// Vocab `en` fields sometimes carry a trailing parenthetical, e.g.
+// "How Egyptians actually say 'I love you' (casual, natural)" — surface that
+// as a small cultural/usage note under the post-answer feedback. Returns null
+// when the item has no such note, so feedback renders exactly as before.
+function extractCulturalNote(en){
+  if(!en)return null;
+  const m=en.match(/\(([^()]+)\)\.?\s*$/);
+  return m?m[1].trim():null;
+}
+
 function showFeedback(ok,ex){
   const fb=document.getElementById("fbArea");
   document.getElementById("skipBtn").classList.add("hidden");
@@ -5329,11 +5345,13 @@ function showFeedback(ok,ex){
                       ex.type==="build" ? `${ex.ar}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="mc" ? `${ex.answer}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="listen" ? ex.answer : "";
+  const culturalNote=ex.item?extractCulturalNote(ex.item.en):null;
   fb.innerHTML=`<div class="feedback ${ok?"fb-ok":"fb-no"}">
     <div style="display:flex;align-items:center;gap:12px">
       <img src="mascot/${ok?"mira_happy":"mira_encouraging"}.webp" alt="${ok?"Mira celebrating a correct answer":"Mira offering encouragement"}" style="width:52px;height:52px;object-fit:contain;flex:0 0 auto">
       <div style="min-width:0">
         <div class="fb-title">${ok?t('ui.correct')+' ✅':t('ui.not_quite')+' ❌'}</div>
+        ${culturalNote?`<div class="fb-note">${culturalNote}</div>`:""}
         ${!ok?`<div>${t('ui.answer')} <b>${answerText}</b></div>`:""}
       </div>
     </div>
