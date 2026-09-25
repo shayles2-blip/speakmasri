@@ -1752,7 +1752,7 @@ input:focus-visible, select:focus-visible {
       <div style="display:flex;justify-content:space-around;margin:24px 0">
         <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pOwned">0</div><span data-i18n="ui.owned_phrases_short">Phrases Owned</span></div>
         <div><div style="font-size:28px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--sage)" id="pMilestones">0</div><span data-i18n="ui.phrases_said">Phrases Said</span></div>
-        <div><div style="font-size:18px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink-soft)" id="pXp">0</div><span data-i18n="ui.total_xp">Total XP</span></div>
+        <div><div style="font-size:18px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink-soft)" id="pXp">0</div><span data-i18n="ui.total_xp">Total XP</span><div id="pXpTier" style="margin-top:4px"></div></div>
       </div>
       <div id="connectionRhythm"></div>
       <div style="text-align:left;padding:0 16px">
@@ -2122,6 +2122,28 @@ const FOUNDATION_LESSONS=[
 const FOUNDATION_COST_LABELS={
   f1:{en:"40 sec · 3 words",ru:"40 сек · 3 слова",de:"40 Sek. · 3 Wörter",hu:"40 mp · 3 szó"},f2:{en:"30 sec · 2 words",ru:"30 сек · 2 слова",de:"30 Sek. · 2 Wörter",hu:"30 mp · 2 szó"},f3:{en:"40 sec · 3 words",ru:"40 сек · 3 слова",de:"40 Sek. · 3 Wörter",hu:"40 mp · 3 szó"},f4:{en:"1 min · lock it in",ru:"1 мин · закрепим",de:"1 Min. · festigen",hu:"1 perc · rögzítsük"},f5:{en:"1 min · your first exchange",ru:"1 мин · первый диалог",de:"1 Min. · dein erster Austausch",hu:"1 perc · az első párbeszéded"},f6:{en:"1 min · 3 words",ru:"1 мин · 3 слова",de:"1 Min. · 3 Wörter",hu:"1 perc · 3 szó"},f7:{en:"40 sec · say goodbye",ru:"40 сек · попрощаться",de:"40 Sek. · verabschieden",hu:"40 mp · elköszönés"}
 };
+
+// XP tier names — each name is a real vocab word already taught in the course
+// (verified against COURSE/FOUNDATION_LESSONS above), reused here as a light,
+// additive badge next to the existing Total XP number on Profile. Thresholds
+// are calibrated against the real per-lesson xp value (10 per lesson; ~39
+// completable lessons across COURSE/FOUNDATION_LESSONS/ALPHABET_LESSONS, plus
+// ongoing +10 Connection Day XP), so tier 1 is reachable immediately and the
+// top tier represents sustained, long-term use.
+const XP_TIERS=[
+  {threshold:0,ar:"أيوة",franco:"Aywa",en:"Yes"},                         // l3-1/f1 idx0
+  {threshold:50,ar:"تمام",franco:"Tamam",en:"Fine / OK"},                 // l1-2 idx2 / f5 idx1
+  {threshold:100,ar:"يلا",franco:"Yalla",en:"Let's go / Come on"},        // l3-1/f1 idx2
+  {threshold:180,ar:"خلاص",franco:"Khalas",en:"Finished / Enough / OK"},  // l3-1/f2 idx0
+  {threshold:280,ar:"حبيبي / حبيبتي",franco:"habibi / habibti",en:"Darling / Sweetheart"}, // l2-2 idx0
+  {threshold:400,ar:"إن شاء الله",franco:"Inshallah",en:"God willing"}    // l3-1/f2 idx1
+];
+function xpTierFor(xp){
+  const n=Number(xp)||0;
+  let tier=XP_TIERS[0];
+  for(const t of XP_TIERS){if(n>=t.threshold)tier=t;else break;}
+  return tier;
+}
 
 /* ===== AGENT 6: APP STATE & LOGIC ===== */
 let user=null;          // logged-in user object
@@ -4246,6 +4268,9 @@ function renderProfile(){
   document.getElementById("pEmail").textContent=user.email;
   countUp(document.getElementById("pOwned"),computeOwnedPhrases().length);
   countUp(document.getElementById("pXp"),user.xp);
+  const xpTier=xpTierFor(user.xp);
+  const xpTierEl=document.getElementById("pXpTier");
+  if(xpTierEl)xpTierEl.innerHTML=`<span style="display:inline-block;padding:2px 8px;border-radius:var(--r-pill);font-size:11px;font-weight:700;color:var(--sage);background:var(--primary-surface)" lang="ar">${xpTier.ar}</span> <span style="font-size:11px;color:var(--ink-soft)">${xpTier.franco}</span>`;
   const milestones=user.milestones||[];
   countUp(document.getElementById("pMilestones"),milestones.length);
   renderConnectionRhythm();
