@@ -134,6 +134,47 @@ exports.momentReminder = onSchedule(
     },
 );
 
+const CONNECTION_REMINDER_HOURS = {8: "morning", 14: "afternoon", 19: "evening"};
+
+exports.connectionReminder = onSchedule(
+    {schedule: "0 * * * *", timeZone: "UTC", secrets: [RESEND_API_KEY]},
+    async () => {
+      const hour = new Date().getUTCHours();
+      const bucket = CONNECTION_REMINDER_HOURS[hour];
+      if (!bucket) return;
+
+      const today = utcDateString();
+      const snapshot = await db.collection("users")
+          .where("connection.reminder", "==", bucket)
+          .get();
+
+      for (const doc of snapshot.docs) {
+        const user = doc.data();
+        if (!user.email) {
+          logger.warn("Connection reminder skipped: user has no email", {uid: doc.id});
+          continue;
+        }
+
+        const connection = user.connection || {};
+        if (connection.lastDate === today) continue;
+        if (connection.lastReminderSentAt === today) continue;
+
+        try {
+          await sendEmail({
+            to: user.email,
+            subject: "Your quiet reminder",
+            text: `This is your ${bucket} reminder for today's Connection Day phrase.\n\nOpen SpeakMasri: ${APP_URL}`,
+            html: `<p>This is your ${bucket} reminder for today's Connection Day phrase.</p><p><a href="${APP_URL}">Open SpeakMasri</a></p>`,
+          });
+          await doc.ref.set({"connection.lastReminderSentAt": today}, {merge: true});
+          logger.info("Connection reminder sent", {uid: doc.id, bucket});
+        } catch (error) {
+          logger.error("Connection reminder failed", {uid: doc.id, error});
+        }
+      }
+    },
+);
+
 exports.reengagementNudge = onSchedule(
     {schedule: "0 15 * * *", timeZone: "UTC", secrets: [RESEND_API_KEY]},
     async () => {
