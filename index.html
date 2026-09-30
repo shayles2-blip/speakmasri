@@ -55,6 +55,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
 <script>
 firebase.initializeApp({
@@ -2416,6 +2417,10 @@ const STRINGS={
   "exercise.match_prompt":{en:"Match the pairs",ru:"Соедините пары",de:"Ordne die Paare zu",hu:"Keresd meg a párokat!"},
   "ui.recording":{en:"🔴 Recording...",ru:"🔴 Запись...",de:"🔴 Aufnahme läuft...",hu:"🔴 Felvétel..."},
   "ui.hold_to_record":{en:"🎙️ Hold to Record",ru:"🎙️ Удерживайте для записи",de:"🎙️ Gedrückt halten zum Aufnehmen",hu:"🎙️ Tartsd nyomva a felvételhez"},
+  "ui.checking_pronunciation":{en:"Checking...",ru:"Проверяем...",de:"Wird geprüft...",hu:"Ellenőrzés..."},
+  "ui.pronunciation_great":{en:"Sounds great! 🎉",ru:"Отлично звучит! 🎉",de:"Klingt super! 🎉",hu:"Nagyszerűen hangzik! 🎉"},
+  "ui.pronunciation_close":{en:"Close — try again",ru:"Почти — попробуйте ещё раз",de:"Fast — versuch's nochmal",hu:"Közel jársz — próbáld újra"},
+  "ui.pronunciation_keep_practicing":{en:"Keep practicing this one",ru:"Продолжайте практиковать эту фразу",de:"Übe diesen Satz noch etwas weiter",hu:"Gyakorold még ezt a kifejezést"},
   "ui.nice":{en:"Nice! 🎉",ru:"Отлично! 🎉",de:"Klasse! 🎉",hu:"Szép volt! 🎉"},
   "ui.nice_sign_up_to_save_this_progress":{en:"Nice! Sign up to save this progress",ru:"Отлично! Зарегистрируйтесь, чтобы сохранить прогресс",de:"Klasse! Registriere dich, um deinen Fortschritt zu speichern",hu:"Szép volt! Regisztrálj, hogy elmentsd a haladásodat!"},
   "ui.signup_free_reassurance":{en:"It's free — just an email and password, no card, ever.",ru:"Это бесплатно — только email и пароль, карта не нужна.",de:"Es ist kostenlos — nur E-Mail und Passwort, keine Karte, nie.",hu:"Ingyenes — csak email és jelszó, kártya soha nem kell."},
@@ -5476,6 +5481,7 @@ function renderRehearsalItem(){
     ${micAvailable
       ? `<button id="recordBtn" class="btn btn-blue" style="margin-top:16px" aria-label="${t('aria.hold_to_record_yourself')}">${t('ui.hold_to_record')}</button>`
       : `<p style="color:var(--ink-soft);margin-top:16px">${t('ui.mic_access_not_available_just_practice_saying_it_out')}</p>`}
+    <div id="pronunciationResult" style="margin-top:12px;min-height:20px;font-weight:600"></div>
     <div style="padding:16px"><button id="nextBtn" class="btn btn-ghost">${rehearsalIdx===rehearsalPack.length-1?t('ui.finish'):t('ui.next')}</button></div>
   `;
   document.getElementById("hearBtn").onclick=()=>playAudio(item.ar,audioPath(curLesson.id,rehearsalIdx));
@@ -5525,6 +5531,7 @@ function startRecording(e){
         const audio=document.getElementById("rehearsalPlayback");
         audio.src=currentAudioURL;
         audio.play();
+        scorePronunciationRecording(blob,rehearsalPack[rehearsalIdx]);
       };
       currentRecorder.start();
     })
@@ -5532,6 +5539,51 @@ function startRecording(e){
       micAvailable=false;
       renderRehearsalItem();
     });
+}
+
+/* Sends the just-recorded blob to the scorePronunciation callable and shows a tiered
+   result. Any failure (no functions SDK, network, no recognizable speech, etc.) is
+   logged and swallowed — recording/playback keeps working either way. */
+function scorePronunciationRecording(blob,item){
+  const resultEl=document.getElementById("pronunciationResult");
+  if(!resultEl||!item)return;
+  resultEl.textContent=t('ui.checking_pronunciation');
+  try{
+    const reader=new FileReader();
+    reader.onerror=(err)=>{
+      console.error('Pronunciation scoring: failed to read recording',err);
+      resultEl.textContent='';
+    };
+    reader.onloadend=()=>{
+      try{
+        const dataUrl=reader.result;
+        const base64=typeof dataUrl==='string'?dataUrl.split(',')[1]:'';
+        if(!base64){resultEl.textContent='';return;}
+        firebase.functions().httpsCallable('scorePronunciation')({
+          audioBase64:base64,
+          mimeType:blob.type||'audio/webm',
+          targetAr:item.ar,
+        }).then(res=>{
+          const score=res&&res.data&&typeof res.data.score==='number'?res.data.score:null;
+          if(score===null){resultEl.textContent='';return;}
+          const message=score>=85?t('ui.pronunciation_great')
+            :score>=60?t('ui.pronunciation_close')
+            :t('ui.pronunciation_keep_practicing');
+          resultEl.textContent=`${score}% — ${message}`;
+        }).catch(err=>{
+          console.error('Pronunciation scoring failed',err);
+          resultEl.textContent='';
+        });
+      }catch(err){
+        console.error('Pronunciation scoring failed',err);
+        resultEl.textContent='';
+      }
+    };
+    reader.readAsDataURL(blob);
+  }catch(err){
+    console.error('Pronunciation scoring failed',err);
+    resultEl.textContent='';
+  }
 }
 
 function stopRecording(){

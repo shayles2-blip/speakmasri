@@ -6,15 +6,20 @@ const {logger} = require("firebase-functions");
 const {defineSecret} = require("firebase-functions/params");
 const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 const {onSchedule} = require("firebase-functions/v2/scheduler");
+const {onCall, HttpsError} = require("firebase-functions/v2/https");
 const {Resend} = require("resend");
+const {SpeechClient} = require("@google-cloud/speech");
 
 initializeApp();
 
 const db = getFirestore();
+const speechClient = new SpeechClient();
 const RESEND_API_KEY = defineSecret("RESEND_API_KEY");
 const FROM = "SpeakMasri <hello@updates.speakmasri.com>";
 const APP_URL = "https://speakmasri.com";
 const VALID_MOMENT_TYPES = new Set(["partner", "traveler", "heritage"]);
+// Arabic diacritics (tashkeel): U+064B-U+065F plus superscript alef U+0670.
+const ARABIC_DIACRITICS_RE = /[ً-ٰٟ]/g;
 
 function utcDateString(date = new Date()) {
   return date.toISOString().slice(0, 10);
@@ -34,6 +39,45 @@ function escapeHtml(value) {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+}
+
+function normalizeArabic(text) {
+  return String(text || "")
+      .replace(ARABIC_DIACRITICS_RE, "")
+      .replace(/[\p{P}\p{S}\p{Z}]/gu, "")
+      .trim();
+}
+
+function levenshteinDistance(a, b) {
+  const m = a.length;
+  const n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+
+  let prevRow = Array.from({length: n + 1}, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    const currentRow = [i];
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      currentRow[j] = Math.min(
+          currentRow[j - 1] + 1, // insertion
+          prevRow[j] + 1, // deletion
+          prevRow[j - 1] + cost, // substitution
+      );
+    }
+    prevRow = currentRow;
+  }
+  return prevRow[n];
+}
+
+function similarityScore(transcript, targetAr) {
+  const normTranscript = normalizeArabic(transcript);
+  const normTarget = normalizeArabic(targetAr);
+  const maxLen = Math.max(normTranscript.length, normTarget.length);
+  if (maxLen === 0) return 100;
+
+  const distance = levenshteinDistance(normTranscript, normTarget);
+  return Math.max(0, Math.round((1 - distance / maxLen) * 100));
 }
 
 function momentSummary(moment) {
@@ -216,3 +260,39 @@ exports.reengagementNudge = onSchedule(
       }
     },
 );
+
+exports.scorePronunciation = onCall(async (request) => {
+  const data = request.data || {};
+  const audioBase64 = data.audioBase64;
+  const targetAr = data.targetAr;
+  // mimeType is accepted from the client for future use, but recognize() below is
+  // hard-configured for WEBM_OPUS (MediaRecorder's default codec), so it isn't used yet.
+
+  if (typeof audioBase64 !== "string" || !audioBase64 ||
+      typeof targetAr !== "string" || !targetAr) {
+    throw new HttpsError("invalid-argument", "audioBase64 and targetAr are required.");
+  }
+
+  try {
+    const [response] = await speechClient.recognize({
+      audio: {content: audioBase64},
+      config: {
+        encoding: "WEBM_OPUS",
+        sampleRateHertz: 48000,
+        languageCode: "ar-EG",
+      },
+    });
+
+    const transcript = (response.results || [])
+        .map((result) => (result.alternatives && result.alternatives[0] && result.alternatives[0].transcript) || "")
+        .join(" ")
+        .trim();
+
+    const score = similarityScore(transcript, targetAr);
+
+    return {transcript, score, targetAr};
+  } catch (error) {
+    logger.error("Pronunciation scoring failed", {error});
+    throw new HttpsError("internal", "Could not score pronunciation right now.");
+  }
+});
