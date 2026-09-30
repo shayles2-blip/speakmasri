@@ -2418,6 +2418,7 @@ const STRINGS={
   "ui.hold_to_record":{en:"🎙️ Hold to Record",ru:"🎙️ Удерживайте для записи",de:"🎙️ Gedrückt halten zum Aufnehmen",hu:"🎙️ Tartsd nyomva a felvételhez"},
   "ui.nice":{en:"Nice! 🎉",ru:"Отлично! 🎉",de:"Klasse! 🎉",hu:"Szép volt! 🎉"},
   "ui.nice_sign_up_to_save_this_progress":{en:"Nice! Sign up to save this progress",ru:"Отлично! Зарегистрируйтесь, чтобы сохранить прогресс",de:"Klasse! Registriere dich, um deinen Fortschritt zu speichern",hu:"Szép volt! Regisztrálj, hogy elmentsd a haladásodat!"},
+  "ui.signup_free_reassurance":{en:"It's free — just an email and password, no card, ever.",ru:"Это бесплатно — только email и пароль, карта не нужна.",de:"Es ist kostenlos — nur E-Mail und Passwort, keine Karte, nie.",hu:"Ingyenes — csak email és jelszó, kártya soha nem kell."},
   "msg.that_file_couldn_t_be_read_as_a_phrase_list_make_sur":{en:"That file couldn't be read as a phrase list. Make sure it's the JSON template with en/ar/franco fields.",ru:"Не удалось прочитать файл как список фраз. Убедитесь, что используете JSON-шаблон с полями en/ar/franco.",de:"Diese Datei konnte nicht als Phrasenliste gelesen werden. Bitte stelle sicher, dass es die JSON-Vorlage mit den Feldern en/ar/franco ist.",hu:"Nem sikerült kifejezéslistaként beolvasni a fájlt. Ellenőrizd, hogy a megadott JSON-sablont használod-e az en/ar/franco mezőkkel."},
   "msg.some_phrases_couldnt_be_saved":{en:"Some phrases couldn't be saved ({n}). Please try importing again.",ru:"Некоторые фразы не удалось сохранить ({n}). Попробуйте импортировать снова.",de:"Einige Phrasen konnten nicht gespeichert werden ({n}). Bitte versuche den Import erneut.",hu:"Néhány kifejezést nem sikerült elmenteni ({n}). Kérjük, próbáld újra az importálást."},
   "msg.delete_this_phrase":{en:"Delete this phrase?",ru:"Удалить эту фразу?",de:"Diesen Satz löschen?",hu:"Törlöd ezt a kifejezést?"},
@@ -6204,6 +6205,9 @@ async function finishAsSuccess(){
     document.getElementById("doneTitle").textContent=t(curLesson.id==="a3"?'ui.nice_sign_up_to_save_this_progress':'ui.donetitle');
     if(curLesson.id==="a1"){
       doneNextPreview.textContent=t('ui.guest_next_lesson_preview');
+      doneNextPreview.classList.remove("hidden");
+    }else if(curLesson.id==="a3"){
+      doneNextPreview.textContent=t('ui.signup_free_reassurance');
       doneNextPreview.classList.remove("hidden");
     }
     analytics.logEvent('lesson_complete',{lesson_id:curLesson.id,guest:true});
