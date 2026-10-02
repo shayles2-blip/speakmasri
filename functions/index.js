@@ -269,8 +269,10 @@ exports.scorePronunciation = onCall(async (request) => {
   // hard-configured for WEBM_OPUS (MediaRecorder's default codec), so it isn't used yet.
 
   if (typeof audioBase64 !== "string" || !audioBase64 ||
-      typeof targetAr !== "string" || !targetAr) {
-    throw new HttpsError("invalid-argument", "audioBase64 and targetAr are required.");
+      typeof targetAr !== "string" || !targetAr ||
+      targetAr.length > 200 || audioBase64.length > 2_000_000) {
+    throw new HttpsError("invalid-argument",
+        "audioBase64 and targetAr are required and must be within size limits.");
   }
 
   try {
