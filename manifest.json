@@ -1,0 +1,22 @@
+{
+  "name": "SpeakMasri",
+  "short_name": "SpeakMasri",
+  "description": "Learn Egyptian Arabic through short, scenario-based lessons. Phrasebook, partner phrases & register-aware practice.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FCFBFA",
+  "theme_color": "#1DA14A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

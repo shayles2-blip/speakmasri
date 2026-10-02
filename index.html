@@ -8,9 +8,11 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<meta name="description" content="Learn Egyptian Arabic through short, scenario-based lessons. Try two free lessons – no account needed. Phrasebook, partner phrases & register-aware practice.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1DA14A">
+<meta name="description" content="Learn Egyptian Arabic through short, scenario-based lessons. 100% free, always. Phrasebook, partner phrases & register-aware practice.">
 <meta property="og:title" content="SpeakMasri – Learn Egyptian Arabic (Masri)">
-<meta property="og:description" content="Short, scenario-based lessons in Egyptian Arabic. Try two free lessons – no account needed.">
+<meta property="og:description" content="Short, scenario-based lessons in Egyptian Arabic. 100% free, always.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://speakmasri.com/">
 <meta property="og:image" content="https://speakmasri.com/og-image.png">
@@ -37,7 +39,7 @@
       "@id": "https://speakmasri.com/#website",
       "url": "https://speakmasri.com/",
       "name": "SpeakMasri",
-      "description": "Learn Egyptian Arabic through short, scenario-based lessons. Try two free lessons – no account needed. Phrasebook, partner phrases & register-aware practice.",
+      "description": "Learn Egyptian Arabic through short, scenario-based lessons. 100% free, always. Phrasebook, partner phrases & register-aware practice.",
       "publisher": { "@id": "https://speakmasri.com/#organization" },
       "inLanguage": "en"
     }
@@ -46,7 +48,7 @@
 </script>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SpeakMasri – Learn Egyptian Arabic (Masri)">
-<meta name="twitter:description" content="Short, scenario-based lessons in Egyptian Arabic. Try two free lessons – no account needed.">
+<meta name="twitter:description" content="Short, scenario-based lessons in Egyptian Arabic. 100% free, always.">
 <meta name="twitter:image" content="https://speakmasri.com/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -6530,6 +6532,9 @@ renderVoicePrefToggles();
 applyStaticStrings();
 applyPersonaLanding();
 if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{};}
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").catch(err=>console.log("SW registration failed:",err));
+}
 initLandingAnimations();
 let homeLoadingSkeletonTimer=null;
 function scheduleHomeLoadingSkeleton(){
