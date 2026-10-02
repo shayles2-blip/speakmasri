@@ -80,6 +80,92 @@ function similarityScore(transcript, targetAr) {
   return Math.max(0, Math.round((1 - distance / maxLen) * 100));
 }
 
+// Average per-word STT confidence (0.0-1.0) across all returned results, using
+// each result's top alternative. Falls back to the alternative-level confidence
+// (populated by default for non-streaming recognize results) when no per-word
+// confidence is available. Returns null when no confidence data exists at all,
+// so callers can fall back to text-only scoring.
+function averageWordConfidence(results) {
+  let total = 0;
+  let count = 0;
+
+  for (const result of results || []) {
+    const alternative = result.alternatives && result.alternatives[0];
+    if (!alternative) continue;
+
+    if (Array.isArray(alternative.words) && alternative.words.length > 0) {
+      for (const word of alternative.words) {
+        if (typeof word.confidence === "number") {
+          total += word.confidence;
+          count += 1;
+        }
+      }
+    } else if (typeof alternative.confidence === "number" && alternative.confidence > 0) {
+      // 0.0 is Google's documented sentinel for "confidence not set", not a real score.
+      total += alternative.confidence;
+      count += 1;
+    }
+  }
+
+  return count > 0 ? total / count : null;
+}
+
+// Blends transcript-match score with STT confidence so a learner can't score 100%
+// just because Google's language model "autocorrected" a mumbled word toward the
+// expected phrase. Text match stays dominant (it's the ground truth of whether the
+// right words came out at all); confidence is a meaningful but secondary signal,
+// since confidence estimates are explicitly documented by Google as not guaranteed
+// to be accurate or consistent, especially for very short utterances.
+function blendedScore(textScore, confidence) {
+  if (confidence === null) return textScore;
+  const confidenceScore = Math.round(confidence * 100);
+  return Math.max(0, Math.min(100, Math.round(textScore * 0.6 + confidenceScore * 0.4)));
+}
+
+const RATE_LIMIT_COLLECTION = "pronunciationRateLimits";
+const RATE_LIMIT_MAX_CALLS = 20;
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+// Per-IP rolling-hour rate limit backed by Firestore. Each IP gets one doc holding
+// a call count and the start of its current window; the window resets (and the doc
+// is overwritten) once an hour has passed since it started, so storage never grows
+// based on sustained traffic from one IP, and an `expiresAt` field is written on
+// every doc so a Firestore TTL policy on that field (configured separately, outside
+// application code) can automatically delete stale entries from inactive IPs.
+// Firestore errors fail OPEN (log and allow the request) so an outage in this
+// side-feature can't take down the primary pronunciation-scoring feature.
+async function enforceRateLimit(ip) {
+  const safeIp = (typeof ip === "string" && ip.trim()) ?
+    ip.trim().replace(/\//g, "_") :
+    "unknown";
+  const docRef = db.collection(RATE_LIMIT_COLLECTION).doc(safeIp);
+  const now = Date.now();
+
+  try {
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(docRef);
+      const data = snap.exists ? snap.data() : null;
+      const windowStart = (data && typeof data.windowStart === "number") ? data.windowStart : 0;
+      const stillInWindow = now - windowStart < RATE_LIMIT_WINDOW_MS;
+      const count = (stillInWindow && typeof data.count === "number") ? data.count : 0;
+
+      if (stillInWindow && count >= RATE_LIMIT_MAX_CALLS) {
+        throw new HttpsError("resource-exhausted",
+            "Too many pronunciation attempts from this network. Please try again later.");
+      }
+
+      tx.set(docRef, {
+        windowStart: stillInWindow ? windowStart : now,
+        count: count + 1,
+        expiresAt: new Date(now + RATE_LIMIT_WINDOW_MS),
+      });
+    });
+  } catch (error) {
+    if (error instanceof HttpsError) throw error;
+    logger.error("Pronunciation rate limit check failed; allowing request", {error});
+  }
+}
+
 function momentSummary(moment) {
   if (!moment || !VALID_MOMENT_TYPES.has(moment.type)) return null;
 
@@ -275,6 +361,8 @@ exports.scorePronunciation = onCall(async (request) => {
         "audioBase64 and targetAr are required and must be within size limits.");
   }
 
+  await enforceRateLimit(request.rawRequest && request.rawRequest.ip);
+
   try {
     const [response] = await speechClient.recognize({
       audio: {content: audioBase64},
@@ -282,6 +370,7 @@ exports.scorePronunciation = onCall(async (request) => {
         encoding: "WEBM_OPUS",
         sampleRateHertz: 48000,
         languageCode: "ar-EG",
+        enableWordConfidence: true,
       },
     });
 
@@ -290,7 +379,9 @@ exports.scorePronunciation = onCall(async (request) => {
         .join(" ")
         .trim();
 
-    const score = similarityScore(transcript, targetAr);
+    const textScore = similarityScore(transcript, targetAr);
+    const confidence = averageWordConfidence(response.results);
+    const score = blendedScore(textScore, confidence);
 
     return {transcript, score, targetAr};
   } catch (error) {
