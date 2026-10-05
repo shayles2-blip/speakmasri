@@ -6344,6 +6344,7 @@ async function finishAsSuccess(){
     missionBox.classList.add("hidden");
     missionBox.innerHTML="";
     await saveXp(user.xp);
+    checkOwnedMilestone().catch(e=>console.error('checkOwnedMilestone error',e));
     document.getElementById("lesson").classList.add("hidden");
     document.getElementById("done").classList.remove("hidden");
     spawnConfettiBurst();
