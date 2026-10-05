@@ -1673,7 +1673,7 @@ input:focus-visible, select:focus-visible {
   </div>
 
   <!-- AUTHENTICATED HOME LOADING STATE -->
-  <div id="homeLoadingSkeleton" class="hidden" role="status" aria-label="Loading your home screen">
+  <div id="homeLoadingSkeleton" class="hidden" role="status" aria-label="Loading your home screen" data-i18n-aria-label="aria.loading_home_screen">
     <div class="home-skeleton-top" aria-hidden="true">
       <div class="skeleton-shape home-skeleton-pill"></div>
       <div class="skeleton-shape home-skeleton-pill"></div>
@@ -1865,13 +1865,13 @@ input:focus-visible, select:focus-visible {
   <!-- ARRIVAL -->
   <div id="arrival" class="arrival-screen hidden" aria-hidden="true">
     <div id="arrivalHero" class="arrival-hero">
-      <button type="button" class="arrival-close" onclick="closeArrival()" aria-label="Close arrival screen">&times;</button>
+      <button type="button" class="arrival-close" onclick="closeArrival()" aria-label="Close arrival screen" data-i18n-aria-label="aria.close_arrival_screen">&times;</button>
       <img class="arrival-mira" src="mascot/mira_speaking_transparent.webp" alt="Mira speaking">
     </div>
     <div class="arrival-body">
       <div class="arrival-bubble">
         <div id="arrivalAr" class="arrival-ar" lang="ar"></div>
-        <div class="arrival-en"><span id="arrivalEn"></span><button id="arrivalPlayBtn" type="button" class="arrival-play-btn" aria-label="Play phrase audio">🔊</button></div>
+        <div class="arrival-en"><span id="arrivalEn"></span><button id="arrivalPlayBtn" type="button" class="arrival-play-btn" aria-label="Play phrase audio" data-i18n-aria-label="aria.play_phrase_audio">🔊</button></div>
       </div>
       <p id="arrivalCulture" class="arrival-culture"></p>
       <button id="arrivalCta" type="button" class="arrival-cta">Start Exploring →</button>
@@ -1881,7 +1881,7 @@ input:focus-visible, select:focus-visible {
   <!-- GUEST WELCOME ARRIVAL -->
   <div id="guestArrival" class="arrival-screen hidden" aria-hidden="true">
     <div id="guestArrivalHero" class="arrival-hero" style="background-image: url('mascot/locations/doorstep.webp');">
-      <button type="button" class="arrival-close" onclick="closeGuestArrival()" aria-label="Close welcome screen">&times;</button>
+      <button type="button" class="arrival-close" onclick="closeGuestArrival()" aria-label="Close welcome screen" data-i18n-aria-label="aria.close_welcome_screen">&times;</button>
       <img class="arrival-mira" src="mascot/mira_encouraging_transparent.webp" alt="Mira welcoming you">
     </div>
     <div class="arrival-body">
@@ -1889,7 +1889,7 @@ input:focus-visible, select:focus-visible {
         <div id="guestArrivalAr" class="arrival-ar" lang="ar">أهلاً بيك! يلا نبدأ</div>
         <div class="arrival-en">
           <span id="guestArrivalEn" data-i18n="ui.guest_welcome_bubble_en">Ahlan! Ready to try your first lesson?</span>
-          <button id="guestArrivalPlayBtn" type="button" class="arrival-play-btn" aria-label="Play phrase audio" onclick="playGuestArrivalAudio()">🔊</button>
+          <button id="guestArrivalPlayBtn" type="button" class="arrival-play-btn" aria-label="Play phrase audio" data-i18n-aria-label="aria.play_phrase_audio" onclick="playGuestArrivalAudio()">🔊</button>
         </div>
       </div>
       <div class="guest-arrival-card" style="background:var(--surface);border:1px solid var(--border-light);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow-card);margin-bottom:16px;">
@@ -1904,7 +1904,7 @@ input:focus-visible, select:focus-visible {
   <!-- KATYA WELCOME ARRIVAL -->
   <div id="katyaArrival" class="arrival-screen hidden" aria-hidden="true">
     <div class="arrival-hero" style="background-image: url('mascot/locations/doorstep.webp');">
-      <button type="button" class="arrival-close" onclick="closeKatyaArrival()" aria-label="Close Katya welcome screen">&times;</button>
+      <button type="button" class="arrival-close" onclick="closeKatyaArrival()" aria-label="Close Katya welcome screen" data-i18n-aria-label="aria.close_katya_welcome_screen">&times;</button>
       <div class="katya-arrival-characters">
         <img class="katya-arrival-character" src="mascot/mira_encouraging_transparent.webp" alt="Mira welcoming Katya">
         <img class="katya-arrival-character katya" src="mascot/katya_curious_transparent.webp" alt="Katya arriving at Mira's home">
@@ -1915,7 +1915,7 @@ input:focus-visible, select:focus-visible {
         <div class="arrival-ar" lang="ar">نورتي مصر ونورتي بيتنا!</div>
         <div class="arrival-en">
           <span data-i18n="ui.katya_welcome_bubble_en">Welcome to Egypt—and welcome to our home!</span>
-          <button type="button" class="arrival-play-btn" aria-label="Play phrase audio" onclick="playKatyaArrivalAudio()">🔊</button>
+          <button type="button" class="arrival-play-btn" aria-label="Play phrase audio" data-i18n-aria-label="aria.play_phrase_audio" onclick="playKatyaArrivalAudio()">🔊</button>
         </div>
       </div>
       <p class="arrival-culture" data-i18n="ui.katya_welcome_context">Katya's here! Help Mira welcome her and show her around.</p>
@@ -2209,6 +2209,9 @@ const STRINGS={
   "ui.try_a_lesson_free_no_account_needed":{en:"Try a lesson free — no account needed.",ru:"Попробуйте урок бесплатно — регистрация не нужна.",de:"Probiere eine Lektion kostenlos aus – ganz ohne Registrierung.",hu:"Próbálj ki egy leckét ingyen – regisztráció nélkül."},
   "btn.try_lesson_free":{en:"Try a Lesson Free",ru:"Попробовать урок бесплатно",de:"Lektion kostenlos ausprobieren",hu:"Próbálj ki egy leckét ingyen"},
   "ui.plan_reveal_eyebrow":{en:"Your first path",ru:"Ваш первый путь",de:"Dein erster Lernpfad",hu:"Az első tanulási útvonalad"},
+  "plan.path_partner":{en:"Warm greetings for meeting the family",ru:"Тёплые приветствия для знакомства с семьёй",de:"Herzliche Grußformeln, um die Familie kennenzulernen",hu:"Szívélyes köszöntések a családdal való megismerkedéshez"},
+  "plan.path_traveler":{en:"Numbers and getting around Egypt",ru:"Числа и ориентирование в Египте",de:"Zahlen und Orientierung in Ägypten",hu:"Számok és eligazodás Egyiptomban"},
+  "plan.path_heritage":{en:"Family words the way Egyptians really say them",ru:"Семейные слова так, как их действительно говорят египтяне",de:"Familienwörter so, wie Ägypter sie wirklich sagen",hu:"Családi szavak úgy, ahogy az egyiptomiak valójában mondják"},
   "btn.start":{en:"Start",ru:"Начать",de:"Starten",hu:"Kezdés"},
   "ui.plan_reveal_later":{en:"Maybe later",ru:"Может быть, позже",de:"Vielleicht später",hu:"Talán később"},
   "ui.voice_male":{en:"Male",ru:"Мужской",de:"Männlich",hu:"Férfi"},
@@ -2486,7 +2489,16 @@ const STRINGS={
   "msg.you_ve_practiced_the_whole_lesson":{en:"You've practiced the whole lesson.",ru:"Ты прошёл весь урок.",de:"Du hast die ganze Lektion geübt.",hu:"Végiggyakoroltad a teljes leckét."},
   "ui.back_to_lessons":{en:"Back to lessons",ru:"К урокам",de:"Zurück zu den Lektionen",hu:"Vissza a leckékhez"},
   "demo.phrase.my_love":{en:"My love",ru:"Любовь моя",de:"Mein Schatz",hu:"Szerelmem"},
-  "demo.phrase.how_are_you":{en:"How are you",ru:"Как дела",de:"Wie geht's dir",hu:"Hogy vagy"}
+  "demo.phrase.how_are_you":{en:"How are you",ru:"Как дела",de:"Wie geht's dir",hu:"Hogy vagy"},
+  "ui.explore_egypt_title":{en:"📍 Explore Egypt",ru:"📍 Исследуйте Египет",de:"📍 Ägypten entdecken",hu:"📍 Fedezd fel Egyiptomot"},
+  "ui.explore_places_count":{en:"{n} places",ru:"{n} мест",de:"{n} Orte",hu:"{n} hely"},
+  "aria.explore_egypt_view":{en:"Explore Egypt view",ru:"Вид «Исследуйте Египет»",de:"Ansicht „Ägypten entdecken“",hu:"„Fedezd fel Egyiptomot” nézet"},
+  "ui.explore_view_rail":{en:"Rail",ru:"Лента",de:"Liste",hu:"Lista"},
+  "ui.explore_view_map":{en:"Map",ru:"Карта",de:"Karte",hu:"Térkép"},
+  "aria.loading_home_screen":{en:"Loading your home screen",ru:"Загрузка главного экрана",de:"Dein Home-Bildschirm wird geladen",hu:"A kezdőképernyőd betöltése"},
+  "aria.close_arrival_screen":{en:"Close arrival screen",ru:"Закрыть экран прибытия",de:"Ankunftsbildschirm schließen",hu:"Az érkezési képernyő bezárása"},
+  "aria.close_welcome_screen":{en:"Close welcome screen",ru:"Закрыть экран приветствия",de:"Willkommensbildschirm schließen",hu:"Az üdvözlő képernyő bezárása"},
+  "aria.close_katya_welcome_screen":{en:"Close Katya welcome screen",ru:"Закрыть экран приветствия Кати",de:"Katjas Willkommensbildschirm schließen",hu:"Katya üdvözlő képernyőjének bezárása"}
 };
 function t(key){
   const entry=STRINGS[key];
@@ -3521,9 +3533,9 @@ function maybeShowPlanReveal(){
   const motivation=sessionStorage.getItem(storageKey);
   sessionStorage.removeItem(storageKey);
   const paths={
-    partner:{unitId:"u1",lessonId:"a1",label:"Warm greetings for meeting the family"},
-    traveler:{unitId:"u4",lessonId:"a1",label:"Numbers and getting around Egypt"},
-    heritage:{unitId:"u2",lessonId:"a1",label:"Family words the way Egyptians really say them"}
+    partner:{unitId:"u1",lessonId:"a1",labelKey:"plan.path_partner"},
+    traveler:{unitId:"u4",lessonId:"a1",labelKey:"plan.path_traveler"},
+    heritage:{unitId:"u2",lessonId:"a1",labelKey:"plan.path_heritage"}
   };
   const path=paths[motivation];
   if(!path)return;
@@ -3533,7 +3545,7 @@ function maybeShowPlanReveal(){
   const overlay=document.getElementById("planRevealOverlay");
   const reveal=document.getElementById("planReveal");
   const startButton=document.getElementById("planRevealStart");
-  document.getElementById("planRevealTitle").textContent=path.label;
+  document.getElementById("planRevealTitle").textContent=t(path.labelKey);
   document.getElementById("planRevealClose").onclick=hidePlanReveal;
   document.getElementById("planRevealLater").onclick=hidePlanReveal;
   startButton.onclick=()=>{hidePlanReveal();startLesson(lesson);};
@@ -3789,7 +3801,7 @@ function renderExplore(el){
   let viewMode=localStorage.getItem('exploreViewMode')==='map'?'map':'rail';
   const head=document.createElement("div");
   head.className="explore-rail-head";
-  head.innerHTML='<span class="explore-rail-heading"><span class="explore-rail-title">📍 Explore Egypt</span><span class="explore-rail-count">7 places</span></span><span class="explore-view-toggle" role="group" aria-label="Explore Egypt view"><button type="button" class="explore-view-btn" data-view="rail">Rail</button><button type="button" class="explore-view-btn" data-view="map">Map</button></span>';
+  head.innerHTML=`<span class="explore-rail-heading"><span class="explore-rail-title">${t('ui.explore_egypt_title')}</span><span class="explore-rail-count">${t('ui.explore_places_count').replace('{n}',EXPLORE_PLACES.length)}</span></span><span class="explore-view-toggle" role="group" aria-label="${t('aria.explore_egypt_view')}"><button type="button" class="explore-view-btn" data-view="rail">${t('ui.explore_view_rail')}</button><button type="button" class="explore-view-btn" data-view="map">${t('ui.explore_view_map')}</button></span>`;
   el.appendChild(head);
 
   const view=document.createElement("div");
@@ -3815,7 +3827,7 @@ function openArrival(unitId){
   const phraseAudio=audioPath(lesson.id,0);
   document.getElementById("arrivalHero").style.backgroundImage=`url("mascot/locations/${unitId}.webp")`;
   document.getElementById("arrivalAr").textContent=item.ar;
-  document.getElementById("arrivalEn").textContent=item.en;
+  document.getElementById("arrivalEn").textContent=vocabText(item);
   document.getElementById("arrivalCulture").textContent=arrivalCultureText(unitId);
   document.getElementById("arrivalPlayBtn").onclick=()=>playAudio(item.ar,phraseAudio);
   document.getElementById("arrivalCta").onclick=()=>{
@@ -4348,7 +4360,7 @@ function renderProfile(){
         const audio=document.createElement("button");
         audio.type="button";
         audio.className="milestone-audio";
-        audio.setAttribute("aria-label","Play phrase audio");
+        audio.setAttribute("aria-label",t('aria.play_phrase_audio'));
         audio.textContent="🔊";
         audio.onclick=()=>playAudio(m.ar,audioPath(source.lessonId,source.idx));
         entry.appendChild(audio);
@@ -5999,7 +6011,7 @@ async function markMissionDone(){
   btn.disabled=true;
   if(user&&!user.isGuest&&curMission){
     const missionIdx=curLesson.vocab.indexOf(curMission);
-    const milestone={ar:curMission.ar,franco:curMission.franco,en:curMission.en,ru:curMission.ru||"",lessonId:curLesson.id,idx:missionIdx};
+    const milestone={ar:curMission.ar,franco:curMission.franco,en:curMission.en,ru:curMission.ru||"",de:curMission.de||"",hu:curMission.hu||"",lessonId:curLesson.id,idx:missionIdx};
     user.milestones=user.milestones||[];
     user.milestones.push({...milestone,date:new Date().toISOString().slice(0,10)});
     refreshTopBar();

@@ -10,7 +10,6 @@
 const CACHE_VERSION = "speakmasri-v2";
 
 const APP_SHELL = [
-  "index.html",
   "manifest.json",
   "logo-512.png",
   "logo-192.png",
@@ -78,7 +77,16 @@ async function cacheFirst(request) {
   const cached = await cache.match(request);
   if (cached) return cached;
   const response = await fetch(request);
-  if (response.ok) cache.put(request, response.clone());
+  // response.ok is true for 206 (Partial Content) too, which is what browsers
+  // request for <audio> elements via Range headers - cache.put() throws a
+  // TypeError on any 206 response regardless of .ok (a hard Cache API spec
+  // restriction), so this must stay defensive even with the .ok check above.
+  // cache.put() is a promise-returning operation, so a 206-triggered TypeError
+  // surfaces as a rejected promise rather than a synchronous throw - .catch()
+  // is required here, not try/catch, since the call is intentionally unawaited.
+  if (response.ok) {
+    cache.put(request, response.clone()).catch(() => {});
+  }
   return response;
 }
 
