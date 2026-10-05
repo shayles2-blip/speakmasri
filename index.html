@@ -2187,12 +2187,12 @@ const STRINGS={
   "ui.speakmasri_learn_egyptian_arabic_masri":{en:"SpeakMasri – Learn Egyptian Arabic (Masri)",ru:"SpeakMasri – Учите египетский арабский (масри)",de:"SpeakMasri – Lerne Ägyptisch-Arabisch (Masri)",hu:"SpeakMasri – Tanulj egyiptomi arabul (Masri)"},
   "landing.headline":{en:"Speak the Arabic they actually use at home.",ru:"Говорите на том арабском, на котором действительно говорят дома.",de:"Sprich das Arabisch, das zu Hause wirklich gesprochen wird.",hu:"Beszéld azt az arabot, amit otthon valóban használnak."},
   "landing.support":{en:"Egyptian Arabic (Masri) for partners, in-laws, and family — not textbooks, not tourists.",ru:"Египетский арабский (масри) для партнёров, родных и семьи — не для учебников и не для туристов.",de:"Ägyptisch-Arabisch (Masri) für Partner, Schwiegereltern und Familie – nicht für Lehrbücher, nicht für Touristen.",hu:"Egyiptomi arab (masri) a párodnak, a rokonoknak és a családnak – nem tankönyveknek, nem turistáknak."},
-  "landing.headline_traveler":{en:"Order, haggle, and connect — in the Arabic Egyptians actually speak."},
-  "landing.support_traveler":{en:"Egyptian Arabic (Masri) for your trip — not textbook Arabic no one in Cairo actually uses."},
-  "landing.headline_heritage":{en:"Reconnect with the Arabic your family actually speaks."},
-  "landing.support_heritage":{en:"Egyptian Arabic (Masri) — the dialect spoken at home, not the Modern Standard Arabic taught in school."},
-  "landing.headline_msa":{en:"You learned the Arabic in books. This is the Arabic in the room."},
-  "landing.support_msa":{en:"Modern Standard Arabic and Egyptian Arabic (Masri) are different in practice — this is the one Egyptians actually speak."},
+  "landing.headline_traveler":{en:"Order, haggle, and connect — in the Arabic Egyptians actually speak.",ru:"Заказывайте, торгуйтесь и общайтесь — на том арабском, на котором действительно говорят египтяне.",de:"Bestelle, handle und verständige dich – im Arabisch, das Ägypter wirklich sprechen.",hu:"Rendelj, alkudj és kapcsolódj — azon az arabon, amit az egyiptomiak valóban beszélnek."},
+  "landing.support_traveler":{en:"Egyptian Arabic (Masri) for your trip — not textbook Arabic no one in Cairo actually uses.",ru:"Египетский арабский (масри) для вашей поездки — не книжный арабский, которым никто в Каире на самом деле не пользуется.",de:"Ägyptisch-Arabisch (Masri) für deine Reise – nicht das Lehrbuch-Arabisch, das in Kairo niemand wirklich benutzt.",hu:"Egyiptomi arab (masri) az utazásodhoz – nem az a tankönyvi arab, amit Kairóban valójában senki sem használ."},
+  "landing.headline_heritage":{en:"Reconnect with the Arabic your family actually speaks.",ru:"Восстановите связь с арабским, на котором действительно говорит ваша семья.",de:"Verbinde dich wieder mit dem Arabisch, das deine Familie wirklich spricht.",hu:"Teremtsd újra a kapcsolatot azzal az arabbal, amit a családod valóban beszél."},
+  "landing.support_heritage":{en:"Egyptian Arabic (Masri) — the dialect spoken at home, not the Modern Standard Arabic taught in school.",ru:"Египетский арабский (масри) — диалект, на котором говорят дома, а не современный стандартный арабский, который учат в школе.",de:"Ägyptisch-Arabisch (Masri) – der Dialekt, der zu Hause gesprochen wird, nicht das Hocharabisch, das in der Schule gelehrt wird.",hu:"Egyiptomi arab (masri) – az otthon beszélt nyelvjárás, nem az iskolában tanított modern standard arab."},
+  "landing.headline_msa":{en:"You learned the Arabic in books. This is the Arabic in the room.",ru:"Вы учили арабский по книгам. А это — арабский из жизни.",de:"Du hast das Arabisch aus Büchern gelernt. Das hier ist das Arabisch aus dem echten Leben.",hu:"A könyvekben tanult arabot már ismered. Ez itt a valódi, beszélt arab."},
+  "landing.support_msa":{en:"Modern Standard Arabic and Egyptian Arabic (Masri) are different in practice — this is the one Egyptians actually speak.",ru:"Современный стандартный арабский и египетский арабский (масри) на практике — это разные языки. Это тот, на котором действительно говорят египтяне.",de:"Hocharabisch und Ägyptisch-Arabisch (Masri) unterscheiden sich in der Praxis deutlich – das hier ist das Arabisch, das Ägypter tatsächlich sprechen.",hu:"A modern standard arab és az egyiptomi arab (masri) a gyakorlatban két különböző nyelv – ez az, amit az egyiptomiak valóban beszélnek."},
   "landing.trust":{en:"100% free, always · no card · ~3 min · Egyptian Arabic",ru:"Всегда бесплатно · без карты · ~3 мин · египетский арабский",de:"Immer 100 % kostenlos · keine Karte · ~3 Min. · Ägyptisch-Arabisch",hu:"100% ingyenes, örökre · nincs kártya · ~3 perc · Egyiptomi arab"},
   "landing.not_now":{en:"Not now — try a lesson free",ru:"Не сейчас — попробовать урок бесплатно",de:"Nicht jetzt – Lektion kostenlos ausprobieren",hu:"Most nem – próbálj ki egy leckét ingyen"},
   "landing.progress_saves":{en:"You're signed in — your progress will save.",ru:"Вы вошли — ваш прогресс сохранится.",de:"Du bist angemeldet – dein Fortschritt wird gespeichert.",hu:"Be vagy jelentkezve – a haladásod elmentődik."},
@@ -2781,7 +2781,8 @@ function normalizeItemStats(value){
   Object.entries(value).forEach(([key,stats])=>{
     if(!stats||typeof stats!=='object'||Array.isArray(stats))return;
     normalized[key]={correct:Number(stats.correct)||0,incorrect:Number(stats.incorrect)||0,
-      lastSeen:typeof stats.lastSeen==='string'?stats.lastSeen:null};
+      lastSeen:typeof stats.lastSeen==='string'?stats.lastSeen:null,
+      box:Number(stats.box)||0,dueAt:Number(stats.dueAt)||0};
   });
   return normalized;
 }
@@ -4169,6 +4170,11 @@ function renderMomentCardState(card,editing){
 }
 
 function flattenedLessons(){const out=[];COURSE.units.forEach(u=>u.lessons.forEach(l=>out.push(l)));FOUNDATION_LESSONS.forEach(l=>out.push(l));ALPHABET_LESSONS.forEach(l=>out.push(l));return out;}
+
+// Distractor pool for review exercises: must include Alphabet/Foundation vocab
+// (not just allVocab()'s COURSE.units) so a reviewed letter/onboarding phrase
+// draws wrong answers from its own pool instead of unrelated regular vocab.
+function reviewDistractorPool(){return flattenedLessons().flatMap(l=>l.vocab);}
 function pickConnectionPrompts(){
   const lessons=flattenedLessons();
   let completed=lessons.filter(l=>isLessonDone(l.id));
@@ -4213,7 +4219,7 @@ function pickReviewItems(){
     })
     .filter(Boolean).slice(0,3).map(entry=>{
       const correct=vocabText(entry.item);
-      const distractors=shuffle(allVocab().map(v=>vocabText(v)).filter((v,i,a)=>v!==correct&&a.indexOf(v)===i)).slice(0,2);
+      const distractors=shuffle(reviewDistractorPool().map(v=>vocabText(v)).filter((v,i,a)=>v!==correct&&a.indexOf(v)===i)).slice(0,2);
       return {...entry,opts:shuffle([correct,...distractors])};
     });
 }
@@ -4299,7 +4305,7 @@ function startDueReviewSession(){
   curLesson={id:'review',title:t('ui.review_session_title'),xp:5,vocab:[],isReviewSession:true};
   exList=dueItems.map(({item,lessonId,idx})=>({type:"listen",item,q:item.ar,answer:item.en,franco:item.franco,register:item.register,
     lessonId,idx,audio:audioPath(lessonId,idx,item.audioSrc),
-    opts:shuffle([item,...shuffle(allVocab().filter(v=>v.en!==item.en)).slice(0,3)]).map(v=>({value:v.en,label:vocabText(v)}))}));
+    opts:shuffle([item,...shuffle(reviewDistractorPool().filter(v=>v.en!==item.en)).slice(0,3)]).map(v=>({value:v.en,label:vocabText(v)}))}));
   exIdx=0;correctCount=0;currentStreak=0;halfwayCelebrated=false;setLessonStreak(0);
   document.getElementById('main').classList.add('hidden');document.getElementById('lesson').classList.remove('hidden');renderExercise();
 }
@@ -5444,7 +5450,7 @@ function showFeedback(ok,ex){
                       ex.type==="build" ? `${ex.ar}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="mc" ? `${ex.answer}${ex.franco?" — "+ex.franco:""}` :
                       ex.type==="listen" ? ex.answer : "";
-  const culturalNote=ex.item?extractCulturalNote(ex.item.en):null;
+  const culturalNote=ex.item?extractCulturalNote(vocabText(ex.item)):null;
   fb.innerHTML=`<div class="feedback ${ok?"fb-ok":"fb-no"}">
     <div style="display:flex;align-items:center;gap:12px">
       <img src="mascot/${ok?"mira_happy":"mira_encouraging"}.webp" alt="${ok?"Mira celebrating a correct answer":"Mira offering encouragement"}" style="width:52px;height:52px;object-fit:contain;flex:0 0 auto">

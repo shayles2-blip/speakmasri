@@ -7,7 +7,7 @@
  * list changes so old caches get cleaned up on activate.
  */
 
-const CACHE_VERSION = "speakmasri-v1";
+const CACHE_VERSION = "speakmasri-v2";
 
 const APP_SHELL = [
   "index.html",
@@ -61,7 +61,7 @@ async function networkFirst(request) {
     // of the init override) - fetching the URL string directly, instead of the
     // Request object, is what actually forces a real network hit.
     const response = await fetch(request.url, {cache: "no-store"});
-    cache.put(request, response.clone());
+    if (response.ok) cache.put(request, response.clone());
     return response;
   } catch (err) {
     const cached = await cache.match(request);
@@ -78,7 +78,7 @@ async function cacheFirst(request) {
   const cached = await cache.match(request);
   if (cached) return cached;
   const response = await fetch(request);
-  cache.put(request, response.clone());
+  if (response.ok) cache.put(request, response.clone());
   return response;
 }
 
